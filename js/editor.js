@@ -29,6 +29,7 @@ function dragElement(elmnt) {
   var editor = $(".editor-wrapper").get(0);
   // only put the mousedown event on the content of the element not on the outline
   $(elmnt).find(".content").get(0).onmousedown = dragMouseDown;
+  $(elmnt).find(".content").get(0).ontouchstart = dragMouseDown;
   // catch hotkey events
   document.onkeydown = onKeyDown;
 
@@ -175,7 +176,7 @@ function dragElement(elmnt) {
   function dragMouseDown(e) {
     e.stopPropagation(); // <-- dont pass event onto elements below clicked element
     // dont trigger dragging if mouse button was right and clicked element should not be the description of the element
-    if(e.button === 0 && !$(e.target).hasClass('description')){
+    if(true && !$(e.target).hasClass('description')){
         // check if clicked element was a connection or an element
         if($(e.target).hasClass('connection')){
             // get id of element
@@ -249,8 +250,10 @@ function dragElement(elmnt) {
                 pos3 = e.clientX;
                 pos4 = e.clientY;
                 document.onmouseup = closeDragElement;
+                document.ontouchend = closeDragElement;
                 // call a function whenever the cursor moves:
                 document.onmousemove = elementDrag;
+                document.ontouchmove = elementDragTouch;
 
                 if(getSelectedCount() === 1){
                     setupEditor();
@@ -275,8 +278,10 @@ function dragElement(elmnt) {
                 pos3 = e.clientX;
                 pos4 = e.clientY;
                 document.onmouseup = closeDragElement;
+                document.ontouchend = closeDragElement;
                 // call a function whenever the cursor moves:
                 document.onmousemove = elementDrag;
+                document.ontouchmove = elementDragTouch;
 
                 if(getSelectedCount() === 1){
                     setupEditor();
@@ -289,31 +294,56 @@ function dragElement(elmnt) {
     }
   }
 
+  function elementDragTouch(e){
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    var touch = event.touches[0];
+    pos1 = pos3 - touch.clientX;
+    pos2 = pos4 - touch.clientY;
+    pos3 = touch.clientX;
+    pos4 = touch.clientY;
+    // set the element's new position:
+    if((elmnt.offsetLeft - pos1) >= 5){
+        $(elmnt).addClass('selected');
+        //var maxPixelsLeft = ((($(".editor").width() / editorObj.scale) - 100)) + $('.editor').scrollLeft();
+        var newTopPixels = elmnt.offsetTop - pos2 / editorObj.scale;
+        elmnt.style.top = newTopPixels + "px";
+        var newLeftPixels = elmnt.offsetLeft - pos1 / editorObj.scale;
+        elmnt.style.left = newLeftPixels + "px";
+
+        // recount selected elements to decide if element toolbar should be visible or not
+        countSelected();
+    }
+
+    if(editorObj.lines.length > 0){
+        updateLines();
+    }
+  }
+
   function elementDrag(e) {
-    if(e.button === 0){
-        e = e || window.event;
-        e.preventDefault();
-        // calculate the new cursor position:
-        pos1 = pos3 - e.clientX;
-        pos2 = pos4 - e.clientY;
-        pos3 = e.clientX;
-        pos4 = e.clientY;
-        // set the element's new position:
-        if((elmnt.offsetLeft - pos1) >= 5){
-            $(elmnt).addClass('selected');
-            //var maxPixelsLeft = ((($(".editor").width() / editorObj.scale) - 100)) + $('.editor').scrollLeft();
-            var newTopPixels = elmnt.offsetTop - pos2 / editorObj.scale;
-            elmnt.style.top = newTopPixels + "px";
-            var newLeftPixels = elmnt.offsetLeft - pos1 / editorObj.scale;
-            elmnt.style.left = newLeftPixels + "px";
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    if((elmnt.offsetLeft - pos1) >= 5){
+        $(elmnt).addClass('selected');
+        //var maxPixelsLeft = ((($(".editor").width() / editorObj.scale) - 100)) + $('.editor').scrollLeft();
+        var newTopPixels = elmnt.offsetTop - pos2 / editorObj.scale;
+        elmnt.style.top = newTopPixels + "px";
+        var newLeftPixels = elmnt.offsetLeft - pos1 / editorObj.scale;
+        elmnt.style.left = newLeftPixels + "px";
 
-            // recount selected elements to decide if element toolbar should be visible or not
-            countSelected();
-        }
+        // recount selected elements to decide if element toolbar should be visible or not
+        countSelected();
+    }
 
-        if(editorObj.lines.length > 0){
-            updateLines();
-        }
+    if(editorObj.lines.length > 0){
+        updateLines();
     }
   }
 
@@ -321,6 +351,8 @@ function dragElement(elmnt) {
     // stop moving when mouse button is released:
     $(elmnt).css('z-index','10');
     document.onmouseup = null;
+    document.ontouchend = null;
+    document.ontouchmove = null;
     document.onmousemove = null;
   }
 }
