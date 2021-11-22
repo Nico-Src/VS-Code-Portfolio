@@ -693,6 +693,7 @@ function closeEditor(){
 }
 
 function iterateTree(originaltree,tree,id){
+    var symbol = $("#"+id).find('.symbol').html();
     var connections = [];
     editorObj.lines.forEach((line) => {
         if(line.firstElement.id === id){
@@ -703,10 +704,10 @@ function iterateTree(originaltree,tree,id){
     });
 
     if(connections.length > 0){
-        tree.next.push({node: connections[0],previous: id,next: []});
+        tree.next.push({node: connections[0],previous: id,previousSymbol: symbol,next: []});
         iterateTree(originaltree,tree.next[0],connections[0]);
         if(connections.length > 1){
-            tree.next.push({node: connections[1],previous: id,next: []});
+            tree.next.push({node: connections[1],previous: id,previousSymbol: symbol,next: []});
             iterateTree(originaltree,tree.next[1],connections[1]);
         }
         return originaltree;
@@ -722,14 +723,14 @@ function getNodeTree(){
             // find starting node by searching for a node that has no connection on the top connection-dot but on the bottom one
             if(!$(this).find(".connection.top").hasClass('connect') && !$(this).find(".connection.top").hasClass('connected')){
                 if($(this).find(".connection.bottom").hasClass('connected')){
-                    tree = {node: $(this).attr('id'),previous: undefined,next: []};
+                    tree = {node: $(this).attr('id'),previous: undefined,previousSymbol: undefined,next: []};
                     return;
                 }
             }
         }
     });
     // start recursion
-    var nodeTree = iterateTree(tree,tree,tree.node,0);
+    var nodeTree = iterateTree(tree,tree,tree.node);
     return nodeTree;
 }
 
