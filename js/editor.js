@@ -672,6 +672,8 @@ function saveEditorChanges(){
             $(selected).find(".description").html(newDesc);
         }
     }
+
+    closeEditor();
 }
 
 function openEditor(){
@@ -717,14 +719,17 @@ function getNodeTree(){
     var tree = "";
     $(".element").each(function(){
         if(!$(this).find(".connection.top").hasClass('connected')){
-            if(!$(this).find(".connection.top").hasClass('connect')){
-                tree = {node: $(this).attr('id'),previous: undefined,next: []};
-                return;
+            // find starting node by searching for a node that has no connection on the top connection-dot but on the bottom one
+            if(!$(this).find(".connection.top").hasClass('connect') && !$(this).find(".connection.top").hasClass('connected')){
+                if($(this).find(".connection.bottom").hasClass('connected')){
+                    tree = {node: $(this).attr('id'),previous: undefined,next: []};
+                    return;
+                }
             }
         }
     });
+    // start recursion
     var nodeTree = iterateTree(tree,tree,tree.node,0);
-    console.log(nodeTree);
     return nodeTree;
 }
 

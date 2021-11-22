@@ -1,0 +1,3 @@
+Edit-Window closes when saving Changes - [X] (By Leo)
+Linking on Mobile
+Better Mobile UI
