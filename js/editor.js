@@ -350,6 +350,7 @@ function dragElement(elmnt) {
   function closeDragElement() {
     // stop moving when mouse button is released:
     $(elmnt).css('z-index','10');
+    // remove event listeners
     document.onmouseup = null;
     document.ontouchend = null;
     document.ontouchmove = null;
@@ -360,6 +361,7 @@ function dragElement(elmnt) {
 function countSelected(){
     var selectedElements = [];
 
+    // add all elements to list
     $(".element.selected").each(function(){
         selectedElements.push(this);
     });
