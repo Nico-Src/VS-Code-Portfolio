@@ -1,6 +1,7 @@
 <html>
     <head>
         <title>Relationale Algebra</title>
+        <meta charset="utf-8"/>
         <link rel="icon" href="favico.ico">
         <link rel="stylesheet" href="css/main.css">
         <link rel="stylesheet" href="css/elements.css">
@@ -26,7 +27,11 @@
                 <div class="footer"><button onclick="saveEditorChanges();" class="btn btn-success">Save</button></div>
             </div>
             <div class="toolbar col-2">
-                    <button class="btn btn-success m-3" onclick="getStatement();">Generate Statement</button>
+                    <button class="btn btn-success m-2" onclick="getStatement();">Generate Statement</button>
+                    <div class="row w-100 h-100 m-0 p-0 d-flex justify-content-center align-items-center">
+                        <button class="btn btn-success m-2" style="width: 50px;" onclick="saveTree();"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+                        <button class="btn btn-success m-2" style="width: 50px;" onclick="loadTree();"><i class="fa fa-file-text" aria-hidden="true"></i></button>
+                    </div>
                     <div class="algebra-element col-12" onmousedown="addElement(this,false,true);">
                         <p class="symbol">Relation</p>
                         <p class="name">Table</p>
@@ -74,6 +79,8 @@
                 </div>
             </div>
         </div>
+
+        <input id="file-input" type="file" name="name" style="display: none;" />
         
         <script src="js/jquery-3.6.0.js"></script>
         <script src="js/jquery-ui.js"></script>
@@ -86,6 +93,7 @@
     </body>
     <script>
         var currentMaxZIndex = 9;
+        var dragDistance = 1000;
 
         function uuidv4() {
             return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -94,9 +102,24 @@
         }
 
         $(document).ready(function(){
+            const fileSelector = document.getElementById('file-input');
+            fileSelector.addEventListener('change', (event) => {
+                const fileList = event.target.files;
+                console.log(fileList[0]);
+                loadFile(fileList[0]);
+            });
             setupEditorEvents();
             $( ".editor-wrapper" ).draggable({
                 refreshPositions: true,
+                drag: function( event, ui){ 
+                    console.log(ui.position);
+                    if(ui.position.left > 0) ui.position.left = 0;
+                    if(ui.position.top > 0) ui.position.top = 0;
+                    if(ui.position.left < (-3392 * editorObj.scale)) ui.position.left = -3392.0 * editorObj.scale;
+                    if(ui.position.top < (-2848 * editorObj.scale)) ui.position.top = -2848.0 * editorObj.scale;
+                    //ui.position.left = Math.min( ui.position.left,  ui.helper.next().offset().left + ui.helper.next().width()-dragDistance); 
+                    //ui.position.left = Math.max(ui.position.left, ui.helper.prev().offset().left + dragDistance);
+                }
             });
             setZoom(1,$(".editor-wrapper").get(0));
             $(".element").each(function(){
@@ -111,6 +134,147 @@
         function resetZoom(){
             setZoom(1,$('.editor-wrapper').get(0));
             editorObj.scale = 1;
+        }
+
+        function download(filename, text) {
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
+        }
+
+        function saveTree(){
+            var tree = getNodeTree();
+            tree.connections = editorObj.lines;
+            download("sample.tree",JSON.stringify(tree));
+        }
+
+        function loadTree(){
+            $('#file-input').trigger('click');
+        }
+
+        function loadFile(file){
+            var reader = new FileReader();
+            reader.readAsText(file, "UTF-8");
+            reader.onload = function (evt) {
+                loadFileToEditor(JSON.parse(evt.target.result));
+            }
+        }
+
+        function loadFileToEditor(data){
+            console.log("Loaded File: ",data);
+            iterateLoadedTree(data,data);
+            loadConnections(data.connections);
+            $(".element").each(function(){
+                dragElement(this);
+            });
+        }
+
+        function loadConnections(connections){
+            connections.forEach((connection) => {
+                var x1 = 0;x2 = 0;y1 = 0;y2 = 0;
+                // if the origin is top and the destination is bottom y1 must stay the same and y2 must be added 100
+                if(connection.firstElement.connectionType === 'top' && connection.secondElement.connectionType === 'bottom'){
+                    var x1 = (parseInt($("#"+connection.firstElement.id).get(0).style.left.replace('px','')) + 50) + "px";
+                    var x2 = (parseInt($("#"+connection.secondElement.id).get(0).style.left.replace('px','')) + 50) + "px";
+                    var y1 = (parseInt($("#"+connection.firstElement.id).get(0).style.top.replace('px',''))) + "px";
+                    var y2 = (parseInt($("#"+connection.secondElement.id).get(0).style.top.replace('px','')) + 100) + "px";
+                    // if the origin is bottom and the destination is top y1 must be added 100 and y2 must stay the same
+                }  else if(connection.firstElement.connectionType === 'bottom' && connection.secondElement.connectionType === 'top') {
+                    var x1 = (parseInt($("#"+connection.firstElement.id).get(0).style.left.replace('px','')) + 50) + "px";
+                    var x2 = (parseInt($("#"+connection.secondElement.id).get(0).style.left.replace('px','')) + 50) + "px";
+                    var y1 = (parseInt($("#"+connection.firstElement.id).get(0).style.top.replace('px','')) + 100) + "px";
+                    var y2 = (parseInt($("#"+connection.secondElement.id).get(0).style.top.replace('px',''))) + "px";
+                }
+
+                var line = $('<svg style="opacity: 0;" id="'+connection.id+'" height="'+$(".editor-wrapper").height()+'" width="'+$(".editor-wrapper").width()+'"><line class="selectable-line" x1="'+x1+'" y1="'+y1+'" x2="'+x2+'" y2="'+y2+'" style="stroke:rgb(101, 209, 86);stroke-width:3" /></svg>');
+
+                // add line to editor
+                $(".editor-wrapper").append(line);
+                line.animate({opacity: 1});
+
+                // add line to line array
+                editorObj.lines.push({id: connection.id,firstElement: {id: connection.firstElement.id,connectionType: connection.firstElement.connectionType,dom: $("#"+connection.firstElement.id).get(0)},secondElement: {id: connection.secondElement.id,connectionType: connection.secondElement.connectionType,dom: $("#"+connection.secondElement.id).get(0)},firstConnectionType:connection.firstElement.connectionType,secondConnectionType:connection.secondElement.connectionType,line: line});
+
+                // get connection types
+                var firstElementConnectionType = connection.firstElement.connectionType;
+                var secondElementConnectionType = connection.secondElement.connectionType;
+
+                // change style
+                $("#"+connection.firstElement.id).find('.connection.'+firstElementConnectionType).addClass('connected');
+                $("#"+connection.secondElement.id).find('.connection.'+secondElementConnectionType).addClass('connected');
+                $("#"+connection.firstElement.id).find('.connection.'+firstElementConnectionType).removeClass('connect');
+                $("#"+connection.secondElement.id).find('.connection.'+secondElementConnectionType).removeClass('connect');
+
+                // update connections
+                changeConnectionStatus(connection.firstElement.id,firstElementConnectionType,'connected');
+                changeConnectionStatus(connection.secondElement.id,secondElementConnectionType,'connected');
+            });
+        }
+
+        function iterateLoadedTree(originalTree,tree){
+            var currentNode = tree;
+
+            $(".editor-wrapper").append(generateElement(currentNode));
+
+            if(tree.next.length > 0){
+                if(tree.next.length > 1){
+                    iterateLoadedTree(originalTree,tree.next[0]);
+                    iterateLoadedTree(originalTree,tree.next[1]);
+                }
+                return iterateLoadedTree(originalTree,tree.next[0]);
+            } else {
+                return;
+            }
+        }
+
+        function generateElement(node){
+            console.log("Node: ",node);
+            var specialFont = (node.symbol === "π" || node.symbol === "σ" || node.symbol === "γ" || node.symbol === "ρ") ? true : false;
+            var smallFont = (node.symbol === "Relation") ? true : false;
+            var el = "";
+            if(node.description.trim() === ""){
+                el = $("<div class='element' style='z-index: 10;top: "+node.position.top+"; left: "+node.position.left+";' id='"+node.node+"'><div class='content'><p class='symbol "+(specialFont ? 'special' : '')+" "+(smallFont ? 'small' : '')+"'>"+node.symbol+"</p><div class='connection top' id='"+node.node+"top'></div><div class='connection bottom' id='"+node.node+"bottom'></div><div class='description right' style='opacity: 0; display: none;' onclick='switchPlacement(this);'></div></div></div>");
+            } else {
+                el = $("<div class='element' style='z-index: 10;top: "+node.position.top+"; left: "+node.position.left+";' id='"+node.node+"'><div class='content'><p class='symbol "+(specialFont ? 'special' : '')+" "+(smallFont ? 'small' : '')+"'>"+node.symbol+"</p><div class='connection top' id='"+node.node+"top'></div><div class='connection bottom' id='"+node.node+"bottom'></div><div class='description right' onclick='switchPlacement(this);'>"+node.description+"</div></div></div>");
+            }
+            if(!editorElementExists(node.node)){
+                editorObj.elements.push({
+                    id: node.node,
+                    domElement: el.get(0),
+                    description: "",
+                    connections: [
+                        {
+                            type: 'top',
+                            status: 'disconnected'
+                        },
+                        {
+                            type: 'bottom',
+                            status: 'disconnected'
+                        }
+                    ]
+                });
+                return el;
+            } else {
+                return null;
+            }
+        }
+
+        function editorElementExists(id){
+            var exists = false;
+            editorObj.elements.forEach((element) => {
+                if(element.id === id){
+                    exists = true;
+                }
+            });
+
+            return exists;
         }
 
         function addElement(symbol,specialFont,smallFont){

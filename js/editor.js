@@ -104,6 +104,12 @@ function dragElement(elmnt) {
 
             // add delete class for scale down animation
             $(this).addClass('delete');
+            var id = this.id;
+            editorObj.elements.forEach((element,index) => {
+                if(element.id === id){
+                    editorObj.elements.splice(index, 1);
+                }
+            });
             // fade out element
             $(this).animate({opacity: 0},500,function(){
                 // remove element
@@ -565,6 +571,7 @@ function connect(){
     var id = uuidv4();
     // get the active connection elements
     var activeElements = getActiveConnectionElements();
+    console.log("Active: ",activeElements);
     var firstElement = null;
     var secondElement = null;
 
@@ -704,10 +711,12 @@ function iterateTree(originaltree,tree,id){
     });
 
     if(connections.length > 0){
-        tree.next.push({node: connections[0],previous: id,previousSymbol: symbol,next: []});
+        var con1 = $("#"+connections[0]).get(0);
+        tree.next.push({node: connections[0],symbol: $("#"+connections[0]).find(".symbol").html(),previous: id,previousSymbol: symbol,joincount: 0,next: [],position: {left: con1.style.left,top: con1.style.top},description: $(con1).find('.description').html()});
         iterateTree(originaltree,tree.next[0],connections[0]);
         if(connections.length > 1){
-            tree.next.push({node: connections[1],previous: id,previousSymbol: symbol,next: []});
+            var con2 = $("#"+connections[1]).get(0);
+            tree.next.push({node: connections[1],symbol: $("#"+connections[1]).find(".symbol").html(),previous: id,previousSymbol: symbol,joincount: 0,next: [],position: {left: con2.style.left,top: con2.style.top},description: $(con2).find('.description').html()});
             iterateTree(originaltree,tree.next[1],connections[1]);
         }
         return originaltree;
@@ -723,7 +732,8 @@ function getNodeTree(){
             // find starting node by searching for a node that has no connection on the top connection-dot but on the bottom one
             if(!$(this).find(".connection.top").hasClass('connect') && !$(this).find(".connection.top").hasClass('connected')){
                 if($(this).find(".connection.bottom").hasClass('connected')){
-                    tree = {node: $(this).attr('id'),previous: undefined,previousSymbol: undefined,next: []};
+                    var element = $(this).get(0);
+                    tree = {node: element.id,symbol: $(element).find(".symbol").html(),previous: undefined,previousSymbol: undefined,joincount: 0,position: {left: element.style.left,top: element.style.top},description: $(element).find('.description').html(),next: []};
                     return;
                 }
             }
@@ -734,12 +744,15 @@ function getNodeTree(){
     return nodeTree;
 }
 
-function buildStatement(originalTree,tree,statement,counter,paranthesisOpened,paranthesisClosed){
+function buildStatement(originalTree,tree,statement,counter,paranthesisOpened,paranthesisClosed,join){
     var currentNode = tree.node;
     var symbol = $("#"+currentNode).find('.symbol').html();
+    var join = symbol === "⋈";
+ 
     if(symbol === "Relation"){
-        statement += $("#"+currentNode).find('.description').html() + ")";
-        paranthesisClosed++
+        statement += "(" + $("#"+currentNode).find('.description').html();
+    } else if(symbol === "⋈") {
+        
     } else {
         statement += symbol + "<sub>"+$("#"+currentNode).find('.description').html()+"</sub>" + "(";
         paranthesisOpened++;
@@ -751,10 +764,10 @@ function buildStatement(originalTree,tree,statement,counter,paranthesisOpened,pa
     if(tree.next.length > 0){
         
         if(tree.next.length > 1){
-            buildStatement(originalTree,tree.next[0],statement,counter,paranthesisOpened,paranthesisClosed);
-            buildStatement(originalTree,tree.next[1],statement,counter,paranthesisOpened,paranthesisClosed);
+            buildStatement(originalTree,tree.next[0],statement,counter,paranthesisOpened,paranthesisClosed,join);
+            buildStatement(originalTree,tree.next[1],statement,counter,paranthesisOpened,paranthesisClosed,join);
         }
-        return buildStatement(originalTree,tree.next[0],statement,counter,paranthesisOpened,paranthesisClosed);
+        return buildStatement(originalTree,tree.next[0],statement,counter,paranthesisOpened,paranthesisClosed,join);
     } else {
         return {statement: statement,openParanthesis: paranthesisOpened,closedParanthesis: paranthesisClosed};
     }

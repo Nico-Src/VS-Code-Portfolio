@@ -1,3 +1,4 @@
 Edit-Window closes when saving Changes - [X] (By Leo)
+Implement Generate Statement for Nodes with 2 connections
 Linking on Mobile
 Better Mobile UI
