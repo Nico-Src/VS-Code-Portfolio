@@ -1,0 +1,195 @@
+.element .content{
+    width: calc(100% - 6px);
+    height: calc(100% - 6px);
+    border-radius: 50%;
+    background-color: #505050;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.element .content .symbol{
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    user-select: none;
+    margin: 0;
+}
+
+.element .content .symbol.small{
+    font-size: 18px;
+}
+
+.element .content .symbol.special{
+    font-family:'Asana Math' !important;
+}
+
+.element .content .connection{
+    transition: border .2s ease;
+}
+
+.element .content .connection.connect{
+    background-color: white !important;
+    border: 3px solid rgb(109, 109, 235) !important;
+}
+
+.element .content .connection.connected.connect{
+    background-color: rgb(27, 82, 27) !important;
+    border-color: rgb(105, 231, 105) !important;
+}
+
+.element .content .connection.connected{
+    background-color: white !important;
+    border: 3px solid rgb(101, 209, 86) !important;
+}
+
+.element .content .connection.top{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    background-color: #909090;
+    border: 3px solid #202020;
+    top: calc(-5px);
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.element .content .connection.bottom{
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    background-color: #909090;
+    border: 3px solid #202020;
+    bottom: calc(-5px);
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+.element .content .description{
+    white-space: nowrap;
+}
+
+.element .content .description.right{
+    width: fit-content;
+    position: absolute;
+    left: 80%;
+    background-color: #202020;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 10px 2px 10px;
+    bottom: 0;
+}
+
+.element .content .description.left{
+    width: fit-content;
+    position: absolute;
+    right: 80%;
+    background-color: #202020;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 10px 2px 10px;
+    bottom: 0;
+}
+
+.element .content .description.topRight{
+    width: fit-content;
+    position: absolute;
+    left: 80%;
+    background-color: #202020;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 10px 2px 10px;
+    top: 0;
+}
+
+.element .content .description.topLeft{
+    width: fit-content;
+    position: absolute;
+    right: 80%;
+    background-color: #202020;
+    color: white;
+    border-radius: 4px;
+    padding: 2px 10px 2px 10px;
+    top: 0;
+}
+
+.element {
+    position: absolute;
+    z-index: 9;
+    top: 20px;
+    transform: scale(1);
+    left: 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    transition: transform .7s ease-out;
+    align-items: center;
+    width: 100px;
+    height: 100px;
+    border-radius: 0px;
+    text-align: center;
+}
+
+.element.selected{
+    box-shadow: 0 0 16px 3px rgba(0,0,0,.4);
+    background-color: rgba(255,255,255,.7);
+    border: 3px solid rgb(59, 157, 248);
+}
+
+.element.selected .content{
+    width: 100% !important;
+    height: 100% !important; 
+}
+
+.element.selected .content .connection.bottom{
+    bottom: -8px;
+}
+
+.element.selected .content .connection.top{
+    top: -8px;
+}
+
+.element .content .description{
+    user-select: none;
+}
+
+.element.selected .content .description.right{
+    left: calc(80% + 2px);
+    bottom: -3px;
+}
+
+.element.selected .content .description.left{
+    right: calc(80% + 2px);
+    bottom: -3px;
+}
+
+.element.selected .content .description.topleft{
+    right: calc(80% + 2px);
+    top: -3px;
+}
+
+.element.selected .content .description.topRight{
+    left: calc(80% + 2px);
+    top: -3px;
+}
+
+.element.delete{
+    transform: scale(0);
+}
+
+.element p{
+    transform: scale(1);
+    transition: transform .7s ease-out;
+}
+
+.element.delete p{
+    transform: scale(0);
+}
+
+.selectable-line.selected{
+    border: 2px solid darkgreen !important;
+}

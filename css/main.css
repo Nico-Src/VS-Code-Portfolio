@@ -1,0 +1,322 @@
+/* FONT */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+*{
+    font-family: 'Poppins',sans-serif;
+    user-select: none;
+}
+
+.editor{
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    pointer-events: all !important;
+    transition: all .4s ease;
+    padding: 0 !important;
+}
+
+.editor-wrapper{
+    position: relative !important;
+    height: 600% !important;
+    width: 600% !important;
+    transform-box: fill-box;
+    transform-origin: 0% 0%;
+    background-size: 50px 50px;
+    background-image: radial-gradient(circle, rgba(50,50,50,.6) 2px, rgba(0, 0, 0, 0) 1px);
+}
+
+.editor-wrapper svg{
+    position: absolute;
+    margin: 0;
+}
+
+.editor-wrapper svg line {
+    stroke-dasharray: 10;
+    animation: dash 25s linear infinite;
+  }
+  
+@keyframes dash {
+    to {
+        stroke-dashoffset: 1000;
+    }
+}
+
+.zoom-level{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    border-radius: 16px;
+    color:white;
+    text-align: center;
+    width: 80px !important;
+    padding: 5px 15px 5px 15px;
+    background-color: #404040;
+    height: fit-content;
+    z-index: 2000;
+    box-shadow: 0 0 16px 3px rgba(0,0,0,.4);
+}
+
+.toolbar{
+    position: relative !important;
+    border-right: 2px solid gray;
+    transition: all .4s ease;
+    box-shadow: 0 0 16px 3px rgba(0,0,0,.4);
+    height: 100%;
+}
+
+.element-toolbar{
+    background-color: white !important;
+    z-index: 2000;
+    border-radius: 4px;
+    position: absolute;
+    width: fit-content !important;
+    height: 50px !important;
+    padding: 5px 10px 5px 10px;
+    top: 10px;
+    right: 10px;
+    opacity: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    display: none;
+    pointer-events: none;
+    padding: 5px;
+    box-shadow: 0 0 16px 3px rgba(0,0,0,.25);
+}
+
+.generatedStatement{
+    background-color: white !important;
+    z-index: 2000;
+    border-radius: 4px;
+    position: absolute;
+    width: fit-content !important;
+    max-width: 400px;
+    height: fit-content !important;
+    padding: 5px 10px 5px 10px;
+    top: 10px;
+    left: calc(16.66666667% + 10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+    box-shadow: 0 0 16px 3px rgba(0,0,0,.25);
+}
+
+.element-toolbar .option{
+    width: 70px;
+    display: flex;
+    color: #CCC;
+    justify-content: center;
+    align-items: center;
+    height: 95%;
+    transition: all .2s ease;
+    position: relative;
+}
+
+.element-toolbar .option .tip{
+    position: absolute;
+    top: calc(100% + 5px);
+    height: fit-content;
+    width: fit-content;
+    margin: auto;
+    text-align: center;
+    padding: 5px 10px 5px 10px;
+    display: none;
+    pointer-events: none;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    background-color: #404040;
+    color: white;
+    box-shadow: 0 0 16px 3px rgba(0,0,0,.4);
+}
+
+.element-toolbar .option:hover .tip{
+    display: block;
+    pointer-events: all;
+}
+
+.element-toolbar .option-xl{
+    width: 140px !important;
+    color: black !important;
+    font-weight: bold;
+}
+
+.element-toolbar .option:hover{
+    color: black;
+}
+
+.element-toolbar .option:not(.element-toolbar .option:last-child){
+    border-right: 2px solid #909090;
+}
+
+.toolbar{
+    padding: 5px 0px 5px 0px !important;
+    display: flex;
+    justify-content: flex-start;
+    overflow: auto;
+    align-items: center;
+    flex-direction: column;
+}
+
+.toolbar::-webkit-scrollbar{
+    width: 10px;
+}
+
+.toolbar::-webkit-scrollbar-track{
+    background-color: white;
+}
+
+.toolbar::-webkit-scrollbar-thumb{
+    background-color: #404040;
+    border-radius: 8px;
+    border-right: 3px solid white;
+}
+
+.toolbar .algebra-element{
+    border-radius: 4px;
+    margin: 5px 0;
+    height: 100px;
+    width: 95%;
+    overflow: hidden;
+    padding: 0;
+    border: 2px solid #404040;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transition: all .4s ease;
+}
+
+.toolbar .algebra-element:hover{
+    background-color: #505050;
+    color: white !important;
+}
+
+.toolbar .algebra-element p:first-child{
+    text-align: center;
+    margin: 0 !important;
+    white-space: nowrap;
+    font-size: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.toolbar .algebra-element p:last-child{
+    text-align: center;
+    margin: 0 !important;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
+    width: 98% !important;
+    max-width: 98% !important;
+    white-space: nowrap;
+    font-size: 16px;
+    font-weight: normal;
+    margin-bottom: 5px;
+}
+
+.tooltip{
+    z-index: 4000 !important;
+}
+
+.edit-box{
+    position: absolute;
+    top: 50%;
+    width: 200px !important;
+    transform: translateY(-50%);
+    right: 10px;
+    display: none;
+    opacity: 0;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    pointer-events: none;
+    background-color: white;
+    z-index: 4000;
+    box-shadow: 0 0 16px 3px rgba(0,0,0,.3);
+    border-radius: 6px;
+    height: 500px;
+}
+
+.edit-box .header .close-btn{
+    background-color: rgb(218, 71, 71);
+    height: 20px;
+    width: 20px;
+    color: white;
+    font-weight: bold;
+    margin-left: auto;
+    border-radius: 6px;
+    font-size: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .4s ease;
+}
+
+.edit-box .header .close-btn:hover{
+    background-color: rgb(138, 63, 63);
+}
+
+.edit-box .header{
+    height: 34px;
+    width: 94%;
+    font-size: 18px;
+    padding: 5px 5px 5px 5px;
+    border-bottom: 2px solid #808080;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #505050;
+    font-weight: bold;
+}
+
+.edit-box .footer{
+    height: 40px;
+    width: 94%;
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-top: 2px solid #808080;
+}
+
+.edit-box .footer button{
+    transform: scale(.8);
+}
+
+.edit-box .property{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 50px;
+    margin-top: 10px;
+    padding: 5px;
+}
+
+.edit-box .property span{
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+.edit-box .property input{
+    font-size: 16px;
+}
+
+.edit-box .id p{
+    margin: 0;
+}
+
+.edit-box .id{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    text-align: center;
+    height: fit-content;
+    margin-right: 5px;
+    font-size: 8px;
+    color: #606060;
+}
