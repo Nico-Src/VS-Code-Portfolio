@@ -10,6 +10,23 @@ function setupEditorEvents(){
     var editor = $(".editor-wrapper").get(0);
     editor.onwheel = wheel;
 
+    document.addEventListener('gestureend', function(e) {
+        if (e.scale < 1.0) {
+            editorObj.scale += (1 * -0.01) / 50.0;
+            editorObj.scale = Math.min(Math.max(.125, editorObj.scale), 4); // maximum is 400% and minimum is 12.5%
+
+            // scale background
+            $(".editor-wrapper").css('background-size',(50.0 * ((editorObj.scale * 100.0)))+'px '+(50.0 * ((editorObj.scale * 100.0)))+' px');
+        } else if (e.scale > 1.0) {
+            // User moved fingers further apart
+            editorObj.scale += (2 * -0.01) / 50.0;
+            editorObj.scale = Math.min(Math.max(.125, editorObj.scale), 4); // maximum is 400% and minimum is 12.5%
+
+            // scale background
+            $(".editor-wrapper").css('background-size',(50.0 * ((editorObj.scale * 100.0)))+'px '+(50.0 * ((editorObj.scale * 100.0)))+' px');
+        }
+    }, false);
+
     function wheel(event) {
         event.preventDefault();
         // increase or decrease scale according to deltaY of the mouse wheel
@@ -360,6 +377,8 @@ function dragElement(elmnt) {
 
 function countSelected(){
     var selectedElements = [];
+    var elementCounter = $(".element-counter");
+    var elementToolbar = $(".element-toolbar");
 
     // add all elements to list
     $(".element.selected").each(function(){
@@ -368,18 +387,18 @@ function countSelected(){
 
     // if there is one selected element display all options
     if(selectedElements.length == 1){
-        $(".element-toolbar").stop().animate({opacity: 1});
-        $(".element-toolbar").css('display','flex');
-        $(".element-toolbar").css('pointer-events','all');
+        elementToolbar.stop().animate({opacity: 1});
+        elementToolbar.css('display','flex');
+        elementToolbar.css('pointer-events','all');
         $(".element-toolbar .option").each(function(){
             $(this).css('display','flex');
             $(this).css('pointer-events','all');
         });
         // if there are more than one only display options that are suited for multiple elements
     } else if (selectedElements.length > 1){
-        $(".element-toolbar").stop().animate({opacity: 1});
-        $(".element-toolbar").css('display','flex');
-        $(".element-toolbar").css('pointer-events','all');
+        elementToolbar.stop().animate({opacity: 1});
+        elementToolbar.css('display','flex');
+        elementToolbar.css('pointer-events','all');
         $(".element-toolbar .option").each(function(){
             if($(this).hasClass('single')){
                 $(this).css('display','none');
@@ -388,16 +407,16 @@ function countSelected(){
         });
         // if there is no selected elements hide the element toolbar
     } else {
-        $(".element-toolbar").stop().animate({opacity: 0},function(){
-            $(".element-toolbar").css('display','none');
-            $(".element-toolbar").css('pointer-events','none');
+        elementToolbar.stop().animate({opacity: 0},function(){
+            $(this).css('display','none');
+            $(this).css('pointer-events','none');
         });
     }
 
     if(selectedElements.length == 1){
-        $(".element-counter").html(selectedElements.length + ' Element');
+        elementCounter.html(selectedElements.length + ' Element');
     } else {
-        $(".element-counter").html(selectedElements.length + ' Elements');
+        elementCounter.html(selectedElements.length + ' Elements');
     }
     return selectedElements.length;
 }
