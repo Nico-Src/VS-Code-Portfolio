@@ -753,7 +753,8 @@ function buildStatement(originalTree,tree,statement,counter,paranthesisOpened,pa
             buildStatement(originalTree,tree.next[0],statement,counter,paranthesisOpened,paranthesisClosed);
             buildStatement(originalTree,tree.next[1],statement,counter,paranthesisOpened,paranthesisClosed);
         }
-        else return buildStatement(originalTree,tree.next[0],statement,counter,paranthesisOpened,paranthesisClosed);
+        buildStatement(originalTree,tree.next[0],statement,counter,paranthesisOpened,paranthesisClosed);
+        return {statement: statement,openParanthesis: paranthesisOpened,closedParanthesis: paranthesisClosed};
     } else {
         return {statement: statement,openParanthesis: paranthesisOpened,closedParanthesis: paranthesisClosed};
     }
