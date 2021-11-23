@@ -13,14 +13,7 @@ function setupEditorEvents(){
     document.addEventListener('gestureend', function(e) {
         if (e.scale < 1.0) {
             editorObj.scale += (1 * -0.01) / 50.0;
-            editorObj.scale = Math.min(Math.max(.125, editorObj.scale), 4); // maximum is 400% and minimum is 12.5%
-
-            // scale background
-            $(".editor-wrapper").css('background-size',(50.0 * ((editorObj.scale * 100.0)))+'px '+(50.0 * ((editorObj.scale * 100.0)))+' px');
-        } else if (e.scale > 1.0) {
-            // User moved fingers further apart
-            editorObj.scale += (2 * -0.01) / 50.0;
-            editorObj.scale = Math.min(Math.max(.125, editorObj.scale), 4); // maximum is 400% and minimum is 12.5%
+            editorObj.scale = Math.min(Math.max(.17, editorObj.scale), 2); // maximum is 200% and minimum is 17%
 
             // scale background
             $(".editor-wrapper").css('background-size',(50.0 * ((editorObj.scale * 100.0)))+'px '+(50.0 * ((editorObj.scale * 100.0)))+' px');
@@ -31,7 +24,7 @@ function setupEditorEvents(){
         event.preventDefault();
         // increase or decrease scale according to deltaY of the mouse wheel
         editorObj.scale += (event.deltaY * -0.01) / 50.0;
-        editorObj.scale = Math.min(Math.max(.125, editorObj.scale), 4); // maximum is 400% and minimum is 12.5%
+        editorObj.scale = Math.min(Math.max(0.17, editorObj.scale), 2); // maximum is 400% and minimum is 12.5%
 
         // scale background
         $(".editor-wrapper").css('background-size',(50.0 * ((editorObj.scale * 100.0)))+'px '+(50.0 * ((editorObj.scale * 100.0)))+' px');

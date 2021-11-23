@@ -93,6 +93,7 @@
     width: fit-content !important;
     max-width: 400px;
     height: fit-content !important;
+    width: -moz-fit-content !important;
     padding: 5px 10px 5px 10px;
     top: 10px;
     left: calc(16.66666667% + 10px);
