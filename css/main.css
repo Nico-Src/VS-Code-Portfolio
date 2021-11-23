@@ -71,6 +71,7 @@
     border-radius: 4px;
     position: absolute;
     width: fit-content !important;
+    width: -moz-fit-content !important;
     height: 50px !important;
     padding: 5px 10px 5px 10px;
     top: 10px;
@@ -119,7 +120,8 @@
     position: absolute;
     top: calc(100% + 5px);
     height: fit-content;
-    width: fit-content;
+    width: fit-content !important;
+    width: -moz-fit-content !important;
     margin: auto;
     text-align: center;
     padding: 5px 10px 5px 10px;
