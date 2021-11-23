@@ -168,6 +168,16 @@
         }
 
         function loadFileToEditor(data){
+            editorObj.elements = [];
+            editorObj.lines = [];
+            editorObj.lastActiveConnection = null;
+            $(".element").each(function(){
+                this.parentElement.removeChild(this);
+            });
+
+            $("svg").each(function(){
+                this.parentElement.removeChild(this);
+            });
             console.log("Loaded File: ",data);
             iterateLoadedTree(data,data);
             loadConnections(data.connections);
