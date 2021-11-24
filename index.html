@@ -2,7 +2,15 @@
     <head>
         <title>Relationale Algebra</title>
         <meta charset="utf-8"/>
+        <style>
+            .enjoyhint_close_btn{
+                display: none !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+            }
+        </style>
         <link rel="icon" href="favico.ico">
+        <link href="js/enjoyhint/enjoyhint.css" rel="stylesheet">
         <link id="mainStyle" rel="stylesheet" href="css/main.css">
         <link id="elementStyle" rel="stylesheet" href="css/elements.css">
         <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -14,16 +22,16 @@
             <div class="element-toolbar">
                 <div class="option option-xl element-counter">0 Elements</div>
                 <div class="option" onmousedown="deleteSelected();"><i class="fa fa-trash-o" aria-hidden="true"></i><div class="tip">Delete <kbd>ENTF</kbd></div></div>
-                <div class="option single" onmousedown="toggleEditorWindow();"><i class="fa fa-pencil" aria-hidden="true"></i><div class="tip">Edit <kbd>E</kbd></div></div>
-                <div class="option" onmousedown="unselectedAll();"><i class="fa fa-times" aria-hidden="true"></i><div class="tip">Unselect <kbd>ESC</kbd></div></div>
+                <div class="option single" onmousedown="toggleEditorWindow();" id="edit-btn"><i class="fa fa-pencil" aria-hidden="true"></i><div class="tip">Edit <kbd>E</kbd></div></div>
+                <div class="option" onmousedown="unselectedAll();" id="unselect-btn"><i class="fa fa-times" aria-hidden="true"></i><div class="tip">Unselect <kbd>ESC</kbd></div></div>
             </div>
             <div class="generatedStatement">Statement: None</div>
             <div class="edit-box col-2" state="closed">
-                <div class="header"><span>Edit</span><div class="close-btn" onmousedown="closeEditorWindow();"><i class="fa fa-times" aria-hidden="true"></i></div></div>
+                <div class="header"><span>Edit</span><div class="close-btn" id="editor-close-btn" onmousedown="closeEditorWindow();"><i class="fa fa-times" aria-hidden="true"></i></div></div>
                 <div class="id"><p>ID: 12419ß41941249102</p></div>
                 <div class="property">
                     <span>Fußnote:</span>
-                    <input type="text" class="form-control" id="description-input">
+                    <input type="text" onkeydown="editInputKeyDown();" class="form-control" id="description-input">
                 </div>
                 <div class="footer"><button onclick="saveEditorChanges();" class="btn btn-success">Save</button></div>
             </div>
@@ -34,7 +42,7 @@
                         <button class="btn btn-success m-2" style="width: 50px;" onclick="loadTree();"><i class="fa fa-file-text" aria-hidden="true"></i></button>
                         <button class="btn btn-success m-2" style="width: 50px;" onclick="showSettings();"><i class="fa fa-cogs" aria-hidden="true"></i></button>
                     </div>
-                    <div class="algebra-element col-12" onmousedown="addElement(this,false,true);">
+                    <div class="algebra-element col-12 pi-element" onmousedown="addElement(this,false,true);">
                         <p class="symbol">Relation</p>
                         <p class="name">Table</p>
                     </div>
@@ -99,12 +107,15 @@
         <input id="file-input" type="file" name="name" style="display: none;" />
         
         <script src="js/jquery-3.6.0.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/kineticjs/5.2.0/kinetic.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
         <script src="js/jquery-ui.js"></script>
         <script src="js/jquery-connect/required/script/jquery.connectingLine.js"></script>
         <script src="bootstrap/js/bootstrap.bundle.js"></script>
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
         <script src="js/fontawesome.js" crossorigin="anonymous"></script>
         <script src="js/editor.js"></script>
+        <script src="js/enjoyhint/enjoyhint.js"></script>
         <script>
         </script>
     </body>
@@ -112,6 +123,108 @@
         var currentMaxZIndex = 9;
         var dragDistance = 1000;
         var animationsEnabled = true;
+        var tutorialActive = false;
+        var enjoyhint_instance = "";
+        var tutorialElement = "";
+
+        function tutorialConnection(){
+            console.log("pressed key");
+            console.log(window.event.keyCode);
+            if(window.event.keyCode === 76){
+                connect();
+            }
+        }
+
+        function setupTutorial(){
+            var el = "";
+            var id = uuidv4();
+            var tutorialElement = id;
+            el = $("<div class='element tutorial' onkeydown='tutorialConnection();' style='z-index: 10;top: "+100+"; left: "+413+"px;' id='"+id+"'><div class='content' onkeydown='tutorialConnection();'><p class='symbol special' onkeydown='tutorialConnection();'>π</p><div onkeydown='tutorialConnection();' class='' id='"+id+"top'></div><div onkeydown='tutorialConnection();' class='connection bottom tutorial' id='"+id+"bottom'></div><div class='description tutorial right' style='display: none; opacity: 0;pointer-events:none;' onclick='switchPlacement(this);'></div></div></div>");
+            editorObj.elements.push({
+                    id: id,
+                    domElement: el.get(0),
+                    description: "",
+                    connections: [
+                        {
+                            type: 'top',
+                            status: 'disconnected'
+                        },
+                        {
+                            type: 'bottom',
+                            status: 'disconnected'
+                        }
+                    ]
+            });
+            $(".editor-wrapper").append(el);
+            tutorialActive = true;
+            //initialize instance
+            enjoyhint_instance = new EnjoyHint({
+                onEnd:function(){
+                    tutorialActive = false;
+                    localStorage.setItem('tutorialFinished',true);
+                    location.reload();
+                },
+                onSkip:function(){
+                    tutorialActive = false;
+                    localStorage.setItem('tutorialFinished',true);
+                    location.reload();
+                }
+            });
+
+            console.log(editorObj.elements);
+
+            //simple config. 
+            //Only one step - highlighting(with description) "New" button 
+            //hide EnjoyHint after a click on the button.
+            var enjoyhint_script_steps = [
+                {
+                    'click .pi-element' : 'Click on the <b>Relation-Element</b> to create a "new" Element in the Editor'
+                },
+                {
+                    'click .element:not(.tutorial)' : 'Click on the "newly" created Element in the Editor<br>(Later you can select multiple elements while holding <kbd>CTRL</kbd>)'
+                },
+                {
+                    'next .element-toolbar' : 'Here you can see how many Elements are selected and the available Options<br>Click "Next" to proceed'
+                },
+                {
+                    'click #unselect-btn' : 'Click on the <b>Unselect-Button</b> to deselect all selected Elements'
+                },
+                {
+                    'click .element:not(.tutorial)' : 'Click on the Element to select it again'
+                },
+                {
+                    'click #edit-btn' : 'This time, click on the <b>Edit-Button</b>'
+                },
+                {
+                    'next #editor-close-btn' : 'You can click this Button to close the Edit-Window<br>Click "Next" to proceed'
+                },
+                {
+                    'key #description-input' : 'Type in a description for the Element you just created and press <b>Enter</b> to save it<br>(Alternatively you can just press the <b>Save-Button</b> below)',
+                    'keyCode': 13
+                },
+                {
+                    'next .description:not(.tutorial)' : 'You can click on the Footnote to move it to the next edge<br> in case it is in the way of other elements'
+                },
+                {
+                    ['click #' + editorObj.elements[0].id+'bottom'] : 'Click on the Bottom-Connection Dot to <b><i>Activate</i></b> it'
+                },
+                {
+                    ['click .' + 'connection.top'] : 'Click on the Top-Connection Dot to <b><i>Activate</i></b> it'
+                },
+                {
+                    'next .element.tutorial' : 'If there are 2 active connection dots you can press <kbd>L</kbd> to connect them<br> or press <kbd>Delete</kbd> to remove an existing line',
+                },
+                {
+                    'next .element.tutorial' : 'If there are 2 active connection dots you can press <kbd>L</kbd> to connect them<br> or press <kbd>Delete</kbd> to remove an existing line',
+                },
+            ];
+
+            //set script config
+            enjoyhint_instance.set(enjoyhint_script_steps);
+
+            //run Enjoyhint script
+            enjoyhint_instance.run();
+        }
 
         function uuidv4() {
             return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -140,6 +253,13 @@
             $("#animation-toggle").prop('checked',animationsEnabled);
         }
 
+        function editInputKeyDown(){
+            if(window.event.keyCode === 13){
+                saveEditorChanges();
+                closeEditor();
+            }
+        }
+
         function showSettings(){
             $("#window-overlay").css('display','flex');
             $("#window-overlay").css('pointer-events','all');
@@ -162,6 +282,12 @@
         }
 
         $(document).ready(function(){
+            var tutorialFinished = localStorage.getItem('tutorialFinished');
+            console.log(tutorialFinished);
+            if(tutorialFinished === 'true'){
+
+            }
+            else setupTutorial();
             $('#animation-toggle').change(function() {
                 if(this.checked){
                     animationsEnabled = true;
@@ -330,7 +456,7 @@
             var smallFont = (node.symbol === "Relation") ? true : false;
             var el = "";
             if(node.description.trim() === ""){
-                el = $("<div class='element' style='z-index: 10;top: "+node.position.top+"; left: "+node.position.left+";' id='"+node.node+"'><div class='content'><p class='symbol "+(specialFont ? 'special' : '')+" "+(smallFont ? 'small' : '')+"'>"+node.symbol+"</p><div class='connection top' id='"+node.node+"top'></div><div class='connection bottom' id='"+node.node+"bottom'></div><div class='description right' style='opacity: 0; display: none;' onclick='switchPlacement(this);'></div></div></div>");
+                el = $("<div class='element' style='z-index: 10;top: "+node.position.top+"; left: "+node.position.left+";' id='"+node.node+"'><div class='content'><p class='symbol "+(specialFont ? 'special' : '')+" "+(smallFont ? 'small' : '')+"'>"+node.symbol+"</p><div class='connection top' id='"+node.node+"top'></div><div class='connection bottom' id='"+node.node+"bottom'></div><div class='description right' style='opacity: 0; display: none; pointer-events:none;' onclick='switchPlacement(this);'></div></div></div>");
             } else {
                 el = $("<div class='element' style='z-index: 10;top: "+node.position.top+"; left: "+node.position.left+";' id='"+node.node+"'><div class='content'><p class='symbol "+(specialFont ? 'special' : '')+" "+(smallFont ? 'small' : '')+"'>"+node.symbol+"</p><div class='connection top' id='"+node.node+"top'></div><div class='connection bottom' id='"+node.node+"bottom'></div><div class='description right' onclick='switchPlacement(this);'>"+node.description+"</div></div></div>");
             }
@@ -379,7 +505,7 @@
             left -= 50; // add elements own radius
             left /= editorObj.scale;
             var symbolHTML = $(symbol).find(".symbol").html();
-            var el = $("<div class='element' style='top: "+top+"px; left: "+left+"px;' id='"+id+"'><div class='content'><p class='symbol "+(specialFont ? 'special' : '')+" "+(smallFont ? 'small' : '')+"'>"+symbolHTML+"</p><div class='connection top' id='"+id+"top'></div><div class='connection bottom' id='"+id+"bottom'></div><div class='description right' style='opacity: 0; display: none;' onclick='switchPlacement(this);'></div></div></div>").get(0);
+            var el = $("<div class='element' style='top: "+top+"px; left: "+left+"px;' id='"+id+"'><div class='content'><p class='symbol "+(specialFont ? 'special' : '')+" "+(smallFont ? 'small' : '')+"'>"+symbolHTML+"</p><div class='connection top' id='"+id+"top'></div><div class='connection bottom' id='"+id+"bottom'></div><div class='description right' style='opacity: 0; display: none;pointer-events:none;' onclick='switchPlacement(this);'></div></div></div>").get(0);
             $(".editor-wrapper").append(el);
             editorObj.elements.push({
                 id: id,
@@ -402,6 +528,7 @@
         }
 
         function deleteSelected(e){
+            if(tutorialActive) return;
             e = e || window.event;
             if(e.which === 1){
                 $(".element.selected").each(function(){
@@ -420,6 +547,15 @@
         }
 
         function unselectedAll(e){
+            if(enjoyhint_instance !== ""){
+                var currentTutorialStep = enjoyhint_instance.getCurrentStep();
+                if(tutorialActive === true)
+                {
+                    if(currentTutorialStep !== 3){
+                        return;
+                    }
+                } 
+            }
             e = e || window.event;
             if(e.which === 1){
                 $(".element.selected").each(function(){
@@ -430,6 +566,7 @@
         }
 
         function closeEditorWindow(e){
+            if(tutorialActive) return;
             e = e || window.event;
             if(e.which === 1){
                 closeEditor();
@@ -437,6 +574,15 @@
         }
 
         function toggleEditorWindow(e){
+            if(enjoyhint_instance !== ""){
+                var currentTutorialStep = enjoyhint_instance.getCurrentStep();
+                if(tutorialActive)
+                {
+                    if(currentTutorialStep !== 5){
+                        return;
+                    }
+                } 
+            }
             e = e || window.event;
             if(e.which === 1){
                 toggleEditor();
@@ -444,6 +590,7 @@
         }
 
         function switchPlacement(el){
+            if(tutorialActive)return;
             if($(el).hasClass('left')){
                 $(el).removeClass('left');
                 $(el).addClass('topLeft');

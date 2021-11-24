@@ -44,6 +44,7 @@ function dragElement(elmnt) {
   document.onkeydown = onKeyDown;
 
   function onKeyDown(e){
+    if(tutorialActive) return;
     e = e || window.event;
     if(e.keyCode == 46){ // delete
         // delete every selected element
@@ -200,6 +201,7 @@ function dragElement(elmnt) {
         // check if clicked element was a connection or an element
         if($(e.target).hasClass('connection')){
             // get id of element
+            console.log("connection clicked");
             var parentId = $(e.target.parentElement.parentElement).attr('id');
             // get editor element with id
             var editorElement = getEditorElement(parentId);
@@ -668,9 +670,11 @@ function saveEditorChanges(){
         if(newDesc.trim() === ""){
             $(selected).find(".description").animate({opacity: 0},function(){
                 $(selected).find(".description").css('display','none');
+                $(selected).find(".description").css('pointer-events','none');
                 $(selected).find(".description").html(newDesc);
             });
         } else {
+            $(selected).find(".description").css('pointer-events','all');
             $(selected).find(".description").css('display','flex');
             $(selected).find(".description").animate({opacity: 1});
             $(selected).find(".description").html(newDesc);
