@@ -99,8 +99,7 @@
 }
 
 .editor-wrapper svg line {
-    stroke-dasharray: 10;
-    animation: dash 25s linear infinite;
+    animation: none;
 }
 
 @keyframes dash {

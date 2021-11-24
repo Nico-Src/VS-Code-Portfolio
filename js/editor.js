@@ -104,12 +104,15 @@ function dragElement(elmnt) {
                 }
             });
             // fade out element
-            $(this).animate({opacity: 0},500,function(){
-                // remove element
+            if(animationsEnabled){
+                $(this).animate({opacity: 0},500,function(){
+                    this.parentElement.removeChild(this);
+                    countSelected();
+                });
+            } else {
                 this.parentElement.removeChild(this);
-                // recount selected elements to decide if element toolbar should be visible or not
                 countSelected();
-            });
+            }
         });
 
         var elements = getActiveConnectionElements();
@@ -176,6 +179,7 @@ function dragElement(elmnt) {
         connect();
     } else if (e.keyCode == 69){ // E - Key for editing
         if(getSelectedCount() == 1){
+            console.log("toggle edit")
             toggleEditor();
         }
     }
