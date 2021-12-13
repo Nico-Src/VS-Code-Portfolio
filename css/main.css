@@ -7,6 +7,45 @@
     touch-action: none;
 }
 
+.drop-zone{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    inset: 0;
+    z-index: 10000;
+    background-color: rgba(0,0,0,.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility:hidden;
+    opacity: 0;
+}
+
+.drop-zone.dragging{
+    background-color: rgb(186, 247, 136);
+}
+
+.drop-zone .drop-border i{
+    color: white;
+    pointer-events: none;
+    font-size: 60px;
+}
+
+.drop-zone .drop-border{
+    width: 96%;
+    height: 96%;
+    display: flex;
+    flex-direction: column;
+    pointer-events: none;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color: white;
+    font-weight: bold;
+    border: 4px dotted white;
+    border-radius: 12px;
+}
+
 #window-overlay{
     position: absolute;
     inset: 0;

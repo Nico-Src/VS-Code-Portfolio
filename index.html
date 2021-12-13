@@ -3,6 +3,25 @@
         <title>Relationale Algebra</title>
         <meta charset="utf-8"/>
         <style>
+            body{
+                background: url(images/repeatbg.png);
+                background-repeat: repeat;
+                background-size: 15%;
+                animation: bg-anim 100s linear infinite; /* background movement */
+            }
+
+            @keyframes bg-anim{
+                0% {
+                    background-position: 0% 0%;
+                }
+                50% { 
+                    background-position: -187% -187%;
+                }
+
+                100% { 
+                    background-position: 0% 0%;
+                }
+            }
             .project{
                 width: fit-content;
                 height: 75px;
@@ -11,7 +30,7 @@
                 justify-content: center;
                 align-items: center;
                 color: white;
-                background-color: #202020;
+                background-color: #505050;
                 font-size: 24px;
                 transition: all .4s ease;
                 box-shadow: 0 0 16px 3px rgba(0,0,0,.3);
@@ -20,10 +39,10 @@
 
             .project:hover{
                 transform: scale(1.05);
-                background-color: #000;
+                background-color: #707070;
             }
         </style>
-        <link rel="icon" href="favico.ico">
+        <link rel="icon" href="icon.png">
         <link href="js/enjoyhint/enjoyhint.css" rel="stylesheet">
         <link id="mainStyle" rel="stylesheet" href="css/main.css">
         <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
