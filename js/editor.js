@@ -671,7 +671,7 @@ function saveEditorChanges(){
                 $(selected).find(".description").html(newDesc);
             });
         } else if (newDesc.trim() === "Oarsch Beamer") {
-            $(selected).find(".content").css('background','url(../images/kvic.png)');
+            //$(selected).find(".content").css('background','url(../images/kvic.png)');
             $(selected).find(".content").css('background-position','center center');
             $(selected).find(".content").css('background-size','110%');
             $(selected).find(".content").css('background-repeat','no-repeat');
@@ -680,7 +680,7 @@ function saveEditorChanges(){
             $(selected).find(".description").animate({opacity: 1});
             $(selected).find(".description").html(newDesc);
         } else if (newDesc.trim() === "Daddy") {
-            $(selected).find(".content").css('background','url(../images/feih.jpg)');
+            //$(selected).find(".content").css('background','url(../images/feih.jpg)');
             $(selected).find(".content").css('background-position','center center');
             $(selected).find(".content").css('background-size','110%');
             $(selected).find(".content").css('background-repeat','no-repeat');
@@ -689,7 +689,7 @@ function saveEditorChanges(){
             $(selected).find(".description").animate({opacity: 1});
             $(selected).find(".description").html(newDesc);
         } else if (newDesc.trim() === "Mommy") {
-            $(selected).find(".content").css('background','url(../images/dawu.jpg)');
+            //$(selected).find(".content").css('background','url(../images/dawu.jpg)');
             $(selected).find(".content").css('background-position','center center');
             $(selected).find(".content").css('background-size','110%');
             $(selected).find(".content").css('background-repeat','no-repeat');
