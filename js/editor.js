@@ -662,13 +662,43 @@ function saveEditorChanges(){
         var selectedElement = getEditorElement(selectedId);
         var newDesc = $(".edit-box #description-input").val().replace('<','&lt;').replace('>','&gt;');
         selectedElement.description = newDesc;
+        console.log(newDesc);
         if(newDesc.trim() === ""){
             $(selected).find(".description").animate({opacity: 0},function(){
                 $(selected).find(".description").css('display','none');
+                $(selected).find(".content").css('background','#505050');
                 $(selected).find(".description").css('pointer-events','none');
                 $(selected).find(".description").html(newDesc);
             });
+        } else if (newDesc.trim() === "Oarsch Beamer") {
+            $(selected).find(".content").css('background','url(../images/kvic.png)');
+            $(selected).find(".content").css('background-position','center center');
+            $(selected).find(".content").css('background-size','110%');
+            $(selected).find(".content").css('background-repeat','no-repeat');
+            $(selected).find(".description").css('pointer-events','all');
+            $(selected).find(".description").css('display','flex');
+            $(selected).find(".description").animate({opacity: 1});
+            $(selected).find(".description").html(newDesc);
+        } else if (newDesc.trim() === "Daddy") {
+            $(selected).find(".content").css('background','url(../images/feih.jpg)');
+            $(selected).find(".content").css('background-position','center center');
+            $(selected).find(".content").css('background-size','110%');
+            $(selected).find(".content").css('background-repeat','no-repeat');
+            $(selected).find(".description").css('pointer-events','all');
+            $(selected).find(".description").css('display','flex');
+            $(selected).find(".description").animate({opacity: 1});
+            $(selected).find(".description").html(newDesc);
+        } else if (newDesc.trim() === "Mommy") {
+            $(selected).find(".content").css('background','url(../images/dawu.jpg)');
+            $(selected).find(".content").css('background-position','center center');
+            $(selected).find(".content").css('background-size','110%');
+            $(selected).find(".content").css('background-repeat','no-repeat');
+            $(selected).find(".description").css('pointer-events','all');
+            $(selected).find(".description").css('display','flex');
+            $(selected).find(".description").animate({opacity: 1});
+            $(selected).find(".description").html(newDesc);
         } else {
+            $(selected).find(".content").css('background','#505050');
             $(selected).find(".description").css('pointer-events','all');
             $(selected).find(".description").css('display','flex');
             $(selected).find(".description").animate({opacity: 1});
