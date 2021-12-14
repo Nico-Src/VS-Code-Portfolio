@@ -17,7 +17,7 @@
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     </head>
     <body>
-        <div class="row m-0 p-0 w-100 h-100">
+        <div class="row m-0 p-0 w-100 h-100 editor-window">
             <div class="zoom-level" onmousedown="resetZoom();">100%</div>
             <div class="element-toolbar">
                 <div class="option option-xl element-counter">0 Elements</div>
@@ -84,8 +84,8 @@
                     </div>
             </div>
 
-            <div class="editor col-10">
-                <div class="editor-wrapper">
+            <div class="editor col-10" ondragover="allowDrop(event);">
+                <div class="editor-wrapper" ondragover="allowDrop(event);">
                 </div>
             </div>
 
@@ -101,13 +101,6 @@
                         </label>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="drop-zone">
-            <div class="drop-border">
-                <i class="fa fa-file" aria-hidden="true"></i>
-                <p>Drag and Drop your .tree file here.</p>
             </div>
         </div>
 
@@ -135,38 +128,16 @@
         var tutorialElement = "";
         var lastTarget = "";
 
-        window.addEventListener("dragenter", function(e)
-        {
-            e.stopPropagation();
-            console.log("dragged");
-            lastTarget = e.target; // cache the last target here
-            // unhide our dropzone overlay
-            document.querySelector(".drop-zone").style.visibility = "visible";
-            document.querySelector(".drop-zone").style.opacity = 1;
-            document.querySelector(".editor-wrapper").style.visibility = "visible";
-            document.querySelector(".drop-zone").style.opacity = 1;
-        });
+        function drop(e){
+            e.preventDefault();
+        }
 
-        window.addEventListener("dragleave", function(e)
-        {
-            e.stopPropagation();
-            console.log("undragged");
-            console.log("Last Target: ",lastTarget);
-            // this is the magic part. when leaving the window,
-            // e.target happens to be exactly what we want: what we cached
-            // at the start, the dropzone we dragged into.
-            // so..if dragleave target matches our cache, we hide the dropzone.
-            // `e.target === document` is a workaround for Firefox 57
-            if(e.target === lastTarget || e.target === document)
-            {
-                document.querySelector(".drop-zone").style.visibility = "hidden";
-                document.querySelector(".drop-zone").style.opacity = 0;
-            }
-        });
+        function allowDrop(e){
+            $("#file-input").css('pointer-events','all');
+            e.preventDefault();
+        }
 
         function tutorialConnection(){
-            console.log("pressed key");
-            console.log(window.event.keyCode);
             if(window.event.keyCode === 76){
                 connect();
             }
@@ -207,8 +178,6 @@
                     location.reload();
                 }
             });
-
-            console.log(editorObj.elements);
 
             //simple config. 
             //Only one step - highlighting(with description) "New" button 
@@ -320,28 +289,7 @@
 
         $(document).ready(function(){
             var tutorialFinished = localStorage.getItem('tutorialFinished');
-            console.log(tutorialFinished);
             // Event Handler for dragging over area
-            $(".drop-zone").on('dragenter',function(event){
-                event.preventDefault();
-                $(".drop-zone").addClass('dragging');
-                return false;
-            });
-            // Event Handler for leaving area
-            $(".drop-zone").on('dragleave',function(event){
-                event.preventDefault();
-                $(".drop-zone").removeClass('dragging');
-                return false;
-            });
-            // if file gets dragged onto the area handle the file
-            $(".drop-zone").get(0).addEventListener('dragdrop', function (e) {
-                onFileDragged();
-            }, false);
-
-            //if file gets changed manually handle the file
-            $(".drop-zone").get(0).addEventListener('change', function (e) {
-                onFileDragged();
-            }, false);
             if(tutorialFinished === 'true'){
 
             }
@@ -369,14 +317,13 @@
             const fileSelector = document.getElementById('file-input');
             fileSelector.addEventListener('change', (event) => {
                 const fileList = event.target.files;
-                console.log(fileList[0]);
                 loadFile(fileList[0]);
+                $("#file-input").css('pointer-events','none');
             });
             setupEditorEvents();
             $( ".editor-wrapper" ).draggable({
                 refreshPositions: true,
                 drag: function( event, ui){ 
-                    console.log(ui.position);
                     if(ui.position.left > 0) ui.position.left = 0;
                     if(ui.position.top > 0) ui.position.top = 0;
                     if(ui.position.left < (-3392 * editorObj.scale)) ui.position.left = -3392.0 * editorObj.scale;
@@ -424,6 +371,11 @@
         }
 
         function loadFile(file){
+            if(!file.name.includes(".tree")){
+                console.log(file.name.split('.')[0] + " ist kaka und davon muss ich brechen");
+                $("#file-input").css('pointer-events','none');
+                return;
+            }
             var reader = new FileReader();
             reader.readAsText(file, "UTF-8");
             reader.onload = function (evt) {
@@ -442,7 +394,6 @@
             $("svg").each(function(){
                 this.parentElement.removeChild(this);
             });
-            console.log("Loaded File: ",data);
             iterateLoadedTree(data,data);
             loadConnections(data.connections);
             $(".element").each(function(){
@@ -509,7 +460,6 @@
         }
 
         function generateElement(node){
-            console.log("Node: ",node);
             var specialFont = (node.symbol === "π" || node.symbol === "σ" || node.symbol === "γ" || node.symbol === "ρ") ? true : false;
             var smallFont = (node.symbol === "Relation") ? true : false;
             var el = "";

@@ -160,8 +160,6 @@ function dragElement(elmnt) {
             editorObj.lines = editorObj.lines.filter(function(item) {
                 return item !== lineToRemove
             });
-
-            console.log(editorObj.lines);
         }
 
     } else if (e.keyCode == 37){ // arrow left
@@ -180,7 +178,6 @@ function dragElement(elmnt) {
         connect();
     } else if (e.keyCode == 69){ // E - Key for editing
         if(getSelectedCount() == 1){
-            console.log("toggle edit")
             toggleEditor();
         }
     }
@@ -201,7 +198,6 @@ function dragElement(elmnt) {
         // check if clicked element was a connection or an element
         if($(e.target).hasClass('connection')){
             // get id of element
-            console.log("connection clicked");
             var parentId = $(e.target.parentElement.parentElement).attr('id');
             // get editor element with id
             var editorElement = getEditorElement(parentId);
@@ -570,7 +566,6 @@ function connect(){
     var id = uuidv4();
     // get the active connection elements
     var activeElements = getActiveConnectionElements();
-    console.log("Active: ",activeElements);
     var firstElement = null;
     var secondElement = null;
 
@@ -759,7 +754,6 @@ function buildStatement(originalTree,tree,statement,counter,paranthesisOpened,pa
         paranthesisOpened++;
     }
 
-    console.log(statement);
     counter++;
 
     if(tree.next.length > 0){
