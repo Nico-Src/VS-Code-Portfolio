@@ -29,6 +29,8 @@
                 height: 75px;
                 padding: 10px;
                 display: flex;
+				margin-left: 10px;
+				margin-right: 10px;
                 justify-content: center;
                 align-items: center;
                 color: white;
@@ -55,6 +57,10 @@
         <div class="project" onclick="GoToProject('relational-algebra');">
             Relationale Algebra
         </div>
+		
+		<div class="project" onclick="GoToProject('generative-art');">
+            Generative Art
+        </div>
         
         <script src="js/jquery-3.6.0.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/kineticjs/5.2.0/kinetic.js"></script>
@@ -68,7 +74,7 @@
         <script src="js/enjoyhint/enjoyhint.js"></script>
         <script>
             function GoToProject(link){
-                window.location.href = "relational-algebra";
+                window.location.href = link;
             }
         </script>
     </body>

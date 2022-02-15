@@ -1,0 +1,94 @@
+/* Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none !important;
+  font-family: 'Poppins', sans-serif;
+}
+
+canvas{
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #000;
+}
+
+#menu{
+    pointer-events: none;
+    position: fixed;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    height: 100%;
+    background-color: #505050;
+    z-index: 200;
+}
+
+#menu #clear-btn{
+    width: calc(100% - 30px);
+    margin-top: 10px;
+    border-radius: 6px;
+    background-color: rgb(204, 85, 85);
+    color:white;
+    pointer-events: all;
+    height: 35px;
+    border: 2px solid transparent;
+    transition: all .4s ease;
+}
+
+#menu #clear-btn:hover{
+    background-color: rgb(139, 58, 58);
+}
+
+#menu .wrapper{
+    margin-top: 10px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 30px);
+    height: fit-content;
+}
+
+#menu .wrapper span{
+    flex: 1;
+    color:white !important;
+}
+
+#menu .wrapper input{
+    flex: 1;
+    pointer-events: all;
+    color:white;
+}
+
+#menu #composite-select{
+    margin-top: 10px;
+    border-radius: 6px;
+    pointer-events: all;
+    background-color: #303030;
+    color:white;
+    outline:none;
+    border:none;
+    padding: 0px 8px 0px 8px;
+    width: calc(100% - 30px);
+    height: 40px;
+}
+
+#menu #header{
+    height: 50px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 24px;
+    background-color: #757575;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}

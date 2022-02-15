@@ -1,0 +1,74 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Generative Art | Canvas Experiment</title>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <div id="menu">
+            <div id="header">
+                Menu
+            </div>
+            <div class="wrapper">
+                <span class="color">BG-Color:</span>
+                <input oninput="document.querySelector('#canvas').style.backgroundColor = this.value;" id="color-input" type="color">
+            </div>
+            <div class="wrapper">
+                <span class="color">Color:</span>
+                <input oninput="changeDefaultColor(event,this);" id="color-input" type="color">
+            </div>
+            <div class="wrapper">
+                <span class="color">Border-Color:</span>
+                <input oninput="changeStrokeColor(event,this);" id="color-input" type="color">
+            </div>
+            <button id="clear-btn" onclick="clearCanvas(event);">Clear</button>
+            <select id="composite-select" onchange="changeComposite(event,this);">
+                <option value="lighten">Lighten</option>
+                <option value="hue">Hue</option>
+                <option value="destination-over">Destination-Overy</option>
+                <option value="color-dodge">Color-Dodge</option>
+                <option value="exclusion">Exclusion</option>
+                <option value="saturation">Saturation</option>
+                <option value="luminosity">Luminosity</option>
+            </select>
+            <div class="wrapper">
+                <span class="shadow-opacity">SpeedX:</span>
+                <input style="color:black;" onchange="changeSpeedX(event,this);" type="number" value="0.01" step="0.01" min="1" max="255">
+            </div>
+            <div class="wrapper">
+                <span class="shadow-opacity">SpeedY:</span>
+                <input style="color:black;" onchange="changeSpeedY(event,this);" type="number" value="0.01" step="0.01" min="1" max="255">
+            </div>
+            <div class="wrapper">
+                <span class="shadow-opacity">Max-Size:</span>
+                <input style="color:black;" onchange="changeMaxSize(event,this);" type="number" value="2" min="1" max="255">
+            </div>
+            <div class="wrapper">
+                <span class="shadow-opacity">Min-Size:</span>
+                <input style="color:black;" onchange="changeMaxSize(event,this);" type="number" value="5" min="1" max="255">
+            </div>
+            <div class="wrapper">
+                <span class="shadow-opacity">Min-Size-Increment:</span>
+                <input style="color:black;" onchange="changeMinSizeIncrement(event,this);" type="number" value="0.05" step="0.01">
+            </div>
+            <div class="wrapper">
+                <span class="shadow-opacity">Max-Size-Increment:</span>
+                <input style="color:black;" onchange="changeMaxSizeIncrement(event,this);" type="number" value="0.2" step="0.01">
+            </div>
+            <div class="wrapper">
+                <span class="shadow-blur-txt">Shadow-Blur (0):</span>
+                <input oninput="changeShadowBlur(event,this);" type="range" min="0" max="10" value="0" step="0.01">
+            </div>
+            <div class="wrapper">
+                <span class="shadow-color">Shadow-Color:</span>
+                <input oninput="changeShadowColor(event,this);" id="shadow-color-input" type="color">
+            </div>
+            <div class="wrapper">
+                <span class="shadow-opacity">Shadow-Opacity (100%):</span>
+                <input style="color:black;" onchange="changeShadowOpacity(event,this);" type="number" value="100" min="10" max="255">
+            </div>
+        </div>
+        <canvas id="canvas"></canvas>
+    </body>
+    <script src="app.js"></script>
+</html>
