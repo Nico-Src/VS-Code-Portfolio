@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none !important;
+  font-family: 'Poppins', sans-serif;
+}
+
+body{
+    background-color: #000;
+}
+
+#menu{
+    width: 400px;
+    height: 100%;
+    background-color: #404040;
+    position: fixed;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: block;
+    overflow: auto;
+}
+
+.spacer{
+    width:100%;
+    background-color: transparent;
+    height:25px;
+}
+
+#menu::-webkit-scrollbar{width:0;}
+
+#menu .wrapper{
+    margin-top: 10px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 30px);
+    height: fit-content;
+}
+
+#menu .menu-category{
+    margin-top: 10px;
+    margin-left: 15px;
+    width: calc(100% - 30px);
+    background-color: #101010;
+    border-radius: 6px;
+    padding: 0px 0px 12px 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+#menu .menu-category-title{
+    height: 30px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #202020;
+    border-radius: 6px 6px 0px 0px;
+    border-bottom: 2px solid #303030;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}
+
+#menu .wrapper span{
+    flex: 1;
+    color:white !important;
+}
+
+#menu .wrapper input{
+    flex: 1;
+    pointer-events: all;
+    color:white;
+}
+
+#menu .wrapper input[type="checkbox"]{
+    flex: none !important;
+}
+
+#menu .wrapper input[type="file"]{
+    flex: 3 !important;
+    background-color: #404040;
+    color: white;
+}
+
+#menu #header{
+    height: 50px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 24px;
+    background-color: #757575;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}
+
+#play-btn{
+    margin-left: 15px;
+    background-color: rgb(100, 197, 100);
+    color:white;
+    border: none;
+    margin: 0px 10px 0px 10px;
+    outline:none;
+    padding: 2px 8px 2px 8px;
+    border-radius: 6px;
+    transition: all .4s ease;
+}
+
+#play-btn:hover{
+    background-color: rgb(68, 134, 68);
+}
+
+#audio_file{
+    background-color: white;
+    border: none;
+    margin: 0px 10px 0px 10px;
+    outline:none;
+    padding: 6px 8px 6px 8px;
+    border-radius: 6px;
+}
+
+#canvas{
+    position:fixed;
+    pointer-events:none;
+    inset:0;
+    right:400px;
+    margin:auto;
+}

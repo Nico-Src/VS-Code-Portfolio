@@ -5,24 +5,14 @@
         <link rel="stylesheet" href="index.css">
     </head>
     <body>
-        <div id="menu">
+        <div id="menu" onclick="event.stopPropagation();">
             <div id="header">
                 Menu
             </div>
-            <div class="wrapper">
-                <span class="color">BG-Color:</span>
-                <input oninput="document.querySelector('#canvas').style.backgroundColor = this.value;" id="color-input" type="color">
-            </div>
-            <div class="wrapper">
-                <span class="color">Color:</span>
-                <input oninput="changeDefaultColor(event,this);" id="color-input" type="color">
-            </div>
-            <div class="wrapper">
-                <span class="color">Border-Color:</span>
-                <input oninput="changeStrokeColor(event,this);" id="color-input" type="color">
-            </div>
             <button id="clear-btn" onclick="clearCanvas(event);">Clear</button>
             <select id="composite-select" onchange="changeComposite(event,this);">
+                <option value="">None</option>
+                <option value="source-over">Source-Over</option>
                 <option value="lighten">Lighten</option>
                 <option value="hue">Hue</option>
                 <option value="destination-over">Destination-Overy</option>
@@ -30,43 +20,87 @@
                 <option value="exclusion">Exclusion</option>
                 <option value="saturation">Saturation</option>
                 <option value="luminosity">Luminosity</option>
+                <option value="source-in">Source-In</option>
+                <option value="source-out">Source-Out</option>
+                <option value="source-atop">Source-Atop</option>
+                <option value="destination-over">Destination-Over</option>
+                <option value="destination-in">Destination-In</option>
+                <option value="destination-out">Destination-Out</option>
+                <option value="destination-atop">Destination-Atop</option>
+                <option value="lighter">Lighter</option>
+                <option value="copy">Copy</option>
+                <option value="xor">XOR</option>
+                <option value="multiply">Multiply</option>
+                <option value="screen">Screen</option>
+                <option value="overlay">Overlay</option>
+                <option value="darken">Darken</option>
+                <option value="color-burn">Color-Burn</option>
+                <option value="hard-light">Hard Light</option>
+                <option value="soft-light">Soft Light</option>
+                <option value="difference">Difference</option>
+                <option value="color">Color</option>
             </select>
-            <div class="wrapper">
-                <span class="shadow-opacity">SpeedX:</span>
-                <input style="color:black;" onchange="changeSpeedX(event,this);" type="number" value="0.01" step="0.01" min="1" max="255">
+            <div class="menu-category">
+                <div class="menu-category-title">Colors</div>
+                <div class="wrapper">
+                    <span class="color">BG-Color:</span>
+                    <input oninput="document.querySelector('#canvas').style.backgroundColor = this.value;" id="color-input" type="color">
+                </div>
+                <div class="wrapper">
+                    <span class="color">Color:</span>
+                    <input oninput="changeDefaultColor(event,this);" id="color-input" type="color">
+                </div>
+                <div class="wrapper">
+                    <span class="color">Border-Color:</span>
+                    <input oninput="changeStrokeColor(event,this);" id="color-input" type="color">
+                </div>
             </div>
-            <div class="wrapper">
-                <span class="shadow-opacity">SpeedY:</span>
-                <input style="color:black;" onchange="changeSpeedY(event,this);" type="number" value="0.01" step="0.01" min="1" max="255">
+            <div class="menu-category">
+                <div class="menu-category-title">Speed</div>
+                <div class="wrapper">
+                    <span class="shadow-opacity">SpeedX:</span>
+                    <input style="color:black;" onchange="changeSpeedX(event,this);" type="number" value="0.01" step="0.01" min="1" max="255">
+                </div>
+                <div class="wrapper">
+                    <span class="shadow-opacity">SpeedY:</span>
+                    <input style="color:black;" onchange="changeSpeedY(event,this);" type="number" value="0.01" step="0.01" min="1" max="255">
+                </div>
             </div>
-            <div class="wrapper">
-                <span class="shadow-opacity">Max-Size:</span>
-                <input style="color:black;" onchange="changeMaxSize(event,this);" type="number" value="2" min="1" max="255">
+            <div class="menu-category">
+                <div class="menu-category-title">Size</div>
+                <div class="wrapper">
+                    <span class="shadow-opacity large">Max-Size:</span>
+                    <input style="color:black;" onchange="changeMaxSize(event,this);" type="number" value="2" min="1" max="255">
+                </div>
+                <div class="wrapper">
+                    <span class="shadow-opacity large">Min-Size:</span>
+                    <input style="color:black;" onchange="changeMaxSize(event,this);" type="number" value="5" min="1" max="255">
+                </div>
+                <div class="wrapper">
+                    <span class="shadow-opacity large">Min-Size-Increment:</span>
+                    <input style="color:black;" onchange="changeMinSizeIncrement(event,this);" type="number" value="0.05" step="0.01">
+                </div>
+                <div class="wrapper">
+                    <span class="shadow-opacity large">Max-Size-Increment:</span>
+                    <input style="color:black;" onchange="changeMaxSizeIncrement(event,this);" type="number" value="0.2" step="0.01">
+                </div>
             </div>
-            <div class="wrapper">
-                <span class="shadow-opacity">Min-Size:</span>
-                <input style="color:black;" onchange="changeMaxSize(event,this);" type="number" value="5" min="1" max="255">
+            <div class="menu-category">
+                <div class="menu-category-title">Shadow</div>
+                <div class="wrapper">
+                    <span class="shadow-blur-txt">Shadow-Blur (0):</span>
+                    <input oninput="changeShadowBlur(event,this);" type="range" min="0" max="10" value="0" step="0.01">
+                </div>
+                <div class="wrapper">
+                    <span class="shadow-color">Shadow-Color:</span>
+                    <input oninput="changeShadowColor(event,this);" id="shadow-color-input" type="color">
+                </div>
+                <div class="wrapper">
+                    <span class="shadow-opacity">Shadow-Opacity (100%):</span>
+                    <input style="color:black;" onchange="changeShadowOpacity(event,this);" type="number" value="100" min="10" max="255">
+                </div>
             </div>
-            <div class="wrapper">
-                <span class="shadow-opacity">Min-Size-Increment:</span>
-                <input style="color:black;" onchange="changeMinSizeIncrement(event,this);" type="number" value="0.05" step="0.01">
-            </div>
-            <div class="wrapper">
-                <span class="shadow-opacity">Max-Size-Increment:</span>
-                <input style="color:black;" onchange="changeMaxSizeIncrement(event,this);" type="number" value="0.2" step="0.01">
-            </div>
-            <div class="wrapper">
-                <span class="shadow-blur-txt">Shadow-Blur (0):</span>
-                <input oninput="changeShadowBlur(event,this);" type="range" min="0" max="10" value="0" step="0.01">
-            </div>
-            <div class="wrapper">
-                <span class="shadow-color">Shadow-Color:</span>
-                <input oninput="changeShadowColor(event,this);" id="shadow-color-input" type="color">
-            </div>
-            <div class="wrapper">
-                <span class="shadow-opacity">Shadow-Opacity (100%):</span>
-                <input style="color:black;" onchange="changeShadowOpacity(event,this);" type="number" value="100" min="10" max="255">
-            </div>
+            <div class="spacer"></div>
         </div>
         <canvas id="canvas"></canvas>
     </body>

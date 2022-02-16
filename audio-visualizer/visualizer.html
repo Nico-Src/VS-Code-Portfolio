@@ -1,0 +1,114 @@
+<html>
+    <head>
+        <title>Audio Visualizer</title>
+        <link rel="stylesheet" href="visualizer.css">
+    </head>
+    <body>
+        <div id="menu">
+            <div id="header">
+                Menu
+            </div>
+            <div class="menu-category">
+                <div class="menu-category-title">Music</div>
+                <div class="wrapper">
+                    <span>File:</span>
+                    <input id="audio_file" type="file" accept="audio/*" />
+                </div>
+                <div class="wrapper">
+                    <span>Volume:</span>
+                    <input type="range" min="0" max="2" value="1" step="0.01" id="volume-slider">
+                </div>
+                <div class="wrapper">
+                    <span>Play/Pause:</span>
+                    <button id="play-btn">Pause</button>
+                </div>
+            </div>
+            <div class="menu-category">
+                <div class="menu-category-title"></div>
+                <div class="wrapper">
+                    <span class="color">BG-Color:</span>
+                    <input oninput="document.querySelector('canvas').style.backgroundColor = this.value;" id="color-input" type="color">
+                </div>
+            </div>
+            <div class="menu-category">
+                <div class="menu-category-title">Bar-Settings</div>
+                <div class="wrapper">
+                    <span class="color">Gradient-Start:</span>
+                    <input id="gradient-start-input" value="#33C0FF" type="color">
+                </div>
+                <div class="wrapper">
+                    <span class="color">Gradient-Stop:</span>
+                    <input id="gradient-stop-input" value="#75FF33" type="color">
+                </div>
+                <div class="wrapper">
+                    <span>Bars:</span>
+                    <select id="barNumber">
+                        <option value="32">32</option>
+                        <option value="4">4</option>
+                        <option value="8">8</option>
+                        <option value="16">16</option>
+                        <option value="64">64</option>
+                        <option value="128">128</option>
+                        <option value="256">256</option>
+                        <option value="512">512</option>
+                    </select>
+                </div>
+                <div class="wrapper">
+                    <span>Volume Influence:</span>
+                    <input type="checkbox" id="volumeInfluenceCheckBox">
+                </div>
+                <div class="wrapper">
+                    <span>Reverse Low Bars:</span>
+                    <input type="checkbox" id="reverseLowBarsCheckBox">
+                </div>
+                <div class="wrapper">
+                    <span>Normalize:</span>
+                    <input type="checkbox" id="normalizeCheckBox">
+                </div>
+            </div>
+            <div class="spacer"></div>
+        </div>
+        <audio src="Ashes_Nate.mp3"></audio>
+        <canvas id="canvas"></canvas>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/6.2.2/browser/pixi.js" integrity="sha512-LDLGJ6FCTB3cSU6TwQhQHT4n1Sje3K1fXCesgME845YTEKNGfQaEnPcLNIqNJ6E3ua65VCL9CVVBdr9G+E7cnw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    </body>
+    <script src="app.js"></script>
+    <script>
+
+    var audio_file = document.querySelector('#audio_file');
+    var audioElement = document.querySelector('audio');
+    var playButton = document.querySelector("#play-btn");
+    var volumeControl = document.querySelector("#volume-slider");
+    var canvas = document.querySelector('canvas');
+    var volumeInfluenceCheckBox = document.querySelector('#volumeInfluenceCheckBox');
+    var reverseLowBarsCheckBox = document.querySelector('#reverseLowBarsCheckBox');
+    var normalizeCheckBox = document.querySelector('#normalizeCheckBox');
+    var barNumberSelect = document.querySelector('#barNumber');
+    var gradientStartInput = document.querySelector("#gradient-start-input");
+    var gradientEndInput = document.querySelector("#gradient-stop-input");
+
+    audio_file.onchange = function(){
+        var files = this.files;
+        var file = URL.createObjectURL(files[0]); 
+        audioElement.src = file; 
+        audioElement.play();
+
+        canvas.width = window.innerWidth - 500;
+        canvas.height = window.innerHeight - 125;
+
+        var visualizer = new Visualizer
+            (
+                audioElement,
+                playButton,
+                volumeControl,
+                barNumberSelect,
+                volumeInfluenceCheckBox,
+                reverseLowBarsCheckBox,
+                normalizeCheckBox,
+                gradientStartInput,
+                gradientEndInput
+            );
+        visualizer.update();
+    };
+    </script>
+</html>
