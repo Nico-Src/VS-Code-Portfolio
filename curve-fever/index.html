@@ -1,0 +1,45 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Curve Fever 0.1</title>
+        <link rel="stylesheet" href="index.css">
+        <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    </head>
+    <body>
+        <div id="gameArea">
+
+        </div>
+        <div id="menu" onclick="event.stopPropagation();">
+            <div id="header">
+                Menu
+            </div>
+            <button id="start-btn" onclick="start(1);">Play (1 Player)</button>
+            <button id="start-btn" onclick="start(2);">Play (2 Player)</button>
+            <div class="menu-category">
+                <div class="menu-category-title">Player</div>
+                <div class="wrapper">
+                    <span class="color">Speed:</span>
+                    <input id="speed-input" type="number" value="1">
+                </div>
+                <div class="wrapper">
+                    <span class="color">Angle:</span>
+                    <input id="angle-input" type="number" value="2">
+                </div>
+                <div class="wrapper">
+                    <span class="color">Line-Width:</span>
+                    <input id="line-width-input" type="number" value="15">
+                </div>
+            </div>
+            <div class="spacer"></div>
+        </div>
+        <div class="rule-container">
+            <p id="rules"><span><i class='bx bx-user-circle'></i><span>1</span></span><kbd><i class='bx bx-left-arrow-alt'></i></kbd><kbd><i class='bx bx-right-arrow-alt'></i></kbd></p>
+            <p id="rules"><span><i class='bx bx-user-circle'></i><span>2</span></span><kbd>A</kbd><kbd>D</kbd></p>
+        </div>
+        <b><p id="looser"></p></b>
+    </body>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.js"></script>
+    <script src="app.js"></script>
+    <script src="curve_fever.js"></script>
+</html>

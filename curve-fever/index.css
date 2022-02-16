@@ -1,0 +1,192 @@
+/* Font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none !important;
+  font-family: 'Poppins', sans-serif;
+}
+
+body{
+    background-color: #202020;
+}
+
+.spacer{
+    width:100%;
+    background-color: transparent;
+    height:25px;
+}
+
+#gameArea{
+    position: fixed;
+    left: 0;
+    right: 300px;
+    top: 25px;
+    width: 600px;
+    height: 600px;
+    margin:auto;
+    background-color: #000;
+}
+
+kbd{
+    border-radius: 4px;
+    border: 1px solid grey;
+    height: 25px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    background-color: #707070;
+    color:white;
+    box-shadow: 0 2px 0 1px grey;
+}
+
+.rule-container{
+    position: fixed;
+    width: 600px;
+    height: fit-content;
+    left: 0;
+    right: 300px;
+    top: 650px;
+    margin:auto;
+}
+
+#rules span{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+#rules span i{
+    font-size: 30px;
+}
+
+#rules span span{
+    font-size: 10px;
+}
+
+#rules{
+    float:left;
+    position: relative;
+    border-radius: 6px;
+    background-color: #404040;
+    color:white;
+    display:flex;
+    justify-content: space-evenly;
+    align-items: center;
+    height: 50px;
+    width: calc(33% - 20px);
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+#menu{
+    pointer-events: all;
+    position: fixed;
+    display: block;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 300px;
+    height: 100%;
+    background-color: #505050;
+    z-index: 200;
+    overflow: auto;
+}
+
+#menu::-webkit-scrollbar{width:0;}
+
+#menu #start-btn{
+    margin-left: 15px;
+    width: calc(100% - 30px);
+    margin-top: 10px;
+    border-radius: 6px;
+    background-color: rgb(148, 204, 85);
+    color:white;
+    pointer-events: all;
+    height: 35px;
+    border: 2px solid transparent;
+    transition: all .4s ease;
+}
+
+#menu #start-btn:hover{
+    background-color: rgb(101, 139, 58);
+}
+
+#menu .wrapper{
+    margin-top: 10px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 30px);
+    height: fit-content;
+}
+
+#menu .wrapper span{
+    flex: 1;
+    color:white !important;
+}
+
+#menu .wrapper span.large{
+    flex: 2 !important;
+}
+
+#menu .wrapper input{
+    flex: 1;
+    pointer-events: all;
+    color:white;
+}
+
+#menu .wrapper input[type="number"]{
+    max-width: 60px;
+}
+
+#menu .wrapper input[type="number"]{
+    background-color: #404040;
+    border-radius: 6px;
+    color:white !important;
+    text-align: center;
+    border:2px solid transparent;
+    outline:none !important;
+}
+
+#menu .menu-category{
+    margin-left: 15px;
+    margin-top: 10px;
+    width: calc(100% - 30px);
+    background-color: #101010;
+    border-radius: 6px;
+    padding: 0px 0px 12px 0px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+#menu .menu-category-title{
+    height: 30px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 18px;
+    background-color: #202020;
+    border-radius: 6px 6px 0px 0px;
+    border-bottom: 2px solid #303030;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}
+
+#menu #header{
+    height: 50px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 24px;
+    background-color: #757575;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+}
