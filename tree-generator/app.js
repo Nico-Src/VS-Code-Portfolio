@@ -22,7 +22,7 @@ function draw(){
 
     translate(0,300,0);
 
-    rotateY(angle);
+    rotateY(mouseX);
 
     stroke(120,90,70,50);
     strokeWeight(15);
@@ -34,8 +34,7 @@ function draw(){
 function branch(len,woodC){
     push();
     strokeWeight(map(len,10,100,.5,6));
-    let addition = random(-leaveColorDifference,leaveColorDifference);
-    stroke(woodC.r + addition,woodC.g + addition,woodC.b + addition);
+    stroke(woodC.r,woodC.g,woodC.b);
     line(0,0,0,0,-len-2,0);
     pop();
 
