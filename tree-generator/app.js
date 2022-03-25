@@ -22,7 +22,7 @@ function draw(){
 
     translate(0,300,0);
 
-    rotateY(mouseX);
+    rotateY(angle);
 
     stroke(120,90,70,50);
     strokeWeight(15);
