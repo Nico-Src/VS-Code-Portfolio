@@ -1,0 +1,62 @@
+<html>
+    <head>
+        <title>Tree Generator</title>
+        <link rel="stylesheet" href="index.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Vollkorn+SC&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <div id="canvas-wrapper"></div>
+        <div class="settings">
+            <div class="settings-wrapper">
+                <span class="title">Settings</span>
+                <div class="wrapper">
+                    <span>View Angle: </span>
+                    <input type="number" max="360" min="0" value="0" step="1" oninput="angle = parseInt(this.value);redraw();">
+                </div>
+                <div class="wrapper">
+                    <span>Branch-Length: </span>
+                    <input type="number" max="500" min="1" value="150" step="1" onchange="branchLength = parseFloat(this.value);redraw();">
+                </div>
+                <div class="wrapper">
+                    <span>Branch-Multiplier: </span>
+                    <input type="number" max="0.74" min="0.1" value="0.7" step="0.01" onchange="branchMultiplier = parseFloat(this.value);redraw();">
+                </div>
+                <div class="wrapper">
+                    <span>Leave-Radius: </span>
+                    <input type="number" max="100" min="2" value="14" step="1" onchange="leaveRadius = parseInt(this.value);redraw();">
+                </div>
+                <div class="wrapper">
+                    <span>Leave-Color-Difference: </span>
+                    <input type="number" max="100" min="2" value="20" step="1" onchange="leaveColorDifference = parseInt(this.value);redraw();">
+                </div>
+                <div class="wrapper">
+                    <span>Leave Color: </span>
+                    <input type="color" onchange="leaveColor =this.value;redraw();">
+                </div>
+                <div class="wrapper">
+                    <span>Wood Color: </span>
+                    <input type="color" onchange="woodColor =this.value;redraw();">
+                </div>
+                <div class="wrapper">
+                    <button type="button" onclick="rSeed = Math.floor(Math.random() * 100000);redraw();">Generate New Tree</button>
+                </div>
+                <div class="wrapper">
+                    <button type="button" onclick="saveImage();">Save Image</button>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.js" integrity="sha512-4P0ZJ49OMXe3jXT+EsEaq82eNwFeyYL81LeHGzGcEhowFbTqeQ80q+NEkgsE8tHPs6aCqvi7U+XWliAjDmT5Lg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="app.js"></script>
+        <script>
+            function saveImage(){
+                var link = document.getElementById('link');
+                if(!link) link = document.createElement('a');
+                link.setAttribute('download', 'GeneratedTree.png');
+                link.setAttribute('href', document.querySelector("canvas").toDataURL("image/png").replace("image/png", "image/octet-stream"));
+                link.click();
+            }
+        </script>
+    </body>
+</html>
