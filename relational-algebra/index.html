@@ -9,10 +9,10 @@
                 pointer-events: none !important;
             }
         </style>
-        <link rel="icon" href="favico.ico">
+        <link rel="icon" href="../icon.png">
         <link href="../js/enjoyhint/enjoyhint.css" rel="stylesheet">
-        <link id="mainStyle" rel="stylesheet" href="../css/main.css">
-        <link id="elementStyle" rel="stylesheet" href="../css/elements.css">
+        <link id="mainStyle" rel="stylesheet" href="css/main.css">
+        <link id="elementStyle" rel="stylesheet" href="css/elements.css">
         <link href="../bootstrap/css/bootstrap.css" rel="stylesheet">
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     </head>
@@ -239,7 +239,7 @@
         }
 
         function swapStyleSheet(sheetId,sheet) {
-            document.getElementById(sheetId).setAttribute("href", "../css/"+sheet);  
+            document.getElementById(sheetId).setAttribute("href", "css/"+sheet);  
         }
         
         function loadSettings(){

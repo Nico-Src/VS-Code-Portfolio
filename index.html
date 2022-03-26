@@ -1,91 +1,93 @@
 <html>
     <head>
-        <title>Relationale Algebra</title>
+        <title>Portfolio</title>
         <meta charset="utf-8"/>
-        <style>
-            body{
-                background: url(images/repeatbg.png);
-                background-repeat: repeat;
-                min-height: 100vh;
-                min-width: 100vw;
-                background-size: 15%;
-                animation: bg-anim 100s linear infinite; /* background movement */
-            }
-
-            @keyframes bg-anim{
-                0% {
-                    background-position: 0% 0%;
-                }
-                50% { 
-                    background-position: -187% -187%;
-                }
-
-                100% { 
-                    background-position: 0% 0%;
-                }
-            }
-            .project{
-                width: fit-content;
-                height: 75px;
-                padding: 10px;
-                display: flex;
-				margin-left: 10px;
-				margin-right: 10px;
-                justify-content: center;
-                align-items: center;
-                color: white;
-                background-color: #505050;
-                font-size: 24px;
-                transition: all .4s ease;
-                box-shadow: 0 0 16px 3px rgba(0,0,0,.3);
-                border-radius: 12px;
-            }
-
-            .project:hover{
-                transform: scale(1.05);
-                background-color: #707070;
-            }
-        </style>
         <link rel="icon" href="icon.png">
         <link href="js/enjoyhint/enjoyhint.css" rel="stylesheet">
-        <link id="mainStyle" rel="stylesheet" href="css/main.css">
+        <link id="mainStyle" rel="stylesheet" href="css/index.css">
         <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
     </head>
-    <body style="background-color: #505050; display: flex; justify-content: center; align-items: center;">
+    <body>
         
-        <div class="project" onclick="GoToProject('relational-algebra');">
-            Relationale Algebra
-        </div>
-		
-		<div class="project" onclick="GoToProject('generative-art');">
-            Generative Art
-        </div>
-		
-		<div class="project" onclick="GoToProject('audio-visualizer');">
-            Audio Visualizer
-        </div>
-		
-		<div class="project" onclick="GoToProject('curve-fever');">
-            Curve Fever
-        </div>
+        <div class="header">NT</div>
 
-        <div class="project" onclick="GoToProject('tree-generator');">
-            Tree Generator
+        <div class="content">
+            <div class="nav-bar">
+                <ul>
+                    <li class="active">
+                        <ion-icon name="code-outline"></ion-icon>
+                        <div class="t-tip">Projects</div>
+                    </li>
+                    <li>
+                        <ion-icon name="person-circle-outline"></ion-icon>
+                        <div class="t-tip">Profile</div>
+                    </li>
+                    <li>
+                        <ion-icon name="mail-outline"></ion-icon>
+                        <div class="t-tip">Contact</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="projects row">
+                <div class="project-item dark" project="relational-algebra">
+                    <img src="images/relational-algebra.png">
+                    <div class="title">
+                        Relational Algebra
+                    </div>
+                </div>
+
+                <div class="project-item light" project="audio-visualizer">
+                    <img src="images/audio-visualizer.png">
+                    <div class="title">
+                        Audio Visualizer
+                    </div>
+                </div>
+
+                <div class="project-item dark" project="tree-generator">
+                    <img src="images/tree-generator.png">
+                    <div class="title">
+                        Tree Generator
+                    </div>
+                </div>
+
+                <div class="project-item light" project="generative-art">
+                    <img src="images/generative-art.png">
+                    <div class="title">
+                        Generative Art
+                    </div>
+                </div>
+            </div>
         </div>
         
         <script src="js/jquery-3.6.0.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/kineticjs/5.2.0/kinetic.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
         <script src="js/jquery-ui.js"></script>
-        <script src="js/jquery-connect/required/script/jquery.connectingLine.js"></script>
         <script src="bootstrap/js/bootstrap.bundle.js"></script>
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
         <script src="js/fontawesome.js" crossorigin="anonymous"></script>
-        <script src="js/editor.js"></script>
-        <script src="js/enjoyhint/enjoyhint.js"></script>
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
         <script>
-            function GoToProject(link){
+            $(document).ready(function(){
+                $(".nav-bar li").each(function(){
+                    this.onclick=()=>{
+                        $(".nav-bar li.active").removeClass('active');
+                        this.classList.add('active');
+                    };
+                });
+
+                $(".project-item").each(function(){
+                    this.onclick=()=>{
+                        visitProject(this.getAttribute('project'));
+                    };
+                });
+            });
+
+            function visitProject(link){
                 window.location.href = link;
             }
         </script>

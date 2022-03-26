@@ -17,6 +17,12 @@ body{
     align-items: center;
 }
 
+#canvas-wrapper{
+    width: 60% !important;
+    max-width: 60% !important;
+    height: 100%;
+}
+
 .settings .settings-wrapper{
     width: calc(100% - 75px);
     height: calc(100% - 75px);border-radius: 6px;
