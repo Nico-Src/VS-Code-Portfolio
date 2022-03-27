@@ -1,0 +1,96 @@
+body{
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.settings{
+    width: 40%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#canvas-wrapper{
+    width: 60% !important;
+    max-width: 60% !important;
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.settings .settings-wrapper{
+    width: calc(100% - 75px);
+    height: calc(100% - 75px);border-radius: 6px;
+    margin-right: 75px;
+    border: 2px solid #303030;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+}
+
+.settings .settings-wrapper .title{
+    font-family: 'Vollkorn SC', serif;
+    color:black;
+    font-size: 32px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+}
+
+.settings .settings-wrapper .wrapper{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+    width: calc(100% - 50px);
+    margin-top: 20px;
+}
+
+.settings .settings-wrapper .wrapper span{
+    font-family: 'Vollkorn SC', serif;
+    color:black;
+    font-size: 26px;
+    height: 40px;
+    line-height: 40px;
+}
+
+.settings .settings-wrapper .wrapper input{
+    background-color: rgba(30,30,30,.2);
+    border: none;
+    font-family: 'Vollkorn SC', serif;
+    color:black;
+    font-size: 26px;
+    transition: all .4s ease;
+    padding: 0px 10px;
+    border-radius: 6px;
+    outline: none;
+}
+
+.settings .settings-wrapper .wrapper button{
+    height: 40px;
+    line-height: 40px;
+    cursor: pointer;
+    transition: all .4s ease;
+    text-align: center;
+    width: calc(100%);
+    margin-top: 20px;
+    background-color: transparent;
+    border-radius: 6px;
+    border: 2px solid #303030;
+    font-family: 'Vollkorn SC', serif;
+    color:black;
+    font-size: 26px;
+}
+
+.settings .settings-wrapper .wrapper button:hover{
+    background-color: rgba(30,30,30,.2);
+}
