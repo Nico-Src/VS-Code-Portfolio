@@ -71,6 +71,7 @@ body{
     padding: 0px 10px;
     border-radius: 6px;
     outline: none;
+    max-width: 25%;
 }
 
 .settings .settings-wrapper .wrapper button{
