@@ -4,7 +4,7 @@
         <title>Blender</title>
         <link rel="stylesheet" href="css/index.css">
     </head>
-    <body>
+    <body onload="setTimeout(() => {$('.loader').addClass('hidden');},1500);">
         <div class="top-bar">
             <span id="test"></span>
         </div>
@@ -49,6 +49,31 @@
                                 <input type="number" id="z-input" step="0.5">
                             </div>
                         </div>
+                        <div class="property-group-title">Scale</div>
+                        <div class="property">
+                            <div class="label">
+                                X:
+                            </div>
+                            <div class="input">
+                                <input type="number" id="x-scale-input" step="0.5">
+                            </div>
+                        </div>
+                        <div class="property">
+                            <div class="label">
+                                Y:
+                            </div>
+                            <div class="input">
+                                <input type="number" id="y-scale-input" step="0.5">
+                            </div>
+                        </div>
+                        <div class="property">
+                            <div class="label">
+                                Z:
+                            </div>
+                            <div class="input">
+                                <input type="number" id="z-scale-input" step="0.5">
+                            </div>
+                        </div>
                     </div>
                     <div class="material-window window">
 
@@ -57,11 +82,19 @@
             </div>
         </div>
 
+        <div class="loader">
+            <img src="img/loading.gif">
+            <span>N</span>
+        </div>
+
         <canvas id="renderCanvas" touch-action="none"></canvas>
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.4.0/babylon.js" integrity="sha512-kSA3rz4hx/x28DsnqE2s/K5M9EBLwDrak2CHVM6C5E9f5n5+pEyhGRrIBhogmkXcnzP6SaisEMrmBKGEbg4blg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="js/babylon.gridMaterial.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs-loaders@3.2.0-alpha10/babylonjs.loaders.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/babylonjs-loaders@5.4.0/babylon.glTF2FileLoader.min.js"></script>
+        <script src="js/modeler.js"></script>
         <script src="js/inspector.js"></script>
         <script src="js/app.js"></script>
     </body>

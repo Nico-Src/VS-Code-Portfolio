@@ -13,6 +13,9 @@ class Inspector{
                 $("#x-input").val(object.element.position.x);
                 $("#y-input").val(object.element.position.y);
                 $("#z-input").val(object.element.position.z);
+                $("#x-scale-input").val(object.element.scaling.x);
+                $("#y-scale-input").val(object.element.scaling.y);
+                $("#z-scale-input").val(object.element.scaling.z);
             }
 
             $(".scene-inspector").append(`<div class="inspector-item ${object.status}" id="${object.id}"><div class="icon"><img src="${icon}"></div><div class="name">${object.name}</div></div>`);
@@ -37,7 +40,7 @@ class Inspector{
                 var activeEl;
 
                 sceneObjects.forEach((object)=>{
-                    if(object.id === $(this).attr("id")){
+                    if(object.id === $(this).attr("id") && object.type !== "light"){
                         object.status = 'active';
                         activeEl = object.element;
                     } else {
@@ -45,41 +48,15 @@ class Inspector{
                     }
                 });
 
+                if(!activeEl) return;
+
                 $("#x-input").val(activeEl.position.x);
                 $("#y-input").val(activeEl.position.y);
                 $("#z-input").val(activeEl.position.z);
+                $("#x-scale-input").val(activeEl.scaling.x);
+                $("#y-scale-input").val(activeEl.scaling.y);
+                $("#z-scale-input").val(activeEl.scaling.z);
             };
         });
-
-        const xInput = $("#x-input").get(0);
-        const yInput = $("#y-input").get(0);
-        const zInput = $("#z-input").get(0);
-
-        xInput.onchange = () => {
-            sceneObjects.forEach((object)=>{
-                if(object.status === 'active'){
-                    object.element.position.x = xInput.value;
-                    return;
-                }
-            });
-        };
-
-        yInput.onchange = () => {
-            sceneObjects.forEach((object)=>{
-                if(object.status === 'active'){
-                    object.element.position.y = yInput.value;
-                    return;
-                }
-            });
-        };
-
-        zInput.onchange = () => {
-            sceneObjects.forEach((object)=>{
-                if(object.status === 'active'){
-                    object.element.position.z = zInput.value;
-                    return;
-                }
-            });
-        };
     }
 }
