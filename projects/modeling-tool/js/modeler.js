@@ -2,6 +2,13 @@ class Modeler{
     constructor(canvas,engine){
         this.canvas = canvas;
         this.engine = engine;
+        this.config = {
+            selection: {
+                show: true,
+                lineWidth: 4.0,
+                lineColor: new BABYLON.Color4(0.46, 0.85, .37,1)
+            }
+        };
         this.sceneObjects = [];
 
         this.init();
@@ -10,6 +17,11 @@ class Modeler{
     // initialize engine and scene
     init(){
         this.scene = this.createScene();
+        // create hightlight layer for selected elements
+        this.highlightLayer = new BABYLON.HighlightLayer("hl1", this.scene);
+        // configure layer
+        this.highlightLayer.blurHorizontalSize = 0.5;
+        this.highlightLayer.blurVerticalSize = 0.5;
         this.setupControls();
 
         // init inspector
@@ -22,10 +34,16 @@ class Modeler{
             this.scene.render();
         
             this.sceneObjects.forEach((object)=>{
-                if(object.status === 'active'){
-                    this.highlightLayer.addMesh(object.element,new BABYLON.Color3(0.54,0.78,0.35));
+                if(object.status === 'active' && this.config.selection.show === true){
+                    object.element.enableEdgesRendering();	
+                    object.element.edgesWidth = this.config.selection.lineWidth;
+                    object.element.edgesColor = this.config.selection.lineColor;
                 } else {
-                    this.highlightLayer.removeMesh(object.element);
+                    try{
+                        object.element.disableEdgesRendering();
+                    } catch {
+                        // ignore
+                    }
                 }
             });
         });
@@ -59,12 +77,6 @@ class Modeler{
         const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(1, 1, 0));
         this.addElement(this.getUniqueId(),'HemisphericLight01','light','inactive',light);
         
-        // create hightlight layer for selected elements
-        this.highlightLayer = new BABYLON.HighlightLayer("hl1", scene);
-        // configure layer
-        this.highlightLayer.blurHorizontalSize = 0.5;
-        this.highlightLayer.blurVerticalSize = 0.5;
-        
         return scene;
     }
 
@@ -75,7 +87,8 @@ class Modeler{
             name: name,
             type: type,
             status: status,
-            element: element
+            element: element,
+            axes: undefined
         });
     }
 
@@ -88,9 +101,16 @@ class Modeler{
                 // get new active element
                 this.sceneObjects.forEach((object)=>{
                     if(object.element === pickInfo.pickedMesh && object.type !== "light"){
-                        object.status = 'active';
-                        activeEl = $(`.inspector-item#${object.id}`).get(0);
-                        activeInspectorElement = object.element;
+                        if(object.status === 'active'){
+                            object.status = 'inactive';
+                            $(".inspector-item").removeClass('active');
+                            $(".inspector-item").addClass('inactive');
+                            return;
+                        } else {
+                            object.status = 'active';
+                            activeEl = $(`.inspector-item#${object.id}`).get(0);
+                            activeInspectorElement = object.element;
+                        }
                     } else {
                         object.status = 'inactive';
                     }
@@ -112,6 +132,10 @@ class Modeler{
                 $("#x-scale-input").val(activeInspectorElement.scaling.x);
                 $("#y-scale-input").val(activeInspectorElement.scaling.y);
                 $("#z-scale-input").val(activeInspectorElement.scaling.z);
+
+                $("#x-rotate-input").val(activeInspectorElement.rotation.x);
+                $("#y-rotate-input").val(activeInspectorElement.rotation.y);
+                $("#z-rotate-input").val(activeInspectorElement.rotation.z);
             }
         }
 
@@ -121,10 +145,16 @@ class Modeler{
         const xScaleInput = $("#x-scale-input").get(0);
         const yScaleInput = $("#y-scale-input").get(0);
         const zScaleInput = $("#z-scale-input").get(0);
+        const xRotateInput = $("#x-rotate-input").get(0);
+        const yRotateInput = $("#y-rotate-input").get(0);
+        const zRotateInput = $("#z-rotate-input").get(0);
+
+        const selectionLineWidthInput = $("#selection-line-width-input").get(0);
 
         xInput.onchange = () => {
             this.sceneObjects.forEach((object)=>{
                 if(object.status === 'active'){
+                    console.log(xInput.value);
                     object.element.position.x = xInput.value;
                     return;
                 }
@@ -174,6 +204,37 @@ class Modeler{
                     return;
                 }
             });
+        };
+
+        xRotateInput.onchange = () => {
+            this.sceneObjects.forEach((object)=>{
+                if(object.status === 'active'){
+                    object.element.rotation.x = BABYLON.Tools.ToRadians(xRotateInput.value);
+                    return;
+                }
+            });
+        };
+
+        yRotateInput.onchange = () => {
+            this.sceneObjects.forEach((object)=>{
+                if(object.status === 'active'){
+                    object.element.rotation.y = BABYLON.Tools.ToRadians(yRotateInput.value);
+                    return;
+                }
+            });
+        };
+
+        zRotateInput.onchange = () => {
+            this.sceneObjects.forEach((object)=>{
+                if(object.status === 'active'){
+                    object.element.rotation.z = BABYLON.Tools.ToRadians(zRotateInput.value);
+                    return;
+                }
+            });
+        };
+
+        selectionLineWidthInput.onchange = () => {
+            this.config.selection.lineWidth = parseFloat(selectionLineWidthInput.value);
         };
     }
 

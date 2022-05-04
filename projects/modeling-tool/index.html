@@ -21,62 +21,154 @@
                     <div class="tab-item" href="material">
                         <img src="img/icons/material.svg">
                     </div>
+                    <div class="tab-item" href="world">
+                        <img src="img/icons/props.svg">
+                    </div>
                 </div>
                 <div class="tab-content">
                     <div class="property-window window active">
-                        <div class="property-group-title">Position</div>
-                        <div class="property">
-                            <div class="label">
-                                X:
-                            </div>
-                            <div class="input">
-                                <input type="number" id="x-input" step="0.5">
-                            </div>
-                        </div>
-                        <div class="property">
-                            <div class="label">
-                                Y:
-                            </div>
-                            <div class="input">
-                                <input type="number" id="y-input" step="0.5">
-                            </div>
-                        </div>
-                        <div class="property">
-                            <div class="label">
-                                Z:
-                            </div>
-                            <div class="input">
-                                <input type="number" id="z-input" step="0.5">
-                            </div>
-                        </div>
-                        <div class="property-group-title">Scale</div>
-                        <div class="property">
-                            <div class="label">
-                                X:
-                            </div>
-                            <div class="input">
-                                <input type="number" id="x-scale-input" step="0.5">
+                        <div class="property-group">
+                            <div class="property-group-title"><img src="img/icons/arrow.svg">&nbsp;Position</div>
+                            <div class="property-group-content">
+                                <div class="property">
+                                    <div class="label">
+                                        X:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" id="x-input" step="0.5">
+                                    </div>
+                                </div>
+                                <div class="property">
+                                    <div class="label">
+                                        Y:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" id="y-input" step="0.5">
+                                    </div>
+                                </div>
+                                <div class="property">
+                                    <div class="label">
+                                        Z:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" id="z-input" step="0.5">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="property">
-                            <div class="label">
-                                Y:
-                            </div>
-                            <div class="input">
-                                <input type="number" id="y-scale-input" step="0.5">
+                        <div class="property-group">
+                            <div class="property-group-title"><img src="img/icons/arrow.svg">&nbsp;Scaling</div>
+                            <div class="property-group-content">
+                                <div class="property">
+                                    <div class="label">
+                                        X:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" id="x-scale-input" step="0.5">
+                                    </div>
+                                </div>
+                                <div class="property">
+                                    <div class="label">
+                                        Y:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" id="y-scale-input" step="0.5">
+                                    </div>
+                                </div>
+                                <div class="property">
+                                    <div class="label">
+                                        Z:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" id="z-scale-input" step="0.5">
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="property">
-                            <div class="label">
-                                Z:
-                            </div>
-                            <div class="input">
-                                <input type="number" id="z-scale-input" step="0.5">
+                        <div class="property-group">
+                            <div class="property-group-title"><img src="img/icons/arrow.svg">&nbsp;Rotation</div>
+                            <div class="property-group-content">
+                                <div class="property">
+                                    <div class="label">
+                                        X:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" id="x-rotate-input" step="0.5">
+                                    </div>
+                                </div>
+                                <div class="property">
+                                    <div class="label">
+                                        Y:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" id="y-rotate-input" step="0.5">
+                                    </div>
+                                </div>
+                                <div class="property">
+                                    <div class="label">
+                                        Z:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" id="z-rotate-input" step="0.5">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="material-window window">
-
+                        <!--<input type="file" id="file-input" onchange="addModel(this.files[0]);">-->
+                    </div>
+                    <div class="world-window window">
+                        <div class="property-group">
+                            <div class="property-group-title"><img src="img/icons/arrow.svg">&nbsp;Grid</div>
+                            <div class="property-group-content">
+                                <div class="property">
+                                    <div class="label">
+                                        Show:
+                                    </div>
+                                    <div class="input">
+                                        <input type="checkbox" checked="true" id="show-grid-input" onchange="ModelTool.toggleGrid();">
+                                    </div>
+                                </div>
+                                <div class="property">
+                                    <div class="label">
+                                        Backface-Culling:
+                                    </div>
+                                    <div class="input">
+                                        <input type="checkbox" checked="true" id="grid-backface-input" onchange="ModelTool.grid.material.backFaceCulling = this.checked;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="property-group">
+                            <div class="property-group-title"><img src="img/icons/arrow.svg">&nbsp;Selection</div>
+                            <div class="property-group-content">
+                                <div class="property">
+                                    <div class="label">
+                                        Show:
+                                    </div>
+                                    <div class="input">
+                                        <input type="checkbox" checked="true" id="show-selection-input" onchange="ModelTool.config.selection.show = this.checked;">
+                                    </div>
+                                </div>
+                                <div class="property">
+                                    <div class="label">
+                                        Line-Width:
+                                    </div>
+                                    <div class="input">
+                                        <input type="number" value="4.0" id="selection-line-width-input" step="0.5">
+                                    </div>
+                                </div>
+                                <div class="property">
+                                    <div class="label">
+                                        Line-Color:
+                                    </div>
+                                    <div class="input">
+                                        <input type="color" value="#77e55e" id="selection-line-color-input" onchange="var tmpColor = hexToRgb(this.value);ModelTool.config.selection.lineColor = new BABYLON.Color4(tmpColor.r / 255,tmpColor.g / 255,tmpColor.b / 255,1);">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -89,6 +181,16 @@
 
         <canvas id="renderCanvas" touch-action="none"></canvas>
 
+        <script>
+            function hexToRgb(hex) {
+                var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            }
+        </script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babylonjs/5.4.0/babylon.js" integrity="sha512-kSA3rz4hx/x28DsnqE2s/K5M9EBLwDrak2CHVM6C5E9f5n5+pEyhGRrIBhogmkXcnzP6SaisEMrmBKGEbg4blg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <script src="js/babylon.gridMaterial.min.js"></script>

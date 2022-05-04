@@ -129,11 +129,42 @@ html, body {
     height: 100%;
 }
 
+.properties-inspector .tab-content .window .property-group{
+    height: fit-content;
+    width: 100%;
+}
+
 .properties-inspector .tab-content .window .property-group-title{
     width: 100%;
-    padding: 2px 5px;
+    height: 25px;
+    cursor: pointer;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    line-height: 25px;
+    padding: 0px 5px;
     color:white;
+    border-bottom: 2px solid #404040;
     font-size: 16px;
+}
+
+.properties-inspector .tab-content .window .property-group-title img{
+    margin-right: 2.5px;
+    height: 20px;
+    width: 20px;
+    transform: rotate(0deg);
+    transition: all .25s ease;
+}
+
+.properties-inspector .tab-content .window .property-group-title.hidden img{
+    transform: rotate(-90deg);
+}
+
+.properties-inspector .tab-content .window .property-group-content{
+    width: 100%;
+    height: fit-content;
+    background-color: #454545;
+    padding: 5px 0px;
 }
 
 .properties-inspector .tab-content .window .property{
@@ -143,7 +174,6 @@ html, body {
     padding: 4px 5px;
     display:flex;
     justify-content: space-between;
-    background-color: #404040;
     color:white !important;
     border-radius: 4px;
     align-items: center;

@@ -16,6 +16,9 @@ class Inspector{
                 $("#x-scale-input").val(object.element.scaling.x);
                 $("#y-scale-input").val(object.element.scaling.y);
                 $("#z-scale-input").val(object.element.scaling.z);
+                $("#x-rotate-input").val(object.element.rotation.x);
+                $("#y-rotate-input").val(object.element.rotation.y);
+                $("#z-rotate-input").val(object.element.rotation.z);
             }
 
             $(".scene-inspector").append(`<div class="inspector-item ${object.status}" id="${object.id}"><div class="icon"><img src="${icon}"></div><div class="name">${object.name}</div></div>`);
@@ -56,6 +59,17 @@ class Inspector{
                 $("#x-scale-input").val(activeEl.scaling.x);
                 $("#y-scale-input").val(activeEl.scaling.y);
                 $("#z-scale-input").val(activeEl.scaling.z);
+                $("#x-rotate-input").val(activeEl.rotation.x);
+                $("#y-rotate-input").val(activeEl.rotation.y);
+                $("#z-rotate-input").val(activeEl.rotation.z);
+            };
+        });
+
+        
+        $(".property-group-title").each(function(){
+            this.onclick = () => {
+                $(this.parentElement).find('.property-group-content').slideToggle();
+                this.classList.toggle('hidden');
             };
         });
     }
