@@ -1,0 +1,76 @@
+body,html{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #505050;
+    overflow: auto;
+}
+
+body::-webkit-scrollbar{
+    width: 5px;
+    height: 5px;
+    background-color: rgba(0,0,0,.5);
+}
+
+body::-webkit-scrollbar-thumb{
+    background-color: #fff;
+}
+
+*{
+    box-sizing: border-box;
+    user-select: none !important;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#original-image{
+    display:none;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    max-width: 50%;
+    max-height: 50%;
+    object-fit: contain;
+    z-index: 1;
+    pointer-events: none;
+}
+
+#canvas{
+    z-index: 5;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.controls{
+    width: 10%;
+    height: 100%;
+    position: fixed;
+    left: 0;
+    z-index: 20;
+    background-color: #707070;
+    box-shadow: 0 0 16px 2px rgba(0,0,0,.15);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.controls .solve-btn{
+    width: calc(100% - 20px);
+    background-color: green;
+    color:white;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 2px;
+    cursor: pointer;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+}

@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title>Image Game</title>
+        <link rel="stylesheet" href="index.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300&display=swap" rel="stylesheet">
+    </head>
+    <body>
+        <script src="puzzle.js"></script>
+        <script>
+            var puzzle = undefined;
+
+            function createPuzzle(){
+                var c = document.getElementById('canvas');
+                var img = document.getElementById('original-image');
+
+                puzzle = new Puzzle({
+                    canvas: c,
+                    rows: 15,
+                    columns: 20,
+                    image: img,
+                    maxImageWidth: 60,
+                    maxImageHeight: 75,
+                    solveRandom: true,
+                    hintsEnabled: false,
+                    scaleMultiplier: 1,
+                });
+
+                puzzle.generatePieces();
+                puzzle.randomizePieces();
+                requestAnimationFrame(puzzle.draw.bind(puzzle));
+            }
+        </script>
+        <div class="controls">
+            <div class="solve-btn" onclick="puzzle.solve();">Solve</div>
+            <select onchange="puzzle.viewMode = this.value;">
+                <option value="All">All Pieces</option>
+                <option value="BorderPieces">Only Border Pieces</option>
+                <option value="NonBorderPieces">Only Non-Border Pieces</option>
+            </select>
+            <input type="checkbox" onchange="puzzle.toggleHints(this.checked);">
+        </div>
+        <image src="img.jpg" id="original-image" onload="createPuzzle();"></image>
+        <canvas id="canvas"></canvas>
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+        <!--<script src="js/app.js" defer></script>-->
+    </body>
+</html>
