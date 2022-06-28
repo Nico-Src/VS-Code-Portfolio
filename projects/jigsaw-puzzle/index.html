@@ -1,13 +1,13 @@
 <html>
     <head>
         <title>Image Game</title>
-        <link rel="stylesheet" href="index.css">
+        <link rel="stylesheet" href="css/index.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;1,100;1,200;1,300&display=swap" rel="stylesheet">
     </head>
     <body>
-        <script src="puzzle.js"></script>
+        <script src="js/puzzle.js"></script>
         <script>
             var puzzle = undefined;
 
@@ -41,7 +41,7 @@
             </select>
             <input type="checkbox" onchange="puzzle.toggleHints(this.checked);">
         </div>
-        <image src="img.jpg" id="original-image" onload="createPuzzle();"></image>
+        <image src="img/img.jpg" id="original-image" onload="createPuzzle();"></image>
         <canvas id="canvas"></canvas>
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
         <!--<script src="js/app.js" defer></script>-->
