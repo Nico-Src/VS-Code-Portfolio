@@ -16,6 +16,7 @@ class Modeler{
 
     // initialize engine and scene
     init(){
+        alert("init");
         this.scene = this.createScene();
         // create hightlight layer for selected elements
         this.highlightLayer = new BABYLON.HighlightLayer("hl1", this.scene);
@@ -32,20 +33,6 @@ class Modeler{
         // start render loop
         this.engine.runRenderLoop(() => {
             this.scene.render();
-        
-            this.sceneObjects.forEach((object)=>{
-                if(object.status === 'active' && this.config.selection.show === true){
-                    object.element.enableEdgesRendering();	
-                    object.element.edgesWidth = this.config.selection.lineWidth;
-                    object.element.edgesColor = this.config.selection.lineColor;
-                } else {
-                    try{
-                        object.element.disableEdgesRendering();
-                    } catch {
-                        // ignore
-                    }
-                }
-            });
         });
 
         // resize engine when window is resized

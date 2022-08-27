@@ -1,0 +1,130 @@
+html,body{
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: #404040;
+    overflow: hidden;
+}
+
+*{
+    font-family: 'Poppins',sans-serif;
+}
+
+#app{
+    width: 100% !important;
+    height: 100% !important;
+    position: relative;
+}
+
+#app .inspector-toggle{
+    position: absolute;
+    top: 60px;
+    right: 0px;
+    background-color: #404040;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 4px 0 0 4px;
+    width: 30px;
+    height: 40px;
+    color: white;
+    font-size: 28px;
+    transition: transform .3s ease;
+}
+
+#app.expanded .inspector-toggle{
+    transform: translateX(-220px);
+}
+
+#app .inspector-toggle i{
+    will-change: transform;
+    transition: transform .2s ease;
+}
+
+#app.expanded .inspector-toggle i{
+    transform: rotate(180deg);
+}
+
+#app .top-bar{
+    width: 100%;
+    height: 50px;
+    background-color: #303030;
+    box-shadow: 0 0 16px 2px rgba(0,0,0,.1);
+}
+
+#app .tool-box{
+    width: 200px;
+    height: calc(100% - 50px);
+    background-color: #404040;
+    float: left;
+}
+
+#app .tool-box .item{
+    width: 85px;
+    margin-left: 10px;
+    height: 95px;
+    background-color: #606060;
+    border-radius: 4px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 16px 2px rgba(0,0,0,.1);
+    transition: all .3s ease;
+    overflow: hidden;
+    float: left;
+    position: relative;
+}
+
+#app .tool-box .item:hover{
+    transform: translateY(-3px) translateZ(0);
+}
+
+#app .tool-box .item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+#app .tool-box .item .name{
+    position: absolute;
+    bottom: 1px;
+    width: 100%;
+    height: fit-content;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color:white;
+}
+
+#app #editor{
+    outline: none !important;
+    border: none !important;
+    float: left;
+    width: calc(100% - 200px);
+    height: calc(100% - 50px);
+    transition: all .3s ease;
+}
+
+#app.expanded #editor{
+    width: calc(100% - 420px);
+}
+
+#app .inspector{
+    width: 0px;
+    height: calc(100% - 50px);
+    float: left;
+    background-color: #353535;
+    transition: all .3s ease;
+    opacity: 0;
+    clear: right;
+}
+
+#app.expanded .inspector{
+    width: 220px;
+    opacity: 1;
+}
