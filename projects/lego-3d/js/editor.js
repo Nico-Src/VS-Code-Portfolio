@@ -64,9 +64,9 @@ class Editor{
         // toggle grid
         this.toggleGrid();
 
-        this.buildSound = new BABYLON.Sound("lego_build", "sounds/lego_build.wav", this.scene);
-        this.buildSound2 = new BABYLON.Sound("lego_build2", "sounds/lego_build2.wav", this.scene);
-        this.buildSound3 = new BABYLON.Sound("lego_build3", "sounds/lego_build3.wav", this.scene);
+        this.buildSound = new BABYLON.Sound("lego_build", "sounds/lego_build.WAV", this.scene);
+        this.buildSound2 = new BABYLON.Sound("lego_build2", "sounds/lego_build2.WAV", this.scene);
+        this.buildSound3 = new BABYLON.Sound("lego_build3", "sounds/lego_build3.WAV", this.scene);
 
         this.assetsManager = new BABYLON.AssetsManager(this.scene);
 
