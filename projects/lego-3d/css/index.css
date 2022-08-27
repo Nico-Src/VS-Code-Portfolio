@@ -9,6 +9,7 @@ html,body{
 
 *{
     font-family: 'Poppins',sans-serif;
+    box-sizing: border-box;
 }
 
 #app{
@@ -17,54 +18,27 @@ html,body{
     position: relative;
 }
 
-#app .inspector-toggle{
-    position: absolute;
-    top: 60px;
-    right: 0px;
-    background-color: #404040;
-    display:flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 4px 0 0 4px;
-    width: 30px;
-    height: 40px;
-    color: white;
-    font-size: 28px;
-    transition: transform .3s ease;
-}
-
-#app.expanded .inspector-toggle{
-    transform: translateX(-220px);
-}
-
-#app .inspector-toggle i{
-    will-change: transform;
-    transition: transform .2s ease;
-}
-
-#app.expanded .inspector-toggle i{
-    transform: rotate(180deg);
-}
-
 #app .top-bar{
     width: 100%;
     height: 50px;
-    background-color: #303030;
+    background-color: #212328;
     box-shadow: 0 0 16px 2px rgba(0,0,0,.1);
+    border-bottom: 2px solid #060608;
 }
 
 #app .tool-box{
     width: 200px;
     height: calc(100% - 50px);
-    background-color: #404040;
+    background-color: #212328;
     float: left;
+    border-right: 2px solid #060608;
 }
 
 #app .tool-box .item{
     width: 85px;
     margin-left: 10px;
     height: 95px;
-    background-color: #606060;
+    background-color: #2a2d34;
     border-radius: 4px;
     display:flex;
     justify-content: center;
@@ -105,26 +79,175 @@ html,body{
     outline: none !important;
     border: none !important;
     float: left;
-    width: calc(100% - 200px);
+    width: calc(100% - 420px);
     height: calc(100% - 50px);
     transition: all .3s ease;
-}
-
-#app.expanded #editor{
-    width: calc(100% - 420px);
 }
 
 #app .inspector{
-    width: 0px;
+    width: 220px;
     height: calc(100% - 50px);
     float: left;
-    background-color: #353535;
+    background-color: #212328;
     transition: all .3s ease;
-    opacity: 0;
-    clear: right;
+    border-left: 2px solid #060608;
 }
 
-#app.expanded .inspector{
-    width: 220px;
+#app .inspector .inspector-elements{
+    width: calc(100% - 20px);
+    height: 250px;
+    border-radius: 4px;
+    margin-left: 10px;
+    margin-top: 10px;
+    background-color: #2a2d34;
+}
+
+#app .inspector hr{
+    height: 2px;
+    margin-top: 10px;
+    background-color: #060608;
+    border:none;
+    outline: none;
+}
+
+#app .inspector .inspector-properties{
+    width: calc(100% - 20px);
+    margin-top: 10px;
+    margin-left: 10px;
+    height: calc(100% - 270px);
+}
+
+#app .inspector .inspector-properties .color-select{
+    width: 100%;
+    background-color: #2a2d34;
+    border-radius: 4px;
+    height: 35px;
+    position: relative;
+    border-bottom: 2px solid transparent;
+    transition: all .3s ease;
+}
+
+#app .inspector .inspector-properties .color-select.expanded{
+    border-radius: 4px 4px 0px 0px;
+    border-bottom: 2px solid #060608;
+}
+
+#app .inspector .inspector-properties .color-select .dropdown{
+    position: absolute;
+    top: calc(100% + 2px);
+    background-color: #2a2d34;
+    box-shadow: 0 0 16px 2px rgba(0,0,0,.1);
+    height: fit-content;
+    max-height: 200px;
+    width: 100%;
+    border-radius: 0px 0px 4px 4px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(15px);
+    will-change: transform;
+    transition: opacity .25s ease, transform .3s ease;
+    overflow: auto;
+}
+
+#app .inspector .inspector-properties .color-select .dropdown::-webkit-scrollbar{width: 0;}
+
+#app .inspector .inspector-properties .color-select.expanded .dropdown{
     opacity: 1;
+    pointer-events: all;
+    transform: translateY(0px);
+}
+
+#app .inspector .inspector-properties .color-select .dropdown .category{
+    height: 30px;
+    line-height: 30px;
+    color:white;
+    text-align: center;
+    width: 100%;
+    font-size: 14px;
+    background-color: #4a505c;
+    border-bottom: 2px solid #060608;
+}
+
+#app .inspector .inspector-properties .color-select .dropdown .item{
+    width: 100%;
+    height: 36px;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0 10px;
+    align-items: center;
+    transition: all .25s ease;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+#app .inspector .inspector-properties .color-select .dropdown .item.active{
+    display:none;
+}
+
+#app .inspector .inspector-properties .color-select .dropdown .item:hover{
+    background-color: #3c414b;
+}
+
+#app .inspector .inspector-properties .color-select .dropdown .item .color{
+    height: 18px;
+    width: 18px;
+    border-radius: 4px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+#app .inspector .inspector-properties .color-select .dropdown .item .name{
+    color: white;
+    font-size: 14px;
+    font-weight: 300;
+    max-width: calc(100% - 28px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#app .inspector .inspector-properties .color-select .value{
+    width: 100%;
+    height: 100%;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 10px;
+    overflow: hidden;
+}
+
+#app .inspector .inspector-properties .color-select .value .color{
+    height: 18px;
+    width: 18px;
+    border-radius: 4px;
+    background-color: green;
+    margin-right: 10px;
+}
+
+#app .inspector .inspector-properties .color-select .value .name{
+    color:white;
+    font-weight: 300;
+    font-size: 14px;
+    max-width: calc(100% - 48px);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+#app .inspector .inspector-properties .color-select .arrow{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 5px;
+    color:white;
+    font-size: 22px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    will-change: transform;
+    transition: transform .25s ease;
+}
+
+#app .inspector .inspector-properties .color-select.expanded .arrow{
+    transform: rotate(180deg);
 }
