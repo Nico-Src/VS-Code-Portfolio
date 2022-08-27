@@ -34,6 +34,7 @@ class Inspector{
                         const b = selectedColor.rgba[2] / 255;
                         el.element.material.diffuseColor = new BABYLON.Color3(r,g,b);
                         el.element.material.alpha = selectedColor.rgba[3];
+                        el.color = selectedColor;
                     });
                     const colorSelect = document.querySelector('.color-select');
                     // update color select value
@@ -49,7 +50,53 @@ class Inspector{
         });
 
         document.addEventListener('selection-changed',(e)=>{
-            
+            const colorSelect = document.querySelector('.color-select');
+            if(e.detail.selectedBricks.length === 1){
+                const selectedColor = e.detail.selectedBricks[0].color;
+
+                // deselect all other items
+                Array.from(document.querySelectorAll('.color-select .dropdown .item')).forEach(item=>{
+                    item.classList.remove('active');
+                });
+
+                document.querySelector('.color-select .dropdown .item[value="'+selectedColor.name+'"]').classList.add('active');
+
+                // update color select value
+                colorSelect.querySelector('.value .color').style.backgroundColor = selectedColor.hex;
+                colorSelect.querySelector('.value .color').style.opacity = selectedColor.rgba[3];
+                colorSelect.querySelector('.value .name').innerHTML = selectedColor.name;
+            } else if(e.detail.selectedBricks.length > 1){
+                const colors = [];
+
+                // get how many different colors are selected
+                e.detail.selectedBricks.forEach(el => {
+                    if(!el.color) return;
+                    if(!colors.includes(el.color)){
+                        colors.push(el.color);
+                    }
+                });
+
+                // change color select accordingly
+                if(colors.length > 1){
+                    colorSelect.querySelector('.value .color').style.backgroundColor = 'red';
+                    colorSelect.querySelector('.value .color').style.opacity = 1;
+                    colorSelect.querySelector('.value .name').innerHTML = "Mixed";
+                } else {
+                    colorSelect.querySelector('.value .color').style.backgroundColor = colors[0].hex;
+                    colorSelect.querySelector('.value .color').style.opacity = colors[0].rgba[3];
+                    colorSelect.querySelector('.value .name').innerHTML = colors[0].name;
+                }
+
+                // deselect all other items (because multiple colors are selected)
+                Array.from(document.querySelectorAll('.color-select .dropdown .item')).forEach(item=>{
+                    item.classList.remove('active');
+                });
+            } else {
+                const selectedColor = this.editor.currentColor;
+                colorSelect.querySelector('.value .color').style.backgroundColor = selectedColor.hex;
+                colorSelect.querySelector('.value .color').style.opacity = selectedColor.rgba[3];
+                colorSelect.querySelector('.value .name').innerHTML = selectedColor.name;
+            }
         });
 
         document.querySelector('.color-select').onclick = (e) => {
