@@ -28,10 +28,10 @@ class Inspector{
                     const selectedColor = BrickLib.brickColors.find(c => c.name === e.currentTarget.getAttribute('value'));
                     this.editor.currentColor = selectedColor;
                     this.editor.elements.filter(elem => elem.selected).forEach(el => {
+                        if(!el.element.material) return;
                         const r = selectedColor.rgba[0] / 255;
                         const g = selectedColor.rgba[1] / 255;
                         const b = selectedColor.rgba[2] / 255;
-                        console.log(el);
                         el.element.material.diffuseColor = new BABYLON.Color3(r,g,b);
                         el.element.material.alpha = selectedColor.rgba[3];
                     });
