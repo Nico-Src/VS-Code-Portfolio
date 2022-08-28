@@ -14,7 +14,46 @@
 <body>
     <div id="app">
         <div class="top-bar">
-
+            <div class="logo"><img src="img/logo.png"></div>
+            <div class="nav-item">
+                <span>File</span>
+                <div class="dropdown">
+                    <div class="dropdown-item">
+                        <span class="name">New</span>
+                        <span class="shortcut">Ctrl + N</span>
+                    </div>
+                    <div class="dropdown-item">
+                        <span class="name">Open</span>
+                        <span class="shortcut">Ctrl + O</span>
+                    </div>
+                    <div class="dropdown-item">
+                        <span class="name">Save</span>
+                        <span class="shortcut">Ctrl + S</span>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="dropdown-item">
+                        <span class="name">Import</span>
+                        <span class="shortcut">Ctrl + I</span>
+                    </div>
+                    <div class="dropdown-item">
+                        <span class="name">Export</span>
+                        <span class="shortcut">Ctrl + E</span>
+                    </div>
+                </div>
+            </div>
+            <div class="nav-item">
+                <span>Edit</span>
+                <div class="dropdown">
+                    <div class="dropdown-item" data-action="selectAll">
+                        <span class="name">Select All</span>
+                        <span class="shortcut">Ctrl + A</span>
+                    </div>
+                    <div class="dropdown-item" data-action="deselectAll">
+                        <span class="name">Deselect All</span>
+                        <span class="shortcut">Shift + A</span>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="tool-box">
             <div class="search-wrapper"></div>
