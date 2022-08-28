@@ -82,7 +82,7 @@ html,body{
     overflow: hidden;
 }
 
-#app .top-bar .nav-item:not(.disabled):hover .dropdown{
+#app .top-bar .nav-item.expanded .dropdown{
     opacity: 1;
     pointer-events: all;
     transform: translateY(0px);
@@ -125,6 +125,10 @@ html,body{
 }
 
 #app .top-bar .nav-item:hover{
+    background-color: #3c414b;
+}
+
+#app .top-bar .nav-item.expanded{
     background-color: #3c414b;
     border-radius: 4px 4px 0px 0px;
 }
