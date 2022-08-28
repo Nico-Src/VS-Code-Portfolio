@@ -19,6 +19,12 @@ class BrickLib{
         'Purple'
     ];
 
+    static brickCategories = [
+        'Brick',
+        'Plate',
+        'Tile'
+    ];
+
     static brickColors = [
         {
             name: 'Black',
@@ -427,43 +433,53 @@ class BrickLib{
     static bricks = [
         {
             name: '1x1',
+            shortName: '1x1',
             height: .235,
             width: 1,
             depth: 1,
             path: '3005.glb',
             offset: new BABYLON.Vector3(0,.005,0),
+            category: 'Brick',
         },
         {
             name: '2x1',
+            shortName: '2x1',
             height: .235,
             width: 2,
             depth: 1,
             path: '3004.glb',
             offset: new BABYLON.Vector3(-0.1,.005,0),
+            category: 'Brick',
         },
         {
             name: '2x2',
+            shortName: '2x2',
             height: .235,
             width: 2,
             depth: 2,
             path: '3003.glb',
-            offset: new BABYLON.Vector3(-0.1,0.005,-0.1)
+            offset: new BABYLON.Vector3(-0.1,0.005,-0.1),
+            category: 'Brick',
         },
         {
             name: '2x2 without Groove',
+            shortName: '2x2 without Groove',
             height: .24,
             width: 2,
             depth: 2,
             path: '3068a.glb',
-            offset: new BABYLON.Vector3(-0.1,-.155,-0.1)
+            offset: new BABYLON.Vector3(-0.1,-.155,-0.1),
+            category: 'Tile',
         },
         {
             name: '1x1 Plate',
+            shortName: '1x1',
             height: .24,
             width: 1,
             depth: 1,
             path: '3024.glb',
             offset: new BABYLON.Vector3(0,-.155,0),
+            category: 'Plate',
         }
     ];
 }
