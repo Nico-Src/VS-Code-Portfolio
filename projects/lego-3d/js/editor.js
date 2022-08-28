@@ -51,7 +51,7 @@ class Editor{
 
         // set intensity and groundcolor for each light
         lights.forEach(light=>{
-            light.intensity = 0.5;
+            light.intensity = 0.75;
             light.groundColor = new BABYLON.Color3(0.2, 0.2, 0.2);
         });
 
@@ -101,7 +101,7 @@ class Editor{
                 task.loadedMeshes[1].position.x = 10000;
 
                 // set mesh in brick library mesh map
-                BrickLib.brickMeshes.set(brick.name, task.loadedMeshes[1]);
+                BrickLib.brickMeshes.set(brick.name,this.ConvertAbstractMeshToFlatShaded(task.loadedMeshes[1]));
             };
         });
 
@@ -248,7 +248,7 @@ class Editor{
             if (!grid) return;
 
             // calculate new position for picked mesh + offsets and sizes of the specific lego brick
-            const pos = new BABYLON.Vector3(Math.round(-grid.x / 0.2) * 0.2 + this.currentMesh.offset.x, grid._y + this.currentMesh.offset.y, Math.round(grid.z / 0.2) * 0.2 + this.currentMesh.offset.z);
+            const pos = new BABYLON.Vector3(Math.round(grid.x / 0.2) * 0.2 + this.currentMesh.offset.x, grid._y + this.currentMesh.offset.y, Math.round(grid.z / 0.2) * 0.2 + this.currentMesh.offset.z);
             
             // update mesh position
             this.currentMesh.position = pos;
@@ -451,5 +451,28 @@ class Editor{
         return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
             (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         );
+    }
+
+    ConvertAbstractMeshToFlatShaded = (mesh)=>{
+        const positions = mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind)
+        const normals = mesh.getVerticesData(BABYLON.VertexBuffer.NormalKind)
+        const indices = mesh.getIndices()
+    
+        console.log(positions)
+    
+        const flatMesh = new BABYLON.Mesh(mesh.name+"_flat", mesh.getScene())
+        flatMesh.position = mesh.position
+        flatMesh.rotation = mesh.rotation
+        flatMesh.scaling = mesh.scaling
+        mesh.dispose()
+    
+        const data = new BABYLON.VertexData()
+        data.positions = positions
+        data.normals = normals
+        data.indices = indices.reverse()
+        data.applyToMesh(flatMesh)
+    
+        flatMesh.convertToFlatShadedMesh()
+        return flatMesh
     }
 }
