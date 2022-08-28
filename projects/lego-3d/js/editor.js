@@ -16,6 +16,9 @@ class Editor{
                 far: 10000,
                 zoomSpeed: 50,
                 zoomToMouseLocation: true,
+            },
+            pipeline: {
+                sharpenEnabled: false,
             }
         };
         
@@ -85,7 +88,7 @@ class Editor{
         );
         
         // enable sharpening in the pipeline
-        this.pipeline.sharpenEnabled = true;
+        this.pipeline.sharpenEnabled = this.config.pipeline.sharpenEnabled;
 
         // load brick meshes
         BrickLib.bricks.forEach(brick=>{
@@ -160,40 +163,11 @@ class Editor{
             if(e.keyCode === 71){
                 this.toggleGrid();
             } else if(e.code === 'KeyA' && e.ctrlKey){
-                // prevent default behaviour of shift + a
-                e.preventDefault();
-                // select all bricks
-                this.elements.forEach(el=>{
-                    if(el.type === 'brick'){
-                        el.selected = true;
-                    }
-                });
-
-                // notify selection change
-                this.notifySelectionChange();
+                this.selectAll(e);
             } else if(e.code === 'KeyA' && e.shiftKey){
-                // prevent default behaviour of shift + a
-                e.preventDefault();
-                // deselect all bricks
-                this.elements.forEach(el=>{
-                    if(el.type === 'brick'){
-                        el.selected = false;
-                    }
-                });
-                
-                // notify selection change
-                this.notifySelectionChange();
+                this.deselectAll(e);
             } else if(e.code === 'Delete'){
-                // get selected elements and remove them from scene
-                let selectedElements = this.elements.filter(el=>el.selected);
-                selectedElements.forEach(el=>{
-                    const index = this.elements.indexOf(el);
-                    this.elements[index].element.dispose();
-                    this.elements.splice(index, 1);
-                });
-
-                // notify selection change
-                this.notifySelectionChange();
+                this.deleteSelected(e);
             }
 
             // set key pressed state in keys map
@@ -459,6 +433,48 @@ class Editor{
         return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
             (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
         );
+    }
+
+    selectAll(e){
+        // prevent default behaviour of shift + a
+        if(e) e.preventDefault();
+        // select all bricks
+        this.elements.forEach(el=>{
+            if(el.type === 'brick'){
+                el.selected = true;
+            }
+        });
+
+        // notify selection change
+        this.notifySelectionChange();
+    }
+
+    deselectAll(e){
+        // prevent default behaviour of shift + a
+        if(e) e.preventDefault();
+        // deselect all bricks
+        this.elements.forEach(el=>{
+            if(el.type === 'brick'){
+                el.selected = false;
+            }
+        });
+        
+        // notify selection change
+        this.notifySelectionChange();
+    }
+
+    deleteSelected(e){
+        if(e) e.preventDefault();
+        // get selected elements and remove them from scene
+        let selectedElements = this.elements.filter(el=>el.selected);
+        selectedElements.forEach(el=>{
+            const index = this.elements.indexOf(el);
+            this.elements[index].element.dispose();
+            this.elements.splice(index, 1);
+        });
+
+        // notify selection change
+        this.notifySelectionChange();
     }
 
     ConvertAbstractMeshToFlatShaded = (mesh)=>{
