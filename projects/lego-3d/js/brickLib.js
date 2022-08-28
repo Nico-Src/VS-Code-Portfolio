@@ -448,6 +448,22 @@ class BrickLib{
             depth: 2,
             path: '3003.glb',
             offset: new BABYLON.Vector3(-0.1,0,-0.1)
+        },
+        {
+            name: '2x2 without Groove',
+            height: .24,
+            width: 2,
+            depth: 2,
+            path: '3068a.glb',
+            offset: new BABYLON.Vector3(-0.1,-.155,-0.1)
+        },
+        {
+            name: '1x1 Plate',
+            height: .24,
+            width: 1,
+            depth: 1,
+            path: '3024.glb',
+            offset: new BABYLON.Vector3(0,-.155,0),
         }
     ];
 }
