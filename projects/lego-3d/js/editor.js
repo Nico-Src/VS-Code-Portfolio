@@ -118,16 +118,25 @@ class Editor{
                         el.element.enableEdgesRendering();
                         el.element.edgesWidth = this.config.selection.lineWidth;
                         el.element.edgesColor = this.config.selection.lineColor;
-
                     // else if the element is hovered show bounding box only
                     } else if(el.type === 'brick' && el.hovering) {
                         el.element.showBoundingBox = true;
                         el.element.disableEdgesRendering();
-
+                        /* el.element.edgesWidth = this.config.selection.lineWidth;
+                        const r = el.color.rgba[0] / 255;
+                        const g = el.color.rgba[1] / 255;
+                        const b = el.color.rgba[2] / 255;
+                        el.element.edgesColor = new BABYLON.Color4(r,g,b,el.color.rgba[3]); */
                     // else if the element is not selected or hovered hide bounding box and edge renderer
                     } else if(el.type === 'brick') {
                         el.element.showBoundingBox = false;
                         el.element.disableEdgesRendering();
+                        el.element.edgesWidth = this.config.selection.lineWidth;
+                        /* el.element.edgesWidth = this.config.selection.lineWidth;
+                        const r = el.color.rgba[0] / 255;
+                        const g = el.color.rgba[1] / 255;
+                        const b = el.color.rgba[2] / 255;
+                        el.element.edgesColor = new BABYLON.Color4(r,g,b,el.color.rgba[3]); */
                     }
                 });
             });
@@ -321,11 +330,13 @@ class Editor{
      * @param {String} name name of the brick to add
      */
     addBrickByName(name){
+        // get brick data
+        const brickData = BrickLib.bricks.find(b=>b.name === name);
         // create brick instance
         const brickMesh = BrickLib.brickMeshes.get(name);
         const brick = brickMesh.clone(name);
         brick.isPickable = true;
-        brick.position = new BABYLON.Vector3(0, 0, 0);
+        brick.position = new BABYLON.Vector3(0, 0, 0).add(brickData.offset);
         // create lego brick material and set it to the brick
         const brickMaterial = new BABYLON.StandardMaterial("mat", this.scene);
         // calculate brick color (babylon uses 0-1 values for colors)
@@ -344,9 +355,6 @@ class Editor{
 
         // check if brick exists
         if(!brick) return;
-
-        // get brick data
-        const brickData = BrickLib.bricks.find(b=>b.name === name);
 
         // set brick offset
         brick.offset = brickData.offset || new BABYLON.Vector3(0,0,0);
@@ -454,25 +462,23 @@ class Editor{
     }
 
     ConvertAbstractMeshToFlatShaded = (mesh)=>{
-        const positions = mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind)
-        const normals = mesh.getVerticesData(BABYLON.VertexBuffer.NormalKind)
-        const indices = mesh.getIndices()
+        const positions = mesh.getVerticesData(BABYLON.VertexBuffer.PositionKind);
+        const normals = mesh.getVerticesData(BABYLON.VertexBuffer.NormalKind);
+        const indices = mesh.getIndices();
     
-        console.log(positions)
+        const flatMesh = new BABYLON.Mesh(mesh.name+"_flat", mesh.getScene());
+        flatMesh.position = mesh.position;
+        flatMesh.rotation = mesh.rotation;
+        flatMesh.scaling = mesh.scaling;
+        mesh.dispose();
     
-        const flatMesh = new BABYLON.Mesh(mesh.name+"_flat", mesh.getScene())
-        flatMesh.position = mesh.position
-        flatMesh.rotation = mesh.rotation
-        flatMesh.scaling = mesh.scaling
-        mesh.dispose()
+        const data = new BABYLON.VertexData();
+        data.positions = positions;
+        data.normals = normals;
+        data.indices = indices.reverse();
+        data.applyToMesh(flatMesh);
     
-        const data = new BABYLON.VertexData()
-        data.positions = positions
-        data.normals = normals
-        data.indices = indices.reverse()
-        data.applyToMesh(flatMesh)
-    
-        flatMesh.convertToFlatShadedMesh()
-        return flatMesh
+        flatMesh.convertToFlatShadedMesh();
+        return flatMesh;
     }
 }

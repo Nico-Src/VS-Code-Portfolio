@@ -431,7 +431,7 @@ class BrickLib{
             width: 1,
             depth: 1,
             path: '3005.glb',
-            offset: new BABYLON.Vector3(0,0,0),
+            offset: new BABYLON.Vector3(0,.005,0),
         },
         {
             name: '2x1',
@@ -439,7 +439,7 @@ class BrickLib{
             width: 2,
             depth: 1,
             path: '3004.glb',
-            offset: new BABYLON.Vector3(-0.1,0,0),
+            offset: new BABYLON.Vector3(-0.1,.005,0),
         },
         {
             name: '2x2',
@@ -447,7 +447,7 @@ class BrickLib{
             width: 2,
             depth: 2,
             path: '3003.glb',
-            offset: new BABYLON.Vector3(-0.1,0,-0.1)
+            offset: new BABYLON.Vector3(-0.1,0.005,-0.1)
         },
         {
             name: '2x2 without Groove',
