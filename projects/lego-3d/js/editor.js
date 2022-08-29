@@ -178,6 +178,10 @@ class Editor{
             this.keys.set(e.code, false);
         }
 
+        document.querySelector('#open-file-input').addEventListener('change',(e)=>{
+            this.openLegoFileChanged(e);
+        });
+
         // on pointer down
         this.scene.onPointerDown = (evt, pickInfo) => {
             // if an object was hit with right click proceed
@@ -303,23 +307,23 @@ class Editor{
     /** add brick to the editor by name
      * @param {String} name name of the brick to add
      */
-    addBrickByName(name){
+    addBrickByName(name,position,color){
         // get brick data
         const brickData = BrickLib.bricks.find(b=>b.name === name);
         // create brick instance
         const brickMesh = BrickLib.brickMeshes.get(name);
         const brick = brickMesh.clone(name);
         brick.isPickable = true;
-        brick.position = new BABYLON.Vector3(0, 0, 0).add(brickData.offset);
+        brick.position = position || new BABYLON.Vector3(0, 0, 0).add(brickData.offset);
         // create lego brick material and set it to the brick
         const brickMaterial = new BABYLON.StandardMaterial("mat", this.scene);
         // calculate brick color (babylon uses 0-1 values for colors)
-        const r = this.currentColor.rgba[0] / 255;
-        const g = this.currentColor.rgba[1] / 255;
-        const b = this.currentColor.rgba[2] / 255;
+        const r = (color === undefined ? this.currentColor.rgba[0] / 255 : color.rgba[0] / 255);
+        const g = (color === undefined ? this.currentColor.rgba[1] / 255 : color.rgba[1] / 255);
+        const b = (color === undefined ? this.currentColor.rgba[2] / 255 : color.rgba[2] / 255);
         // set properties of the bricks material
         brickMaterial.diffuseColor = new BABYLON.Color3(r, g, b);
-        brickMaterial.alpha = this.currentColor.rgba[3];
+        brickMaterial.alpha = (color === undefined ? this.currentColor.rgba[3] : color.rgba[3]);
 
         // TODO add specular and emissive colors also to BrickLib colors
         brickMaterial.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
@@ -342,7 +346,7 @@ class Editor{
             type: 'brick',
             selected: false,
             hovering: false,
-            color: this.currentColor
+            color: (color === undefined ? this.currentColor : color),
         });
     }
 
@@ -475,6 +479,63 @@ class Editor{
 
         // notify selection change
         this.notifySelectionChange();
+    }
+
+    saveLegoFile(){
+        const saveBricks = [];
+
+        for(const brick of this.elements){
+            if(brick.type === 'brick'){
+                saveBricks.push({
+                    name: brick.name,
+                    data: brick.data,
+                    type: 'brick',
+                    position: brick.element.position,
+                    rotation: brick.element.rotation,
+                    color: brick.color
+                });
+            }
+        }
+
+        const legoFile = JSON.stringify(saveBricks);
+        this.download('lego.brick',legoFile);
+    }
+
+    openLegoFile(){
+        document.querySelector('#open-file-input').click();
+    }
+
+    loadLegoFile(legoFile){
+        console.log(legoFile);
+        for(const brick of legoFile){
+            this.addBrickByName(brick.name, brick.position, brick.color);
+        }
+    }
+
+    openLegoFileChanged(e){
+        const file = e.target.files[0];
+
+        if(!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const legoFile = JSON.parse(e.target.result);
+            this.loadLegoFile(legoFile);
+        }
+        reader.readAsText(file);
+    }
+
+    download(filename, text) {
+        const element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
     }
 
     ConvertAbstractMeshToFlatShaded = (mesh)=>{

@@ -75,7 +75,12 @@
             </div>
             <div class="section projects">
                 <div class="title">Projects</div>
+                <div class="description">Some of my personal tools or libraries i created.</div>
                 <div class="item">
+                    <div class="top-left-right"></div>
+                    <div class="top-left-bottom"></div>
+                    <div class="bottom-right-left"></div>
+                    <div class="bottom-right-top"></div>
                     <img src="img/relational-algebra.png">
                     <div class="info">
                         <div class="name">Relational Algebra</div>
@@ -88,9 +93,14 @@
                         <div class="description">
                             A tool with which you can easily draw relational algebra trees.
                         </div>
+                        <!-- TODO VISIT BTN HERE -->
                     </div>
                 </div>
                 <div class="item">
+                    <div class="top-left-right"></div>
+                    <div class="top-left-bottom"></div>
+                    <div class="bottom-right-left"></div>
+                    <div class="bottom-right-top"></div>
                     <img src="img/audio-visualizer.png">
                     <div class="info">
                         <div class="name">Audio Visualizer</div>
@@ -105,6 +115,10 @@
                     </div>
                 </div>
                 <div class="item">
+                    <div class="top-left-right"></div>
+                    <div class="top-left-bottom"></div>
+                    <div class="bottom-right-left"></div>
+                    <div class="bottom-right-top"></div>
                     <img src="img/curve-fever.png">
                     <div class="info">
                         <div class="name">Curve Fever</div>
@@ -120,6 +134,10 @@
                     </div>
                 </div>
                 <div class="item">
+                    <div class="top-left-right"></div>
+                    <div class="top-left-bottom"></div>
+                    <div class="bottom-right-left"></div>
+                    <div class="bottom-right-top"></div>
                     <img src="img/tree-generator.png">
                     <div class="info">
                         <div class="name">Tree Generator</div>
@@ -135,6 +153,10 @@
                     </div>
                 </div>
                 <div class="item">
+                    <div class="top-left-right"></div>
+                    <div class="top-left-bottom"></div>
+                    <div class="bottom-right-left"></div>
+                    <div class="bottom-right-top"></div>
                     <img src="img/generative-art.png">
                     <div class="info">
                         <div class="name">Generative Art Tool</div>
@@ -149,6 +171,10 @@
                     </div>
                 </div>
                 <div class="item">
+                    <div class="top-left-right"></div>
+                    <div class="top-left-bottom"></div>
+                    <div class="bottom-right-left"></div>
+                    <div class="bottom-right-top"></div>
                     <img src="img/maze-generator.png">
                     <div class="info">
                         <div class="name">Maze Generator</div>
@@ -163,6 +189,10 @@
                     </div>
                 </div>
                 <div class="item">
+                    <div class="top-left-right"></div>
+                    <div class="top-left-bottom"></div>
+                    <div class="bottom-right-left"></div>
+                    <div class="bottom-right-top"></div>
                     <img src="img/jigsaw-framework.png">
                     <div class="info">
                         <div class="name">Jigsaw Puzzle Lib</div>
@@ -177,6 +207,10 @@
                     </div>
                 </div>
                 <div class="item">
+                    <div class="top-left-right"></div>
+                    <div class="top-left-bottom"></div>
+                    <div class="bottom-right-left"></div>
+                    <div class="bottom-right-top"></div>
                     <img src="img/lego-3d.png">
                     <div class="info">
                         <div class="name">Lego Building Tool</div>
@@ -198,59 +232,6 @@
             <div class="section">Section3</div>
             <div class="section">Section4</div>
         </div>
-
-        <!--<div class="content">
-            <div class="projects row">
-                <div class="project-item dark" project="relational-algebra">
-                    <img src="images/relational-algebra.png">
-                    <div class="title">
-                        Relational Algebra
-                    </div>
-                </div>
-
-                <div class="project-item light" project="audio-visualizer">
-                    <img src="images/audio-visualizer.png">
-                    <div class="title">
-                        Audio Visualizer
-                    </div>
-                </div>
-
-                <div class="project-item dark" project="tree-generator">
-                    <img src="images/tree-generator.png">
-                    <div class="title">
-                        Tree Generator
-                    </div>
-                </div>
-
-                <div class="project-item dark" project="maze-generator">
-                    <img src="images/maze-generator.png">
-                    <div class="title">
-                        Maze Generator
-                    </div>
-                </div>
-
-                <div class="project-item light" project="generative-art">
-                    <img src="images/generative-art.png">
-                    <div class="title">
-                        Generative Art Drawing
-                    </div>
-                </div>
-				
-				<div class="project-item light" project="lego-3d">
-                    <img src="images/lego-3d.png">
-                    <div class="title">
-                        Lego Modeling Tool
-                    </div>
-                </div>
-
-                <div class="project-item light" project="jigsaw-puzzle">
-                    <img src="images/jigsaw-framework.png">
-                    <div class="title">
-                        Jigzaw Puzzle Framework
-                    </div>
-                </div>
-            </div>
-        </div> -->
         
         <script src="js/jquery-3.6.0.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullPage.js/2.9.7/jquery.fullpage.min.js" integrity="sha512-bxzECOBohzcTcWocMAlNDE2kYs0QgwGs4eD8TlAN2vfovq13kfDfp95sJSZrNpt0VMkpP93ZxLC/+WN/7Trw2g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
@@ -284,6 +265,8 @@
                     anchors: ['me', 'projects', 'skills', 'contact'],
                     autoScrolling:true,
                     scrollHorizontally: true,
+                    controlArrows: false,
+                    slidesNavigation: true,
                     onLeave: (origin,destination,direction)=>{
                         setTimeout(() => {
                             sections[destination-1].classList.add('loaded');

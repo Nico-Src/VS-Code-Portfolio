@@ -14,6 +14,7 @@
 <body>
     <div id="app">
         <div class="top-bar">
+            <input type="file" id="open-file-input" accept=".brick" style="display: none;">
             <div class="logo"><img src="img/logo.png"></div>
             <div class="nav-item">
                 <span>File</span>
@@ -22,11 +23,11 @@
                         <span class="name">New</span>
                         <span class="shortcut">Ctrl + N</span>
                     </div>
-                    <div class="dropdown-item">
+                    <div class="dropdown-item" data-action="openLegoFile">
                         <span class="name">Open</span>
                         <span class="shortcut">Ctrl + O</span>
                     </div>
-                    <div class="dropdown-item">
+                    <div class="dropdown-item" data-action="saveLegoFile">
                         <span class="name">Save</span>
                         <span class="shortcut">Ctrl + S</span>
                     </div>

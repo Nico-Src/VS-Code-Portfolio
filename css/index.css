@@ -118,7 +118,8 @@ body,html{
     transform: translateX(0px);
 }
 
-.side-bar #menu .menu-item .top-left-right{
+.side-bar #menu .menu-item .top-left-right,
+.section.projects .item .top-left-right{
     height: 2px;
     width: 0;
     position: absolute;
@@ -126,9 +127,22 @@ body,html{
     left: 0px;
     background-color: var(--accent-color);
     transition: all .25s ease;
+    z-index: 20;
 }
 
-.side-bar #menu .menu-item .top-left-bottom{
+.section.projects .item .top-left-right,
+.section.projects .item .bottom-right-left{
+    height: 4px !important;
+}
+
+.section.projects .item .top-left-bottom,
+.section.projects .item .bottom-right-top{
+    width: 4px !important;
+}
+
+
+.side-bar #menu .menu-item .top-left-bottom,
+.section.projects .item .top-left-bottom{
     height: 0;
     width: 2px;
     position: absolute;
@@ -136,9 +150,11 @@ body,html{
     left: 0px;
     background-color: var(--accent-color);
     transition: all .25s ease;
+    z-index: 20;
 }
 
-.side-bar #menu .menu-item .bottom-right-left{
+.side-bar #menu .menu-item .bottom-right-left,
+.section.projects .item .bottom-right-left{
     height: 2px;
     width: 0;
     position: absolute;
@@ -146,9 +162,11 @@ body,html{
     right: 0px;
     background-color: var(--accent-color);
     transition: all .25s ease;
+    z-index: 20;
 }
 
-.side-bar #menu .menu-item .bottom-right-top{
+.side-bar #menu .menu-item .bottom-right-top,
+.section.projects .item .bottom-right-top{
     height: 0;
     width: 2px;
     position: absolute;
@@ -156,6 +174,7 @@ body,html{
     right: 0px;
     background-color: var(--accent-color);
     transition: all .25s ease;
+    z-index: 20;
 }
 
 .side-bar #menu .menu-item a{
@@ -170,12 +189,16 @@ body,html{
 }
 
 .side-bar #menu .menu-item.active .top-left-bottom,
-.side-bar #menu .menu-item.active .bottom-right-top{
+.side-bar #menu .menu-item.active .bottom-right-top,
+.section.projects .item:hover .top-left-bottom,
+.section.projects .item:hover .bottom-right-top{
     height: 30%;
 }
 
 .side-bar #menu .menu-item.active .top-left-right,
-.side-bar #menu .menu-item.active .bottom-right-left{
+.side-bar #menu .menu-item.active .bottom-right-left,
+.section.projects .item:hover .top-left-right,
+.section.projects .item:hover .bottom-right-left{
     width: 30%;
 }
 
@@ -359,10 +382,23 @@ body,html{
     will-change: transform, opacity;
     transition: transform .3s cubic-bezier(0.83, 0, 0.17, 1), opacity .3s cubic-bezier(0.83, 0, 0.17, 1);
     transition-delay: 200ms;
+}
+
+.section.projects .description{
+    display:block;
+    font-size: 18px;
+    font-weight: 400;
+    color: #BBB;
+    transform: translateY(50px);
+    opacity: 0;
+    will-change: transform, opacity;
+    transition: transform .3s cubic-bezier(0.83, 0, 0.17, 1), opacity .3s cubic-bezier(0.83, 0, 0.17, 1);
+    transition-delay: 400ms;
     margin-bottom: 10px;
 }
 
-.section.projects.loaded .title{
+.section.projects.loaded .title,
+.section.projects.loaded .description{
     transform: translateY(0px);
     opacity: 1;
 }
@@ -422,7 +458,7 @@ body,html{
     transform: translateY(calc(100% + 20px));
     will-change: transform;
     transition: transform .25s ease;
-    padding: 5px 10px;
+    padding: 10px 20px;
     pointer-events: none;
 }
 
