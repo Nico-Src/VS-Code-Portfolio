@@ -506,7 +506,7 @@ class Editor{
     }
 
     loadLegoFile(legoFile){
-        console.log(legoFile);
+        // TODO clear previous bricks
         for(const brick of legoFile){
             this.addBrickByName(brick.name, brick.position, brick.color);
         }

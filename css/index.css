@@ -496,3 +496,63 @@ body,html{
     color:white;
     font-weight: 200;
 }
+
+.section.projects .item .info .visit-btn{
+    margin-top: 5px;
+    width: 150px;
+    height: 30px;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    transition: all .25s ease;
+    cursor: pointer;
+}
+
+.section.projects .item .info .visit-btn .content{
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    z-index: 3;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--accent-color);
+    text-decoration: none;
+}
+
+.section.projects .item .info .visit-btn .content span,
+.section.projects .item .info .visit-btn .content i{
+    transition: all .25s ease;
+}
+
+.section.projects .item .info .visit-btn:hover .content span,
+.section.projects .item .info .visit-btn:hover .content i{
+    color: black;
+}
+
+.section.projects .item .info .visit-btn .hover-box{
+    width: 0px;
+    z-index: 1;
+    background-color: var(--accent-color);
+    height: 30px;
+    transition: all .35s ease;
+}
+
+.section.projects .item .info .visit-btn:hover .hover-box{
+    width: 150px;
+}
+
+.section.projects .item .info .visit-btn .border-box{
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    width: 150px;
+    height: 30px;
+    border: 2px solid var(--accent-color);
+}
+
+.section.projects .item .info .visit-btn i{
+    margin-left: 5px;
+}

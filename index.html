@@ -93,7 +93,14 @@
                         <div class="description">
                             A tool with which you can easily draw relational algebra trees.
                         </div>
-                        <!-- TODO VISIT BTN HERE -->
+                        <div class="visit-btn" url="relational-algebra">
+                            <div class="content">
+                                <span>Visit</span>
+                                <i class='bx bx-link'></i>
+                            </div>
+                            <div class="hover-box"></div>
+                            <div class="border-box"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="item">
@@ -111,6 +118,14 @@
                         </div>
                         <div class="description">
                             A Simple Configurable Audio Visualizer with Bars.
+                        </div>
+                        <div class="visit-btn" url="audio-visualizer">
+                            <div class="content">
+                                <span>Visit</span>
+                                <i class='bx bx-link'></i>
+                            </div>
+                            <div class="hover-box"></div>
+                            <div class="border-box"></div>
                         </div>
                     </div>
                 </div>
@@ -131,6 +146,14 @@
                         <div class="description">
                             A recreation of the game "Curve Fever" with WebGL. (Work in Progress)
                         </div>
+                        <div class="visit-btn" url="curve-fever">
+                            <div class="content">
+                                <span>Visit</span>
+                                <i class='bx bx-link'></i>
+                            </div>
+                            <div class="hover-box"></div>
+                            <div class="border-box"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="item">
@@ -150,6 +173,14 @@
                         <div class="description">
                             A tool with which you can generate trees with the desired options like Color Variation,...
                         </div>
+                        <div class="visit-btn" url="tree-generator">
+                            <div class="content">
+                                <span>Visit</span>
+                                <i class='bx bx-link'></i>
+                            </div>
+                            <div class="hover-box"></div>
+                            <div class="border-box"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="item">
@@ -167,6 +198,14 @@
                         </div>
                         <div class="description">
                             A Tool with which you can create generative art. (With a lot of different modes/options)
+                        </div>
+                        <div class="visit-btn" url="generative-art">
+                            <div class="content">
+                                <span>Visit</span>
+                                <i class='bx bx-link'></i>
+                            </div>
+                            <div class="hover-box"></div>
+                            <div class="border-box"></div>
                         </div>
                     </div>
                 </div>
@@ -186,6 +225,14 @@
                         <div class="description">
                             A Tool with which you can generate a maze with the desired options like Size.
                         </div>
+                        <div class="visit-btn" url="maze-generator">
+                            <div class="content">
+                                <span>Visit</span>
+                                <i class='bx bx-link'></i>
+                            </div>
+                            <div class="hover-box"></div>
+                            <div class="border-box"></div>
+                        </div>
                     </div>
                 </div>
                 <div class="item">
@@ -203,6 +250,14 @@
                         </div>
                         <div class="description">
                             A Library with which you can create playable and configurable Jigsaw Puzzles.
+                        </div>
+                        <div class="visit-btn" url="jigsaw-puzzle">
+                            <div class="content">
+                                <span>Visit</span>
+                                <i class='bx bx-link'></i>
+                            </div>
+                            <div class="hover-box"></div>
+                            <div class="border-box"></div>
                         </div>
                     </div>
                 </div>
@@ -222,6 +277,14 @@
                         </div>
                         <div class="description">
                             A Tool with which you can create Lego Builds.
+                        </div>
+                        <div class="visit-btn" url="lego-3d">
+                            <div class="content">
+                                <span>Visit</span>
+                                <i class='bx bx-link'></i>
+                            </div>
+                            <div class="hover-box"></div>
+                            <div class="border-box"></div>
                         </div>
                     </div>
                 </div>
@@ -274,22 +337,16 @@
                     }
                 });
 
-                $(".nav-bar li").each(function(){
-                    this.onclick=()=>{
-                        $(".nav-bar li.active").removeClass('active');
-                        this.classList.add('active');
-                    };
-                });
-
-                $(".project-item").each(function(){
-                    this.onclick=()=>{
-                        visitProject(this.getAttribute('project'));
+                $(".section.projects .item").each(function(){
+                    const visitBtn = this.querySelector('.visit-btn');
+                    visitBtn.onclick = () => {
+                        visitProject(visitBtn.getAttribute('url'));
                     };
                 });
             });
 
             function visitProject(link){
-                window.location.href = "projects/"+link;
+                const win = window.open(`projects/${link}`, '_blank').focus();
             }
         </script>
     </body>
