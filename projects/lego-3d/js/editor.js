@@ -117,29 +117,37 @@ class Editor{
                 this.elements.forEach(el=>{
                     // if the element is selected show bounding box and edge renderer
                     if(el.type === 'brick' && el.selected){
+                        // set colors of the bounding box
+                        this.scene.getBoundingBoxRenderer().frontColor.set(.46, 0.96, 0.96);
+                        this.scene.getBoundingBoxRenderer().backColor.set(.46, 0.96, 0.96);
                         el.element.showBoundingBox = true;
                         el.element.enableEdgesRendering();
                         el.element.edgesWidth = this.config.selection.lineWidth;
                         el.element.edgesColor = this.config.selection.lineColor;
+                        el.element.material.alpha = el.color.rgba[3];
                     // else if the element is hovered show bounding box only
-                    } else if(el.type === 'brick' && el.hovering) {
+                    } else if(el.type === 'brick' && el.hovering && !el.invalidPos) {
+                        // set colors of the bounding box
+                        this.scene.getBoundingBoxRenderer().frontColor.set(.46, 0.96, 0.96);
+                        this.scene.getBoundingBoxRenderer().backColor.set(.46, 0.96, 0.96);
                         el.element.showBoundingBox = true;
                         el.element.disableEdgesRendering();
-                        /* el.element.edgesWidth = this.config.selection.lineWidth;
-                        const r = el.color.rgba[0] / 255;
-                        const g = el.color.rgba[1] / 255;
-                        const b = el.color.rgba[2] / 255;
-                        el.element.edgesColor = new BABYLON.Color4(r,g,b,el.color.rgba[3]); */
+                        el.element.material.alpha = el.color.rgba[3];
                     // else if the element is not selected or hovered hide bounding box and edge renderer
-                    } else if(el.type === 'brick') {
+                    } else if(el.type === 'brick' && !el.invalidPos) {
                         el.element.showBoundingBox = false;
                         el.element.disableEdgesRendering();
                         el.element.edgesWidth = this.config.selection.lineWidth;
-                        /* el.element.edgesWidth = this.config.selection.lineWidth;
-                        const r = el.color.rgba[0] / 255;
-                        const g = el.color.rgba[1] / 255;
-                        const b = el.color.rgba[2] / 255;
-                        el.element.edgesColor = new BABYLON.Color4(r,g,b,el.color.rgba[3]); */
+                        el.element.material.alpha = el.color.rgba[3];
+                    } else if(el.type === 'brick') {
+                        el.element.showBoundingBox = true;
+                        el.element.enableEdgesRendering();
+                        el.element.edgesWidth = this.config.selection.lineWidth;
+                        el.element.edgesColor = new BABYLON.Color4(1,0,0,1);
+                        // set colors of the bounding box
+                        this.scene.getBoundingBoxRenderer().frontColor.set(1,0,0);
+                        this.scene.getBoundingBoxRenderer().backColor.set(1,0,0);
+                        el.element.material.alpha = 0.5;
                     }
                 });
             });
@@ -239,7 +247,22 @@ class Editor{
             
             // update mesh position
             this.currentMesh.position = pos;
+            
+            this.checkForCollisions();
         };
+    }
+
+    checkForCollisions(){
+        const currentBrick = this.elements.find(el=>el.element === this.currentMesh);
+        for(const brick of this.elements.filter(e => e.element !== this.currentMesh && e.type === 'brick')){
+            const intersects = BABYLON.BoundingBox.Intersects(this.currentMesh._boundingInfo.boundingBox,brick.element._boundingInfo.boundingBox);
+            if(intersects){
+                currentBrick.invalidPos = true;
+                break;
+            } else {
+                currentBrick.invalidPos = false;
+            }
+        }
     }
 
     /** generates grid */
@@ -337,6 +360,11 @@ class Editor{
         // set brick offset
         brick.offset = brickData.offset || new BABYLON.Vector3(0,0,0);
 
+        const boundingBoxOffset = 0.01;
+        const brickMin = new BABYLON.Vector3(-(0.1 * brickData.width) + boundingBoxOffset,this.grid.position._y,-(0.1 * brickData.depth) + boundingBoxOffset);
+        const brickMax = new BABYLON.Vector3((0.1 * brickData.width) - boundingBoxOffset,this.grid.position._y + (brickData.height),(0.1 * brickData.depth) - boundingBoxOffset);
+        brick._boundingInfo.boundingBox = new BABYLON.BoundingBox(brickMin,brickMax,brick._boundingInfo.boundingBox._worldMatrix);
+
         // push to editors elements
         this.elements.push({
             id:brick.uniqueId,
@@ -346,6 +374,7 @@ class Editor{
             type: 'brick',
             selected: false,
             hovering: false,
+            invalidPos: false,
             color: (color === undefined ? this.currentColor : color),
         });
     }

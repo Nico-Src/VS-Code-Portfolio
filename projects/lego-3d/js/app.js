@@ -4,7 +4,6 @@ const toolbox = new ToolBox(editor);
 const inspector = new Inspector(editor);
 
 document.onclick = (e) => {
-    console.log(e);
     if(!e.target.classList.contains('.dropdown') && !e.target.classList.contains('.dropdown-item') && !e.target.classList.contains('.nav-item')){
         Array.from(document.querySelectorAll('.nav-item')).forEach(nav => nav.classList.remove('expanded'));
     }
