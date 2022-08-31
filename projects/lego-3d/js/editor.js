@@ -117,36 +117,18 @@ class Editor{
                 this.elements.forEach(el=>{
                     // if the element is selected show bounding box and edge renderer
                     if(el.type === 'brick' && el.selected){
-                        // set colors of the bounding box
-                        this.scene.getBoundingBoxRenderer().frontColor.set(.46, 0.96, 0.96);
-                        this.scene.getBoundingBoxRenderer().backColor.set(.46, 0.96, 0.96);
                         el.element.showBoundingBox = true;
-                        el.element.enableEdgesRendering();
-                        el.element.edgesWidth = this.config.selection.lineWidth;
-                        el.element.edgesColor = this.config.selection.lineColor;
                         el.element.material.alpha = el.color.rgba[3];
                     // else if the element is hovered show bounding box only
                     } else if(el.type === 'brick' && el.hovering && !el.invalidPos) {
-                        // set colors of the bounding box
-                        this.scene.getBoundingBoxRenderer().frontColor.set(.46, 0.96, 0.96);
-                        this.scene.getBoundingBoxRenderer().backColor.set(.46, 0.96, 0.96);
                         el.element.showBoundingBox = true;
-                        el.element.disableEdgesRendering();
                         el.element.material.alpha = el.color.rgba[3];
                     // else if the element is not selected or hovered hide bounding box and edge renderer
                     } else if(el.type === 'brick' && !el.invalidPos) {
                         el.element.showBoundingBox = false;
-                        el.element.disableEdgesRendering();
-                        el.element.edgesWidth = this.config.selection.lineWidth;
                         el.element.material.alpha = el.color.rgba[3];
                     } else if(el.type === 'brick') {
-                        el.element.showBoundingBox = true;
-                        el.element.enableEdgesRendering();
-                        el.element.edgesWidth = this.config.selection.lineWidth;
-                        el.element.edgesColor = new BABYLON.Color4(1,0,0,1);
-                        // set colors of the bounding box
-                        this.scene.getBoundingBoxRenderer().frontColor.set(1,0,0);
-                        this.scene.getBoundingBoxRenderer().backColor.set(1,0,0);
+                        el.element.showBoundingBox = false;
                         el.element.material.alpha = 0.5;
                     }
                 });
@@ -167,6 +149,7 @@ class Editor{
 
     /** setup controls of the elements and everything else */
     setupControls(){
+        // TODO setup control for selecting elements with drawing a rectangle with mouse
         document.onkeydown = (e) => {
             if(e.keyCode === 71){
                 this.toggleGrid();
@@ -176,6 +159,10 @@ class Editor{
                 this.deselectAll(e);
             } else if(e.code === 'Delete'){
                 this.deleteSelected(e);
+            } else if(e.code === 'KeyC' && e.ctrlKey){
+                this.copySelected(e);
+            } else if(e.code === 'KeyV' && e.ctrlKey){
+                this.pasteSelected(e);
             }
 
             // set key pressed state in keys map
@@ -361,9 +348,11 @@ class Editor{
         brick.offset = brickData.offset || new BABYLON.Vector3(0,0,0);
 
         const boundingBoxOffset = 0.01;
-        const brickMin = new BABYLON.Vector3(-(0.1 * brickData.width) + boundingBoxOffset,this.grid.position._y,-(0.1 * brickData.depth) + boundingBoxOffset);
-        const brickMax = new BABYLON.Vector3((0.1 * brickData.width) - boundingBoxOffset,this.grid.position._y + (brickData.height),(0.1 * brickData.depth) - boundingBoxOffset);
+        const _boundingBoxOffset = brickData.boundingBoxOffset || new BABYLON.Vector3(0,0,0);
+        const brickMin = new BABYLON.Vector3(-(0.1 * brickData.width) + boundingBoxOffset + _boundingBoxOffset.x,this.grid.position._y + _boundingBoxOffset.y,-(0.1 * brickData.depth) + boundingBoxOffset + _boundingBoxOffset.z);
+        const brickMax = new BABYLON.Vector3((0.1 * brickData.width) - boundingBoxOffset + _boundingBoxOffset.x,this.grid.position._y + (brickData.height - boundingBoxOffset) + _boundingBoxOffset.y,(0.1 * brickData.depth) - boundingBoxOffset + _boundingBoxOffset.z);
         brick._boundingInfo.boundingBox = new BABYLON.BoundingBox(brickMin,brickMax,brick._boundingInfo.boundingBox._worldMatrix);
+        brick.doNotSyncBoundingInfo = true;
 
         // push to editors elements
         this.elements.push({
@@ -374,6 +363,7 @@ class Editor{
             type: 'brick',
             selected: false,
             hovering: false,
+            edgeRendererEnabled: false,
             invalidPos: false,
             color: (color === undefined ? this.currentColor : color),
         });
@@ -435,8 +425,14 @@ class Editor{
         if (brickInfo.hit) {
             // get brick info
             const brick = BrickLib.bricks.find(b=>b.name === brickInfo.pickedMesh.name);
+            if(brick.canPlaceOnTop === false){
+                pickInfo.pickedPoint.y -= this.grid.position._y; // add grid offset to make brick position correct
+                return pickInfo.pickedPoint;
+            }
             // set brick y position based on the height of the brick it is placed on
-            return new BABYLON.Vector3(brickInfo.pickedPoint.x, brickInfo.pickedMesh._position._y + brick.height, brickInfo.pickedPoint.z);
+            console.log(brickInfo.pickedMesh._position._y);
+            const boxOffset = brick.boundingBoxOffset || new BABYLON.Vector3(0,0,0);
+            return new BABYLON.Vector3(brickInfo.pickedPoint.x, brickInfo.pickedMesh._position._y + brick.height + boxOffset.y, brickInfo.pickedPoint.z);
         } else if(pickInfo.hit){
             pickInfo.pickedPoint.y -= this.grid.position._y; // add grid offset to make brick position correct
             return pickInfo.pickedPoint;
@@ -565,6 +561,23 @@ class Editor{
         element.click();
 
         document.body.removeChild(element);
+    }
+
+    copySelected(){
+        // get selected elements and remove them from scene
+        let selectedElements = this.elements.filter(el=>el.selected);
+        this.clipBoard = [];
+        selectedElements.forEach(el=>{
+            this.clipBoard.push(el);
+        });
+    }
+
+    pasteSelected(){
+        if(!this.clipBoard) return;
+
+        for(const brick of this.clipBoard){
+            this.addBrickByName(brick.name, new BABYLON.Vector3(brick.element._position._x, brick.element._position._y ,brick.element._position._z).add(new BABYLON.Vector3(1,0,0)), brick.color);
+        }
     }
 
     ConvertAbstractMeshToFlatShaded = (mesh)=>{
