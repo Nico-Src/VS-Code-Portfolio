@@ -22,7 +22,11 @@ class BrickLib{
     static brickCategories = [
         'Brick',
         'Plate',
-        'Tile'
+        'Tile',
+        'Arch',
+        'Deco',
+        'Panel',
+        'Slope'
     ];
 
     static brickColors = [
@@ -440,6 +444,7 @@ class BrickLib{
             path: '3005.glb',
             offset: new BABYLON.Vector3(0,.005,0),
             category: 'Brick',
+            canPlaceOnTop: true,
         },
         {
             name: '2x1',
@@ -450,6 +455,7 @@ class BrickLib{
             path: '3004.glb',
             offset: new BABYLON.Vector3(-0.1,.005,0),
             category: 'Brick',
+            canPlaceOnTop: true,
         },
         {
             name: '2x2',
@@ -460,26 +466,53 @@ class BrickLib{
             path: '3003.glb',
             offset: new BABYLON.Vector3(-0.1,0.005,-0.1),
             category: 'Brick',
+            canPlaceOnTop: true,
         },
         {
             name: '2x2 without Groove',
             shortName: '2x2 without Groove',
-            height: .24,
+            height: .08,
             width: 2,
             depth: 2,
             path: '3068a.glb',
+            boundingBoxOffset: new BABYLON.Vector3(0,.155,0),
             offset: new BABYLON.Vector3(-0.1,-.155,-0.1),
             category: 'Tile',
+            canPlaceOnTop: false,
         },
         {
             name: '1x1 Plate',
             shortName: '1x1',
-            height: .24,
+            height: .08,
             width: 1,
             depth: 1,
             path: '3024.glb',
+            boundingBoxOffset: new BABYLON.Vector3(0,.155,0),
             offset: new BABYLON.Vector3(0,-.155,0),
             category: 'Plate',
+            canPlaceOnTop: true,
+        },
+        {
+            name: '1x4',
+            shortName: '1x4',
+            height: .235,
+            width: 4,
+            depth: 1,
+            path: '3659.glb',
+            offset: new BABYLON.Vector3(0.1,0,0),
+            category: 'Arch',
+            canPlaceOnTop: true,
+        },
+        {
+            name: '1x1 Crystal 5 Point',
+            shortName: '1x1 Crystal 5 Point',
+            height: .24,
+            width: 1,
+            depth: 1,
+            path: '30385.glb',
+            offset: new BABYLON.Vector3(0,0,0),
+            category: 'Deco',
+            canPlaceOnTop: false,
         }
     ];
 }
