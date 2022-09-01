@@ -510,7 +510,8 @@ class BrickLib{
             width: 1,
             depth: 1,
             path: '30385.glb',
-            offset: new BABYLON.Vector3(0,0,0),
+            boundingBoxOffset: new BABYLON.Vector3(0,.235,0),
+            offset: new BABYLON.Vector3(0,-.235,0),
             category: 'Deco',
             canPlaceOnTop: false,
         }
