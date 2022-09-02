@@ -102,6 +102,8 @@ class Editor{
                 task.loadedMeshes[0].isPickable = false;
                 task.loadedMeshes[1].isPickable = false;
                 task.loadedMeshes[1].position.x = 10000;
+                task.loadedMeshes[0].setEnabled(false);
+                task.loadedMeshes[1].setEnabled(false);
 
                 // set mesh in brick library mesh map
                 BrickLib.brickMeshes.set(brick.name,this.ConvertAbstractMeshToFlatShaded(task.loadedMeshes[1]));
@@ -118,26 +120,28 @@ class Editor{
                     // if the element is selected show bounding box and edge renderer
                     if(el.type !== 'brick') return;
 
-                    if(el.selected === true && el.invalidPos === false){
+                    if(el.selected === true && el.invalidPos === false){ // selected and valid position
                         el.element.showBoundingBox = true;
                         el.element.material.alpha = el.color.rgba[3];
                         el.element.material.emissiveColor = new BABYLON.Color3(0,0,0);
                     }
-                    else if(el.hovering === true && el.invalidPos === false){
+                    else if(el.hovering === true && el.invalidPos === false){ // hovered and valid position
                         el.element.showBoundingBox = true;
                         el.element.material.alpha = el.color.rgba[3];
                         el.element.material.emissiveColor = new BABYLON.Color3(0,0,0);
                     }
-                    else if(el.invalidPos === true){
+                    else if(el.invalidPos === true){ // invalid position
                         el.element.showBoundingBox = true;
                         el.element.material.alpha = .5;
                         el.element.material.emissiveColor = new BABYLON.Color3(1,0,0);
-                    } else {
+                    } else { // default (not hovered or selected and valid position)
                         el.element.showBoundingBox = false;
                         el.element.material.alpha = el.color.rgba[3];
                         el.element.material.emissiveColor = new BABYLON.Color3(0,0,0);
                     }
                 });
+
+                document.querySelector('.fps').innerHTML = "FPS " + this.engine.getFps().toFixed();
             });
             
             // resize engine when window is resized
@@ -169,6 +173,9 @@ class Editor{
                 this.copySelected(e);
             } else if(e.code === 'KeyV' && e.ctrlKey){
                 this.pasteSelected(e);
+            } else if(e.code === 'F3'){
+                e.preventDefault();
+                document.querySelector('.fps').classList.toggle('hidden');
             }
 
             // set key pressed state in keys map
@@ -239,7 +246,13 @@ class Editor{
             const pos = new BABYLON.Vector3(Math.round(grid.x / 0.2) * 0.2 + this.currentMesh.offset.x, grid._y + this.currentMesh.offset.y, Math.round(grid.z / 0.2) * 0.2 + this.currentMesh.offset.z);
             
             // update mesh position
+            const previousPosition = this.currentMesh.position;
             this.currentMesh.position = pos;
+            const posDiff = this.currentMesh.position.subtract(previousPosition);
+            const selectedElements = this.elements.filter(el=>el.selected === true && el.element !== this.currentMesh);
+            selectedElements.forEach(el=>{
+                el.element.position = el.element.position.add(posDiff);
+            });
             
             this.checkForCollisions();
         };
