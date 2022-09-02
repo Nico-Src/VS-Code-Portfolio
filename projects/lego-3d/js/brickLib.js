@@ -27,7 +27,8 @@ class BrickLib{
         'Deco',
         'Panel',
         'Slope',
-        'Antenna'
+        'Antenna',
+        'Container'
     ];
 
     static brickColors = [
@@ -575,6 +576,42 @@ class BrickLib{
             offset: new BABYLON.Vector3(0,-.155,0),
             category: 'Antenna',
             canPlaceOnTop: false,
+        },
+        {
+            name: '1x1 Round with Hollow Stud',
+            shortName: '1x1 Round with Hollow Stud',
+            height: .235,
+            width: 1,
+            depth: 1,
+            path: '3062b.glb',
+            boundingBoxOffset: new BABYLON.Vector3(0,0,0),
+            offset: new BABYLON.Vector3(0,0,0),
+            category: 'Brick',
+            canPlaceOnTop: true,
+        },
+        {
+            name: 'Bookcase 2x4x4',
+            shortName: 'Bookcase 2x4x4',
+            height: .940,
+            width: 4,
+            depth: 2,
+            path: '1.glb',
+            boundingBoxOffset: new BABYLON.Vector3(0,-.715,0),
+            offset: new BABYLON.Vector3(0.1,.725,0.1),
+            category: 'Container',
+            canPlaceOnTop: true,
+        },
+        {
+            name: 'Drawers 4x4x4',
+            shortName: 'Drawers 4x4x4',
+            height: .940,
+            width: 4,
+            depth: 4,
+            path: '2.glb',
+            boundingBoxOffset: new BABYLON.Vector3(0,-.725,0),
+            offset: new BABYLON.Vector3(0.1,.725,0.1),
+            category: 'Container',
+            canPlaceOnTop: true,
         }
     ];
 }
