@@ -55,6 +55,7 @@ class ToolBox{
                 // create brick item
                 const brickItem = document.createElement("div");
                 brickItem.classList.add('brick-item');
+                brickItem.setAttribute('brick-name',brick.name);
                 // onclick add brick to scene
                 brickItem.onclick = () => {this.editor.addBrickByName(brick.name)};
                 brickItem.innerHTML = `<img src="img/${brick.name}.png">
@@ -65,6 +66,24 @@ class ToolBox{
             // append category to toolbox
             document.querySelector('.tool-box').appendChild(item);
         });
+
+        const search = document.querySelector('#search-input');
+        search.oninput = () => {
+            const val = search.value.toLowerCase();
+            const all = val.trim() === '';
+
+            Array.from(document.querySelectorAll(`.tool-box .category-wrapper`)).forEach(category=>{
+                Array.from(category.querySelectorAll(`.brick-item`)).forEach(brick=>{
+                    if(brick.getAttribute('brick-name').toLowerCase().includes(val) || all){
+                        brick.style.display = 'flex';
+                        brick.classList.remove('hidden');
+                    } else {
+                        brick.style.display = 'none';
+                        brick.classList.add('hidden');
+                    }
+                });
+            });
+        };
 
         // open first category wrapper by default
         setTimeout(() => {
