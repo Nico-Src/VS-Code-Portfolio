@@ -592,11 +592,11 @@ class BrickLib{
         {
             name: 'Bookcase 2x4x4',
             shortName: 'Bookcase 2x4x4',
-            height: .940,
+            height: .965,
             width: 4,
             depth: 2,
             path: '1.glb',
-            boundingBoxOffset: new BABYLON.Vector3(0,-.715,0),
+            boundingBoxOffset: new BABYLON.Vector3(0,-.725,0),
             offset: new BABYLON.Vector3(0.1,.725,0.1),
             category: 'Container',
             canPlaceOnTop: true,
@@ -604,7 +604,7 @@ class BrickLib{
         {
             name: 'Drawers 4x4x4',
             shortName: 'Drawers 4x4x4',
-            height: .940,
+            height: .965,
             width: 4,
             depth: 4,
             path: '2.glb',
