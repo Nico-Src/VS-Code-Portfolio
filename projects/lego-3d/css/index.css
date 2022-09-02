@@ -14,7 +14,6 @@ html,body{
 *{
     font-family: 'Poppins',sans-serif;
     box-sizing: border-box;
-    user-select: none;
 }
 
 #app{
@@ -62,6 +61,7 @@ html,body{
     transition: all .25s ease;
     cursor: pointer;
     position: relative;
+    user-select: none;
 }
 
 #app .top-bar .nav-item .dropdown{
@@ -141,6 +141,57 @@ html,body{
     border-right: 2px solid #060608;
 }
 
+#app .fps{
+    position: absolute;
+    z-index: 10000;
+    top: 50px;
+    right: 220px;
+    width: auto;
+    padding: 0 10px;
+    height: 30px;
+    line-height: 30px;
+    color: white;
+    font-family: 'Poppins',sans-serif;
+    background-color: #212328;
+    border-top: 2px solid #060608;
+    border-bottom: 2px solid #060608;
+    border-left: 2px solid #060608;
+    border-radius: 4px 0px 0px 4px;
+    display:block;
+    pointer-events: none;
+}
+
+#app .fps.hidden{
+    display:none;
+}
+
+#app .tool-box .search-wrapper{
+    border-bottom: 2px solid #060608;
+    height: 30px;
+    width: 100%;
+    background-color: #191a1d;
+    user-select: all !important;
+}
+
+#app .tool-box .search-wrapper input{
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    padding: 0 5px;
+    line-height: 30px;
+    outline: none;
+    border: none;
+    font-family: 'Poppins',sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    color:white;
+    user-select: all !important;
+    pointer-events: all;
+}
+
+#app .tool-box .search-wrapper input::-webkit-input-placeholder,
+#app .tool-box .search-wrapper input::-moz-placeholder{color: #ccc;opacity: 1;}
+
 #app .tool-box .category-wrapper{
     height: 30px;
     width: 100%;
@@ -159,6 +210,7 @@ html,body{
     padding: 0 5px;
     border-bottom: 2px solid #060608;
     cursor: pointer;
+    user-select: none;
 }
 
 #app .tool-box .category-wrapper .category-header span{
@@ -203,6 +255,7 @@ html,body{
     cursor: pointer;
     box-shadow: 0 0 16px 2px rgba(0,0,0,.1);
     transition: all .3s ease;
+    user-select: none;
     overflow: hidden;
     float: left;
     position: relative;
@@ -215,7 +268,7 @@ html,body{
 #app .tool-box .category-wrapper .category-content .brick-item img{
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     margin-bottom: 10px;
 }
 
