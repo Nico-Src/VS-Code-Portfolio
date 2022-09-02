@@ -19,6 +19,8 @@ class Editor{
             },
             pipeline: {
                 sharpenEnabled: false,
+                fxaaEnabled: true,
+                antialiasingSamples: 4,
             }
         };
         
@@ -89,6 +91,8 @@ class Editor{
         
         // enable sharpening in the pipeline
         this.pipeline.sharpenEnabled = this.config.pipeline.sharpenEnabled;
+        this.pipeline.fxaaEnabled = this.config.pipeline.fxaaEnabled;
+        this.pipeline.samples = this.config.pipeline.antialiasingSamples;
 
         // load brick meshes
         BrickLib.bricks.forEach(brick=>{
