@@ -535,7 +535,7 @@ class Editor{
     deleteSelected(e){
         if(e) e.preventDefault();
         // get selected elements and remove them from scene
-        let selectedElements = this.elements.filter(el=>el.selected);
+        let selectedElements = this.elements.filter(el=>el.selected && el.type === 'brick');
         selectedElements.forEach(el=>{
             const index = this.elements.indexOf(el);
             this.elements[index].element.dispose();
