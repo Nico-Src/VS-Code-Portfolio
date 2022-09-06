@@ -20,7 +20,7 @@ class Editor{
             pipeline: {
                 sharpenEnabled: false,
                 fxaaEnabled: true,
-                antialiasingSamples: 4,
+                antialiasingSamples: 1,
             }
         };
         
@@ -253,9 +253,25 @@ class Editor{
             const previousPosition = this.currentMesh.position;
             this.currentMesh.position = pos;
             const posDiff = this.currentMesh.position.subtract(previousPosition);
-            const selectedElements = this.elements.filter(el=>el.selected === true && el.element !== this.currentMesh);
+            const selectedElements = this.elements.filter(el=>el.selected === true && el.element !== this.currentMesh && el.type === 'brick');
             selectedElements.forEach(el=>{
-                el.element.position = el.element.position.add(posDiff);
+
+                // some elements dont have a position vector instead they have an object with _x, _y, _z
+                // catch error here to handle the other case
+                try{
+                    el.element.position = el.element.position.add(posDiff);
+                } catch (e){
+                    // get current pos and create vector out of it
+                    // if _x is set use that if not normal x
+                    let pos = new BABYLON.Vector3(el.element.position._x || this.element.position.x, 
+                                                  el.element.position._y || this.element.position.y, 
+                                                  el.element.position._z || this.element.position.z);
+
+                    // now vector.add is usable
+                    pos = pos.add(posDiff);
+                    // set position
+                    el.element.position = pos;
+                }
             });
             
             this.checkForCollisions();
@@ -602,6 +618,8 @@ class Editor{
         for(const brick of this.clipBoard){
             this.addBrickByName(brick.name, new BABYLON.Vector3(brick.element._position._x, brick.element._position._y ,brick.element._position._z).add(new BABYLON.Vector3(1,0,0)), brick.color);
         }
+
+        this.elements.filter(el=>el.selected === true).forEach(el=>{el.selected = false});
     }
 
     ConvertAbstractMeshToFlatShaded = (mesh)=>{
