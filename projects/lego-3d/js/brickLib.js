@@ -592,7 +592,7 @@ class BrickLib{
         {
             name: 'Bookcase 2x4x4',
             shortName: 'Bookcase 2x4x4',
-            height: .965,
+            height: .960,
             width: 4,
             depth: 2,
             path: '1.glb',
@@ -604,7 +604,7 @@ class BrickLib{
         {
             name: 'Drawers 4x4x4',
             shortName: 'Drawers 4x4x4',
-            height: .965,
+            height: .960,
             width: 4,
             depth: 4,
             path: '2.glb',
