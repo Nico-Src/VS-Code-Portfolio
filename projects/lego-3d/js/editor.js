@@ -56,7 +56,7 @@ class Editor{
 
         // set intensity and groundcolor for each light
         lights.forEach(light=>{
-            light.intensity = 0.75;
+            light.intensity = 1;
             light.groundColor = new BABYLON.Color3(0.2, 0.2, 0.2);
         });
 
@@ -128,11 +128,17 @@ class Editor{
                         el.element.showBoundingBox = true;
                         el.element.material.alpha = el.color.rgba[3];
                         el.element.material.emissiveColor = new BABYLON.Color3(0,0,0);
+                        // set colors of the bounding box
+                        this.scene.getBoundingBoxRenderer().frontColor.set(0,1,0);
+                        this.scene.getBoundingBoxRenderer().backColor.set(0,1,0);
                     }
                     else if(el.hovering === true && el.invalidPos === false){ // hovered and valid position
                         el.element.showBoundingBox = true;
                         el.element.material.alpha = el.color.rgba[3];
                         el.element.material.emissiveColor = new BABYLON.Color3(0,0,0);
+                        // set colors of the bounding box
+                        this.scene.getBoundingBoxRenderer().frontColor.set(.46, 0.96, 0.96);
+                        this.scene.getBoundingBoxRenderer().backColor.set(.46, 0.96, 0.96);
                     }
                     else if(el.invalidPos === true){ // invalid position
                         el.element.showBoundingBox = true;
@@ -378,7 +384,7 @@ class Editor{
 
         // TODO add specular and emissive colors also to BrickLib colors
         brickMaterial.specularColor = new BABYLON.Color3(0.2, 0.2, 0.2);
-        brickMaterial.emissiveColor = new BABYLON.Color3(0, 0, 0);
+        brickMaterial.emissiveColor = new BABYLON.Color3(0,0,0);
         brickMaterial.ambientColor = new BABYLON.Color3(0.75, 0.75, 0.75);
         brick.material = brickMaterial;
 
@@ -407,6 +413,8 @@ class Editor{
             invalidPos: false,
             color: (color === undefined ? this.currentColor : color),
         });
+
+        document.dispatchEvent(new CustomEvent('brick-added', { detail: { id:brick.uniqueId, name: name, position: position, color: color } }));
     }
 
     /** select brick in the editor
@@ -538,6 +546,7 @@ class Editor{
         let selectedElements = this.elements.filter(el=>el.selected && el.type === 'brick');
         selectedElements.forEach(el=>{
             const index = this.elements.indexOf(el);
+            document.dispatchEvent(new CustomEvent('brick-removed', { detail: { id:el.id, name: el.name, position: el.element.position, color: el.color } }));
             this.elements[index].element.dispose();
             this.elements.splice(index, 1);
         });
@@ -549,6 +558,7 @@ class Editor{
     saveLegoFile(){
         const saveBricks = [];
 
+        // get all bricks and save them to a json file
         for(const brick of this.elements){
             if(brick.type === 'brick'){
                 saveBricks.push({
@@ -563,10 +573,12 @@ class Editor{
         }
 
         const legoFile = JSON.stringify(saveBricks);
+        // download lego file
         this.download('lego.brick',legoFile);
     }
 
     openLegoFile(){
+        // click on file input
         document.querySelector('#open-file-input').click();
     }
 
@@ -578,13 +590,17 @@ class Editor{
     }
 
     openLegoFileChanged(e){
+        // get first file
         const file = e.target.files[0];
 
         if(!file) return;
 
         const reader = new FileReader();
+        // read file
         reader.onload = (e) => {
+            // parse result
             const legoFile = JSON.parse(e.target.result);
+            // load bricks
             this.loadLegoFile(legoFile);
         }
         reader.readAsText(file);
