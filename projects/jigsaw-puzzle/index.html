@@ -34,11 +34,14 @@
         </script>
         <div class="controls">
             <div class="solve-btn" onclick="puzzle.solve();">Solve</div>
+            <div class="mix-btn" onclick="puzzle.randomizePieces();">Mix</div>
             <select onchange="puzzle.viewMode = this.value;">
                 <option value="All">All Pieces</option>
                 <option value="BorderPieces">Only Border Pieces</option>
                 <option value="NonBorderPieces">Only Non-Border Pieces</option>
             </select>
+            <div class="divider"></div>
+            <span>Show Hints: </span>
             <input type="checkbox" onchange="puzzle.toggleHints(this.checked);">
         </div>
         <image src="img/img.jpg" id="original-image" onload="createPuzzle();"></image>

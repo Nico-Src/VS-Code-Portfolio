@@ -3,7 +3,7 @@ body,html{
     height: 100%;
     margin: 0;
     padding: 0;
-    background-color: #505050;
+    background-color: #454545;
     overflow: auto;
 }
 
@@ -48,29 +48,66 @@ body{
 }
 
 .controls{
-    width: 10%;
-    height: 100%;
+    width: 100%;
+    height: 50px;
     position: fixed;
     left: 0;
+    top: 0;
+    right: 0;
     z-index: 20;
-    background-color: #707070;
+    background-color: #353535;
     box-shadow: 0 0 16px 2px rgba(0,0,0,.15);
     display:flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    flex-direction: column;
+    padding: 0 10px;
 }
 
-.controls .solve-btn{
-    width: calc(100% - 20px);
+.controls .solve-btn,
+.controls .mix-btn{
+    width: 75px;
+    height: 30px;
+    margin-right: 10px;
+    font-family: 'Poppins',sans-serif;
     background-color: green;
     color:white;
     font-weight: bold;
-    border-radius: 8px;
-    padding: 2px;
+    border-radius: 4px;
     cursor: pointer;
     display:flex;
     justify-content: center;
     align-items: center;
     flex-shrink: 0;
+}
+
+.controls select{
+    width: 200px;
+    height: 30px;
+    margin-right: 10px;
+    font-family: 'Poppins',sans-serif;
+    background-color: #000;
+    color:white;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    border: none;
+    outline: none;
+}
+
+.controls .divider{
+    margin-right: 10px;
+    width: 2px;
+    height: calc(100% - 20px);
+    background-color: #707070;
+}
+
+.controls span{
+    color: #fff;
+    font-size: 16px;
+    font-weight: normal;
+    margin-right: 10px;
 }

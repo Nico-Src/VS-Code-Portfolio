@@ -1,5 +1,5 @@
 /*
-    Nico Thuniot 2022
+    Nico Thuniot 2022 (C)
 */
 
 /** @const */
@@ -294,8 +294,8 @@ class Puzzle{
                     y = Math.floor(Math.random() * this.canvas.height);
                     
                     // on the left side
-                    if(x > this.canvas.width * .11 && x < (this.imgX - puzzleWidth - 10)){
-                        if(y < (this.canvas.height - puzzleHeight * 2)){
+                    if(x > 0 && x < (this.imgX - puzzleWidth - 10)){
+                        if(y < (this.canvas.height - puzzleHeight * 2) && y > 50 + puzzleHeight){
                             piece.setPosition(x,y);
                             placedCount++;
                             moved = true;
@@ -308,9 +308,9 @@ class Puzzle{
                             continue;
                         }
                     // in the middle
-                    } else if (x > this.canvas.width * .11 && x < (this.imgX + this.imgWidth + puzzleWidth + 10)) {
+                    } else if (x > 0 && x < (this.imgX + this.imgWidth + puzzleWidth + 10)) {
                         // top or bottom middle
-                        if(y < (this.imgY - puzzleHeight - 10) && y > puzzleHeight){
+                        if(y < (this.imgY - puzzleHeight - 10) && y > 50 + puzzleHeight){
                             piece.setPosition(x,y);
                             placedCount++;
                             moved = true;
@@ -328,7 +328,7 @@ class Puzzle{
                         }
                     // on the right
                     } else if(x > (this.imgX + this.imgWidth + puzzleWidth + 10) && x < (this.canvas.width - puzzleWidth - 10)){
-                        if(y < this.canvas.height - puzzleHeight * 2){
+                        if(y < this.canvas.height - puzzleHeight * 2 && y > 50 + puzzleHeight){
                             piece.setPosition(x,y);
                             placedCount++;
                             moved = true;
