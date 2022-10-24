@@ -22,6 +22,7 @@ var maxI = 2.0;
 var minR = -2.0;
 var maxR = 2.0;
 var viewportDimensions = [0,0];
+var previousTouch;
 
 function loadShaderAsync(shaderURL,callback){
     var req = new XMLHttpRequest();
@@ -231,7 +232,22 @@ function onZoom(e){
 }
 
 function OnPan(e){
-    if(e.buttons != 0){
+    if(e.type === 'touchmove'){
+        const touch = e.touches[0];
+
+        e.movementX = 0;
+        e.movementY = 0;
+
+        if (previousTouch) {
+            // be aware that these only store the movement of the first touch in the touches array
+            e.movementX = touch.pageX - previousTouch.pageX;
+            e.movementY = touch.pageY - previousTouch.pageY;
+        }
+    
+        previousTouch = touch;
+    }
+
+    if(e.buttons != 0 || e.type === 'touchmove' && e.touches.length > 0){
         const iRange = maxI - minI;
         const rRange = maxR - minR;
 
