@@ -9,11 +9,12 @@ var currentShader;
 var shaderVars = {
     'Green Matrix': {
         greenMatrixColorMultiplier: 64.0,
+        greenMatrixType: 1.0
     }
 };
 
 var shaderInputs = {
-    'Green Matrix': ['greenMatrixColorMultiplier']
+    'Green Matrix': ['greenMatrixColorMultiplier','greenMatrixType']
 };
 
 var minI = -2.0;
@@ -72,14 +73,14 @@ function run(loadErrors, loadedShaders){
     addEvent(window, 'resize', onWindowResize);
     addEvent(window, 'wheel', onZoom);
     addEvent(canvas, 'mousemove', OnPan);
+    addEvent(canvas, 'touchmove', OnPan);
     document.querySelector('.controls #shader').addEventListener('change', shaderSelectionChanged);
 
     for(const key in shaderInputs){
         for(const input of shaderInputs[key]){
             document.querySelector(`.controls #${input}`).addEventListener('click', (e) => {e.preventDefault();e.stopPropagation()});
             document.querySelector(`#${input}`).addEventListener('change', (e) => {
-                shaderVars[currentShader][input] = e.target.value;
-                shaderVars[currentShader].colorMultiplier
+                shaderVars[currentShader][input] = parseFloat(e.target.value);
                 console.log(input, shaderVars[currentShader][input]);
             });
         }
@@ -173,6 +174,7 @@ function run(loadErrors, loadedShaders){
                 gl.uniform1f(uniforms.minR, minR);
                 gl.uniform1f(uniforms.maxR, maxR);
                 gl.uniform1f(uniforms.colorMultiplier, shaderVars[currentShader].greenMatrixColorMultiplier);
+                gl.uniform1f(uniforms.colorType, shaderVars[currentShader].greenMatrixType);
                 break;
             default: 
                 gl.uniform2f(uniforms.viewportDimensions, viewportDimensions[0], viewportDimensions[1]);
@@ -308,7 +310,8 @@ function swapShaders(newVSTxt, newFSTxt){
                 maxI: gl.getUniformLocation(program, 'maxI'),
                 minR: gl.getUniformLocation(program, 'minR'),
                 maxR: gl.getUniformLocation(program, 'maxR'),
-                colorMultiplier: gl.getUniformLocation(program, 'colorMultiplier')
+                colorMultiplier: gl.getUniformLocation(program, 'colorMultiplier'),
+                colorType: gl.getUniformLocation(program, 'colorType')
             };
             break;
         default: 

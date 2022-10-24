@@ -17,8 +17,8 @@ void main(){
     vec2 z = c;
     float iterations = 0.0;
     int iterationsInt = 0;
-    float maxIterations = 5000.0;
-    const int maxIterationsInt = 5000;
+    float maxIterations = 2500.0;
+    const int maxIterationsInt = 2500;
     vec4 prevColor = vec4(1.0, 1.0, 1.0,1.0);
 
     for(int i = 0; i < maxIterationsInt; i++){
