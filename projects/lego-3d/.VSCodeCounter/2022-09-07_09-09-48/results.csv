@@ -1,0 +1,13 @@
+"filename", "language", "HTML", "CSS", "JavaScript", "comment", "blank", "total"
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\css\index.css", "CSS", 0, 426, 0, 0, 56, 482
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\index.html", "HTML", 95, 0, 0, 0, 2, 97
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\app.js", "JavaScript", 0, 0, 27, 1, 2, 30
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\babylon.glTF2FileLoader.min.js", "JavaScript", 0, 0, 1, 1, 0, 2
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\babylon.gridMaterial.min.js", "JavaScript", 0, 0, 1, 2, 0, 3
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\babylon.js", "JavaScript", 0, 0, 1, 1, 0, 2
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\babylonjs.loaders.js", "JavaScript", 0, 0, 4715, 700, 62, 5477
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\brickLib.js", "JavaScript", 0, 0, 613, 0, 4, 617
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\editor.js", "JavaScript", 0, 0, 444, 119, 92, 655
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\inspector.js", "JavaScript", 0, 0, 103, 14, 12, 129
+"c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\toolbox.js", "JavaScript", 0, 0, 70, 17, 6, 93
+"Total", "-", 95, 426, 5975, 855, 236, 7587

@@ -49,6 +49,26 @@ class Inspector{
             }
         });
 
+        // listen for the 'brick-added' event to keep the inspector up to date
+        document.addEventListener('brick-added',(e)=>{
+            const brick = e.detail;
+            // create a new element in the inspector
+            const brickDiv = document.createElement('div');
+            brickDiv.classList.add('inspector-item');
+            // set the brick's id as the element's id to make it easy to find
+            brickDiv.setAttribute('id',"brick"+brick.id);
+            brickDiv.innerHTML = brick.name;
+            document.querySelector('.inspector-elements').appendChild(brickDiv);
+        });
+
+        // listen for the 'brick-remove' event to keep the inspector up to date
+        document.addEventListener('brick-removed',(e)=>{
+            const brick = e.detail;
+            // find the element in the inspector and remove it
+            const brickDiv = document.querySelector(`.inspector-item#brick${brick.id}`);
+            brickDiv.remove();
+        });
+
         document.addEventListener('selection-changed',(e)=>{
             const colorSelect = document.querySelector('.color-select');
             if(e.detail.selectedBricks.length === 1){

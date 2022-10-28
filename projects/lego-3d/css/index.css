@@ -314,6 +314,21 @@ html,body{
     margin-left: 10px;
     margin-top: 10px;
     background-color: #2a2d34;
+    overflow: auto;
+}
+
+#app .inspector .inspector-elements::-webkit-scrollbar{
+    width:0px;
+}
+
+#app .inspector .inspector-elements .inspector-item{
+    margin-left: 5px;
+    width: calc(100% - 10px);
+    margin-top: 5px;
+    background-color: #4a505c;
+    border-radius: 4px;
+    padding: 2px 5px;
+    color:white;
 }
 
 #app .inspector hr{

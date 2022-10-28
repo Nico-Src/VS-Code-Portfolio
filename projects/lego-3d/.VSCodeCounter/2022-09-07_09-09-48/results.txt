@@ -1,0 +1,39 @@
+Date : 2022-09-07 09:09:48
+Directory : c:\xampp\htdocs\nico-src.github.io\projects\lego-3d
+Total : 11 files,  6496 codes, 855 comments, 236 blanks, all 7587 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |          9 |      5,975 |        855 |        178 |      7,008 |
+| CSS        |          1 |        426 |          0 |         56 |        482 |
+| HTML       |          1 |         95 |          0 |          2 |         97 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                  | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                     |         11 |      6,496 |        855 |        236 |      7,587 |
+| css                                                                                   |          1 |        426 |          0 |         56 |        482 |
+| js                                                                                    |          9 |      5,975 |        855 |        178 |      7,008 |
++---------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                              | language   | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\css\index.css                     | CSS        |        426 |          0 |         56 |        482 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\index.html                        | HTML       |         95 |          0 |          2 |         97 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\app.js                         | JavaScript |         27 |          1 |          2 |         30 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\babylon.glTF2FileLoader.min.js | JavaScript |          1 |          1 |          0 |          2 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\babylon.gridMaterial.min.js    | JavaScript |          1 |          2 |          0 |          3 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\babylon.js                     | JavaScript |          1 |          1 |          0 |          2 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\babylonjs.loaders.js           | JavaScript |      4,715 |        700 |         62 |      5,477 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\brickLib.js                    | JavaScript |        613 |          0 |          4 |        617 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\editor.js                      | JavaScript |        444 |        119 |         92 |        655 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\inspector.js                   | JavaScript |        103 |         14 |         12 |        129 |
+| c:\xampp\htdocs\nico-src.github.io\projects\lego-3d\js\toolbox.js                     | JavaScript |         70 |         17 |          6 |         93 |
+| Total                                                                                 |            |      6,496 |        855 |        236 |      7,587 |
++---------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

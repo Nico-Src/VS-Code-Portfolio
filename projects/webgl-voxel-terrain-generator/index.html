@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="stats-panel">
+        <div class="stat">
+            <div class="label">Rendered Blocks:</div>
+            <div class="value" id="rendered-blocks"></div>
+        </div>
+        <div class="setting">
+            <div class="label">Biome:</div>
+            <select id="biomeSelect">
+                <option value="plains">Plains</option>
+                <option value="desert">Desert</option>
+            </select>
+        </div>
+        <div class="setting">
+            <div class="label">Noise Smoothen:</div>
+            <input type="number" min="0.01" max="1000" step="0.01" id="noiseSmoothnessInput">
+        </div>
+        <div class="setting">
+            <div class="label">Chunk Width:</div>
+            <input type="number" min="5" max="1000" value="64" step="1" id="chunkWidthInput">
+        </div>
+        <div class="setting">
+            <div class="label">Chunk Height:</div>
+            <input type="number" min="5" max="1000" value="64" step="1" id="chunkHeightInput">
+        </div>
+        <div class="setting">
+            <div class="label">Noise Offset X:</div>
+            <input type="range" min="0" max="1000" value="0" step="1" id="noiseOffsetX">
+        </div>
+        <div class="setting">
+            <div class="label">Noise Offset Z:</div>
+            <input type="range" min="0" max="1000" value="0" step="1" id="noiseOffsetZ">
+        </div>
+    </div>
+    <!-- Three JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Orbit Controls -->
+    <script src="js/OrbitControls.js"></script>
+    <!-- Stats -->
+    <script src="js/Stats.js"></script>
+    <script src="js/perlin.js"></script>
+    <script src="js/generator.js"></script>
+    <script src="js/app.js" defer></script>
+</body>
+</html>
