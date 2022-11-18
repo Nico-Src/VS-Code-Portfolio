@@ -1,0 +1,134 @@
+:root{
+    --accent-color: rgb(74, 187, 74);
+}
+
+body,html{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #202020;
+    overflow: hidden;
+}
+
+*{
+    box-sizing: border-box;
+    font-family: 'Poppins',sans-serif;
+}
+
+.controls{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px;
+    background-color: #353535;
+    z-index: 10;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.controls .add-btn{
+    background-color: var(--accent-color);
+    width: 100%;
+    border-radius: 4px;
+    color:white;
+    padding: 2px 10px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    will-change: transform;
+    transition: all .15s ease;
+}
+
+.controls .add-btn.disabled{
+    opacity: .5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.tools{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    margin-top: 10px;
+    border-radius: 4px;
+    background-color: #606060;
+    overflow: hidden;
+}
+
+.tools div{
+    flex: 1;
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color:white;
+    transition: all .15s ease;
+    cursor: pointer;
+}
+
+.tools div i{
+    width: 100%;
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+.tools div:hover{
+    background-color: #707070;
+}
+
+.tools div.active{
+    background-color: var(--accent-color);
+}
+
+canvas{
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+/* ANCHOR Ripple */
+
+.ripple-btn{
+    position: relative !important;
+    overflow: hidden !important;
+    z-index: 0 !important;
+    user-select: none !important;
+    cursor: pointer !important;
+}
+
+span.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation-name: ripple;
+    animation-duration: 600ms;
+    animation-timing-function: linear;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 200;
+    opacity: 1;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
