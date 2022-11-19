@@ -284,6 +284,20 @@ hr{
     padding: 0 10px;
 }
 
+.edit-menu .menu .input-wrapper input[type="checkbox"]{
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    border: 1px solid white;
+    border-radius: 4px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 14px;
+    padding: 0;
+}
+
 .edit-menu .menu .type{
     width: 100%;
     height: 30px;

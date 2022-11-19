@@ -1,5 +1,5 @@
 class State{
-    constructor(name, x, y, radius, color){
+    constructor(name, x, y, radius, color, isStart){
         this.name = name;
         this.x = x;
         this.y = y;
@@ -7,6 +7,7 @@ class State{
         this.color = color || [255, 255, 255];
         this.connections = 0;
         this.selected = false;
+        this.isStart = isStart == undefined ? false : isStart;
     }
 
     draw(ctx){
@@ -28,5 +29,15 @@ class State{
         ctx.fillStyle = "#fff";
         ctx.fillText(this.name, this.x, this.y);
         ctx.fillStyle = "#333";
+
+        // draw small green dot in the top right corner if this is the start state
+        if(this.isStart){
+            ctx.beginPath();
+            ctx.arc(this.x + this.radius * .5, this.y - this.radius * .5, 2.5, 0, 2 * Math.PI);
+            ctx.fillStyle = "green";
+            ctx.fill();
+            ctx.closePath();
+            ctx.fillStyle = "#333";
+        }
     }
 }

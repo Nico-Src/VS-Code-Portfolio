@@ -109,7 +109,6 @@ class Editor{
                 connection.progress = 0;
                 this.activeState = connection.target;
                 this.currentInput++;
-                console.log(this.currentInput, this.inputSequence);
                 // check if the active state is a final state
                 if(this.currentInput > this.inputSequence.length - 1){
                     this.controls.animationFinished = true;
@@ -380,7 +379,7 @@ class Editor{
         this.controls.adding = true;
         document.querySelector('.add-btn').classList.add('disabled');
 
-        const state = new State("S" + (this.states.length + 1), 0,0);
+        const state = new State("S" + (this.states.length + 1), 0,0, undefined,undefined, this.states.length === 0 ? true : false);
         this.states.push(state);
     }
 
@@ -450,7 +449,7 @@ class Editor{
             connection.progress = 0;
         });
 
-        this.activeState = this.states[0];
+        this.activeState = this.states.find((state)=>{ return state.isStart; });
         this.currentInput = 0;
         this.controls.animationFinished = false;
     }
@@ -520,6 +519,16 @@ class Editor{
                 document.querySelector('#name input').oninput = (e)=>{
                     this.editElement.element.name = e.target.value;
                 };
+
+                document.querySelector('#isStart input').checked = this.editElement.element.isStart;
+                document.querySelector('#isStart input').onchange = (e)=>{
+                    this.editElement.element.isStart = e.target.checked;
+                    for(const state of this.states){
+                        if(state !== this.editElement.element){
+                            state.isStart = false;
+                        }
+                    }
+                }
             }
         }
     }
@@ -535,7 +544,8 @@ class Editor{
             project.states.push({
                 name: state.name,
                 x: state.x,
-                y: state.y
+                y: state.y,
+                isStart: state.isStart
             });
         });
 
@@ -570,8 +580,8 @@ class Editor{
                 this.resetAnimation();
 
                 // load new project
-                project.states.forEach((state)=>{
-                    this.states.push(new State(state.name,state.x,state.y));
+                project.states.forEach((state,index)=>{
+                    this.states.push(new State(state.name,state.x,state.y,undefined,undefined,state.isStart));
                 });
 
                 project.connections.forEach((connection)=>{
