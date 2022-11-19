@@ -18,10 +18,41 @@
             <i class='bx bx-folder-plus'></i>&nbsp;<span>Add State</span>
         </div>
         <div class="tools">
-            <div class="move active" data-tool="move"><i class='bx bx-move'></i></div>
-            <div class="connect" data-tool="connect"><i class='bx bx-link'></i></div>
-            <div class="delete" data-tool="delete"><i class='bx bx-trash'></i></div>
-            <div class="edit" data-tool="edit"><i class='bx bx-pencil'></i></div>
+            <div class="move ripple-btn active" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="move"><i class='bx bx-move'></i></div>
+            <div class="connect ripple-btn" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="connect"><i class='bx bx-link'></i></div>
+            <div class="delete ripple-btn" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="delete"><i class='bx bx-trash'></i></div>
+            <div class="edit ripple-btn" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="edit"><i class='bx bx-pencil'></i></div>
+        </div>
+        <div class="animation-tools">
+            <div class="play-pause-btn ripple-btn" onclick="editor.toggleAnimation(event)"><i class='bx bx-play'></i></div>
+            <div class="speed-input">
+                <div class="slower-btn ripple-btn" onclick="editor.changeAnimationSpeed(event,'slower')"><i class='bx bxs-chevrons-left'></i></div>
+                <div class="value">1x</div>
+                <div class="faster-btn ripple-btn" onclick="editor.changeAnimationSpeed(event,'faster')"><i class='bx bxs-chevrons-right'></i></div>
+            </div>
+        </div>
+        <hr>
+        <input class="input-sequence" type="text" onchange="editor.inputSequence = this.value.split('');">
+        <hr>
+        <div class="inspector">
+
+        </div>
+        <hr>
+        <div class="edit-menu empty">
+            <div class="menu hidden">
+                <div class="type" style="text-align: flex-start;"></div>
+                <div class="input-wrapper" id="condition" setting-type="connection">
+                    <label>Input:</label>
+                    <input type="text">
+                </div>
+                <div class="input-wrapper" id="name" setting-type="state">
+                    <label>Name:</label>
+                    <input type="text">
+                </div>
+            </div>
+            <div class="none">
+                Nothing selected
+            </div>
         </div>
     </div>
     <script src="js/ripple.js"></script>

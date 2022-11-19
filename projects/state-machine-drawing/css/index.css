@@ -1,5 +1,6 @@
 :root{
     --accent-color: rgb(74, 187, 74);
+    --light-accent: rgb(122, 229, 122);
 }
 
 body,html{
@@ -89,6 +90,201 @@ body,html{
 
 .tools div.active{
     background-color: var(--accent-color);
+}
+
+.animation-tools{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 30px;
+    margin-top: 10px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.animation-tools .play-pause-btn{
+    width: calc(50% - 5px);
+    height: 30px;
+    border-radius: 4px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    background-color: var(--accent-color);
+    color:white;
+    cursor: pointer;
+    transition: all .15s ease;
+}
+
+.animation-tools .play-pause-btn i{
+    pointer-events: none;
+}
+
+.animation-tools .speed-input{
+    width: calc(50% - 5px);
+    height: 30px;
+    background-color: #707070;
+    border-radius: 4px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.animation-tools .speed-input .slower-btn,
+.animation-tools .speed-input .faster-btn{
+    width: 20px;
+    height: 30px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+    color:white;
+    cursor: pointer;
+    transition: all .15s ease;
+}
+
+.animation-tools .speed-input .slower-btn{
+    background: linear-gradient(to right, #909090, #707070);
+}
+
+.animation-tools .speed-input .faster-btn{
+    background: linear-gradient(to left, #909090, #707070);
+}
+
+.animation-tools .speed-input .value{
+    flex: 1;
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
+hr{
+    width: 100%;
+    height: 1px;
+    background-color: #707070;
+    margin: 10px 0;
+}
+
+.inspector{
+    background-color: #707070;
+    width: 100%;
+    height: 200px;
+    display:flex;
+    justify-content: center;
+    align-items: center; 
+    flex-direction: column;
+    border-radius: 4px;
+}
+
+.edit-menu{
+    background-color: #707070;
+    width: 100%;
+    height: 100px;
+    display:flex;
+    justify-content: center;
+    align-items: center; 
+    flex-direction: column;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.edit-menu.empty{
+    height: 40px;
+}
+
+.edit-menu .menu{
+    width: 100%;
+    height: 100%;
+    display:flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.edit-menu .none{
+    width: 100%;
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 16px;
+}
+
+.edit-menu .menu.hidden,
+.edit-menu .none.hidden,
+.edit-menu .menu .input-wrapper.hidden{
+    display: none;
+}
+
+.edit-menu .menu .input-wrapper{
+    width: 100%;
+    height: 30px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5px;
+    margin-top: 10px;
+}
+
+.edit-menu .menu .input-wrapper label{
+    min-width: 0;
+    flex: 1;
+    height: 20px;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    color: white;
+    font-size: 14px;
+}
+
+.edit-menu .menu .input-wrapper input{
+    flex: 2;
+    min-width: 0;
+    height: 30px;
+    background-color: #909090;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 14px;
+    padding: 0 10px;
+}
+
+.edit-menu .menu .type{
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 0 10px;
+    color:white;
+    font-size: 12px;
+    background-color: var(--accent-color);
+}
+
+.input-sequence{
+    width: 100%;
+    height: 100%;
+    padding: 0px 10px;
+    height: 30px;
+    background-color: #909090;
+    outline: none;
+    border: none;
+    border-radius: 4px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 14px;
 }
 
 canvas{

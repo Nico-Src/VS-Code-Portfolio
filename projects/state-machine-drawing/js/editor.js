@@ -2,6 +2,7 @@ class Editor{
     constructor(){
         this.canvas = document.getElementById("canvas");
 
+        this.debugPoints = [];
         this.states = [];
         this.connections = [];
 
@@ -29,12 +30,17 @@ class Editor{
             connections: {
                 stroke: 2,
                 strokeColor: "#fff"
+            },
+            animation: {
+                speed: 1,
+                speeds: [0.5,1,1.5,2,2.5,4,8]
             }
         };
 
         this.controls = {
             adding: false,
             animate: false,
+            animationFinished: false,
             scale: 1,
             translation: {
                 x: 0,
@@ -46,8 +52,12 @@ class Editor{
         this.selectedTool = 'move';
 
         this.activeState = undefined;
+        this.editElement = undefined;
 
         this.tempConnection = new Connection();
+
+        this.inputSequence = ['0'];
+        this.currentInput = 0;
 
         this.init();
     }
@@ -77,6 +87,10 @@ class Editor{
     draw(){
         const ctx = this.canvas.getContext("2d");
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        // draw grid that moves with the canvas
+        this.drawGrid(ctx);
+
         // scale and translate
         ctx.save();
         ctx.translate(this.controls.translation.x, this.controls.translation.y);
@@ -88,12 +102,20 @@ class Editor{
         for(const connection of this.connections){
             connection.draw(ctx,this.connections);
             // if animation has started and this connection is currently being animated increase progress
-            if(this.controls.animate && connection.source === this.activeState) connection.progress += 0.005;
+            if(this.controls.animate && connection.source === this.activeState && connection.input === this.inputSequence[this.currentInput]) connection.progress += (0.001 * this.options.animation.speeds[this.options.animation.speed]);
 
             // if progress finished reset progress and set active state to the next state
             if(connection.progress >= 1){
                 connection.progress = 0;
                 this.activeState = connection.target;
+                this.currentInput++;
+                console.log(this.currentInput, this.inputSequence);
+                // check if the active state is a final state
+                if(this.currentInput > this.inputSequence.length - 1){
+                    this.controls.animationFinished = true;
+                    this.controls.animate = false;
+                    document.querySelector('.play-pause-btn').innerHTML = '<i class="bx bx-play"></i>';
+                }
             }
         }
 
@@ -103,6 +125,15 @@ class Editor{
 
         for(const state of this.states){
             state.draw(ctx);
+        }
+
+        for(const point in this.debugPoints){
+            ctx.fillStyle = this.debugPoints[point].color;
+            ctx.beginPath();
+            ctx.arc(this.debugPoints[point].x, this.debugPoints[point].y, this.debugPoints[point].size, 0, 2 * Math.PI);
+            ctx.stroke();
+            ctx.fill();
+            ctx.closePath();
         }
 
         // restore canvas to normal
@@ -154,6 +185,44 @@ class Editor{
                 this.tempConnection.source = start;
                 this.tempConnection.target = start;
                 this.connections.push(this.tempConnection);
+            }
+        }
+
+        if(this.mouse.right && this.selectedTool === 'edit'){
+            const near = this.getNearPointCon(e,undefined);
+            if(near){
+                near.selected = !near.selected;
+
+                if(near.selected){
+                    for(const connection of this.connections){
+                        if(connection !== near) connection.selected = false;
+                    }
+                    for(const state of this.states){
+                        state.selected = false;
+                    }
+                    this.editElement = {type:'connection',element:near};
+                } else {
+                    this.editElement = undefined;
+                }
+                this.updateEditMenu();
+            }
+
+            const nearState = this.getNearPoint(e,undefined);
+            if(nearState){
+                nearState.selected = !nearState.selected;
+
+                if(nearState.selected){
+                    for(const state of this.states){
+                        if(state !== nearState) state.selected = false;
+                    }
+                    for(const connection of this.connections){
+                        connection.selected = false;
+                    }
+                    this.editElement = {type:'state',element:nearState};
+                } else {
+                    this.editElement = undefined;
+                }
+                this.updateEditMenu();
             }
         }
     }
@@ -266,6 +335,32 @@ class Editor{
         return near;
     }
 
+    getNearPointCon(e, selectedCon){ // ANCHOR getNearPointCon
+        let x = e.clientX || e.x;
+        let y = e.clientY || e.y;
+
+        // calculate mouse position in canvas with scale and translation
+        x = (x - this.controls.translation.x) / this.controls.scale;
+        y = (y - this.controls.translation.y) / this.controls.scale;
+
+        let near = undefined;
+        let minDistance = 500;
+
+        for(const con of this.connections){
+            // skip the selected state
+            if(con === selectedCon) continue;
+
+            // check if mouse is near the connection
+            const distanceCheck = con.isNear(x,y);
+            if(distanceCheck.isNear && distanceCheck.distance < minDistance){
+                near = con;
+                minDistance = distanceCheck.distance;
+            }
+        }
+
+        return near;
+    }
+
     /** add new state */
     addState(e){ // ANCHOR addState
         createRipple(e);
@@ -279,6 +374,7 @@ class Editor{
 
     /** select tool */
     selectTool(e){ // ANCHOR selectTool
+        createRipple(e);
         e.stopPropagation();
         // get tool from button
         const tool = e.target.parentElement.getAttribute("data-tool");
@@ -289,15 +385,128 @@ class Editor{
         // add active class to selected
         e.target.parentElement.classList.add('active');
         this.selectedTool = tool;
+
+        if(this.selectedTool !== 'edit'){
+            for(const con of this.connections){
+                con.selected = false;
+            }
+
+            for(const state of this.states){
+                state.selected = false;
+            }
+
+            this.editElement = undefined;
+            this.updateEditMenu();
+        }
     }
 
-    startAnimation(){
+    drawGrid(ctx){
+        // draw grid
+
+        // calculate grid size
+        const gridSize = 50 * this.controls.scale;
+
+        // calculate offset
+        const offsetX = this.controls.translation.x % gridSize;
+        const offsetY = this.controls.translation.y % gridSize;
+
+        // set line width
+        ctx.lineWidth = 1;
+
+        // set line color
+        ctx.strokeStyle = "#333";
+
+        // draw vertical lines
+        for(let x = offsetX; x < this.canvas.width; x += gridSize){
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, this.canvas.height);
+            ctx.stroke();
+        }
+
+        // draw horizontal lines
+        for(let y = offsetY; y < this.canvas.height; y += gridSize){
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(this.canvas.width, y);
+            ctx.stroke();
+        }
+    }
+
+    resetAnimation(){
         this.connections.forEach((connection)=>{
             connection.progress = 0;
         });
 
-        this.controls.animate = true;
-
         this.activeState = this.states[0];
+        this.currentInput = 0;
+    }
+
+    toggleAnimation(e){
+        createRipple(e);
+        const newAnimationState = !this.controls.animate;
+
+        // TODO check if animation finished and if so reset animation
+        if(!this.activeState || this.controls.animationFinished){
+            this.resetAnimation();
+        }
+
+        this.controls.animate = newAnimationState;
+
+        if(this.controls.animate){
+            e.target.innerHTML = "<i class='bx bx-pause'></i>";
+            this.animationFinished = false;
+        } else {
+            e.target.innerHTML = "<i class='bx bx-play'></i>";
+        }
+    }
+
+    changeAnimationSpeed(e,type){
+        if(type === 'slower'){
+            this.options.animation.speed--;
+            if(this.options.animation.speed < 0) this.options.animation.speed = 0;
+        } else {
+            this.options.animation.speed++;
+            if(this.options.animation.speed >= this.options.animation.speeds.length) this.options.animation.speed = this.options.animation.speeds.length - 1;
+        }
+
+        document.querySelector('.speed-input .value').innerHTML = `${this.options.animation.speeds[this.options.animation.speed]}x`;
+    }
+
+    updateEditMenu(){
+        if(!this.editElement){
+            document.querySelector('.edit-menu').classList.add('empty');
+            document.querySelector('.edit-menu .none').classList.remove('hidden');
+            document.querySelector('.edit-menu .menu').classList.add('hidden');
+            return;
+        } else {
+            document.querySelector('.edit-menu').classList.remove('empty');
+            document.querySelector('.edit-menu .none').classList.add('hidden');
+            document.querySelector('.edit-menu .menu').classList.remove('hidden');
+
+            const type = this.editElement.type;
+            Array.from(document.querySelectorAll('.edit-menu .input-wrapper')).forEach((el)=>{
+                const settingType = el.getAttribute('setting-type');
+                if(settingType === type){
+                    el.classList.remove('hidden');
+                } else {
+                    el.classList.add('hidden');
+                }
+            });
+
+            if(type === 'connection'){
+                document.querySelector('.edit-menu .type').innerHTML = `Connection (${this.editElement.element.source.name}->${this.editElement.element.target.name})`;
+                document.querySelector('#condition input').value = this.editElement.element.input;
+                document.querySelector('#condition input').oninput = (e)=>{
+                    this.editElement.element.input = e.target.value;
+                };
+            } else {
+                document.querySelector('.edit-menu .type').innerHTML = `State ("${this.editElement.element.name}")`;
+                document.querySelector('#name input').value = this.editElement.element.name;
+                document.querySelector('#name input').oninput = (e)=>{
+                    this.editElement.element.name = e.target.value;
+                };
+            }
+        }
     }
 }

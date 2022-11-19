@@ -6,13 +6,16 @@ class State{
         this.radius = radius || 20;
         this.color = color || [255, 255, 255];
         this.connections = 0;
+        this.selected = false;
     }
 
     draw(ctx){
         // if this is the active state draw a red border
-        if(editor.activeState === this) ctx.strokeStyle = "#f00";
+        if(editor.activeState === this) ctx.strokeStyle = "green";
         // else default white
         else ctx.strokeStyle = "#fff";
+
+        if(this.selected) ctx.strokeStyle = "yellow";
 
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
