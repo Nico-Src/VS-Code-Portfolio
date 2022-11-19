@@ -160,6 +160,7 @@ class Editor{
             // remove last state and deactivate adding
             this.controls.adding = false;
             this.states.pop();
+            document.querySelector('.add-btn').classList.remove('disabled');
             return;
         }
 
@@ -208,7 +209,9 @@ class Editor{
             }
 
             const nearState = this.getNearPoint(e,undefined);
+            console.log(nearState);
             if(nearState){
+                // toggle selected
                 nearState.selected = !nearState.selected;
 
                 if(nearState.selected){
@@ -222,6 +225,7 @@ class Editor{
                 } else {
                     this.editElement = undefined;
                 }
+                console.log(nearState.selected);
                 this.updateEditMenu();
             }
         }
@@ -350,11 +354,19 @@ class Editor{
             // skip the selected state
             if(con === selectedCon) continue;
 
-            // check if mouse is near the connection
-            const distanceCheck = con.isNear(x,y);
-            if(distanceCheck.isNear && distanceCheck.distance < minDistance){
-                near = con;
-                minDistance = distanceCheck.distance;
+            if(con.source === con.target){
+                const distanceCheck = con.isSelfNear(x,y);
+                if(distanceCheck.distance < minDistance){
+                    near = con;
+                    minDistance = distanceCheck.distance;
+                }
+            } else {
+                // check if mouse is near the connection
+                const distanceCheck = con.isNear(x,y);
+                if(distanceCheck.isNear && distanceCheck.distance < minDistance){
+                    near = con;
+                    minDistance = distanceCheck.distance;
+                }
             }
         }
 
@@ -440,12 +452,14 @@ class Editor{
 
         this.activeState = this.states[0];
         this.currentInput = 0;
+        this.controls.animationFinished = false;
     }
 
     toggleAnimation(e){
         createRipple(e);
         const newAnimationState = !this.controls.animate;
 
+        console.log(this.controls.animationFinished);
         // TODO check if animation finished and if so reset animation
         if(!this.activeState || this.controls.animationFinished){
             this.resetAnimation();
@@ -508,5 +522,81 @@ class Editor{
                 };
             }
         }
+    }
+
+    saveProject(e){
+        createRipple(e);
+        const project = {
+            states: [],
+            connections: []
+        };
+
+        this.states.forEach((state)=>{
+            project.states.push({
+                name: state.name,
+                x: state.x,
+                y: state.y
+            });
+        });
+
+        this.connections.forEach((connection)=>{
+            project.connections.push({
+                source: connection.source.name,
+                target: connection.target.name,
+                input: connection.input
+            });
+        });
+
+        const json = JSON.stringify(project);
+        this.download('project.machine',json);
+    }
+
+    loadProject(e){
+        createRipple(e);
+        
+        // trigger file input
+        document.querySelector('#file-input').onchange = (e)=>{
+            const file = e.target.files[0];
+            if(!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e)=>{
+                const project = JSON.parse(e.target.result);
+                
+                // clear current project
+                this.states = [];
+                this.connections = [];
+
+                this.resetAnimation();
+
+                // load new project
+                project.states.forEach((state)=>{
+                    this.states.push(new State(state.name,state.x,state.y));
+                });
+
+                project.connections.forEach((connection)=>{
+                    const source = this.states.find((state)=>state.name === connection.source);
+                    const target = this.states.find((state)=>state.name === connection.target);
+                    this.connections.push(new Connection(source,target,connection.input));
+                });
+
+                this.updateEditMenu();
+            }
+            reader.readAsText(file);
+        };
+        document.querySelector('#file-input').click();
+    }
+
+    download(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+
+        element.style.display = 'none';
+        document.body.appendChild(element);
+
+        element.click();
+
+        document.body.removeChild(element);
     }
 }

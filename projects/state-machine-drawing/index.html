@@ -17,6 +17,10 @@
         <div class="add-btn ripple-btn" onclick="editor.addState(event)">
             <i class='bx bx-folder-plus'></i>&nbsp;<span>Add State</span>
         </div>
+        <div class="save-load-wrapper">
+            <div class="save-btn ripple-btn" onclick="editor.saveProject(event)"><i class='bx bx-save'></i></div>
+            <div class="load-btn ripple-btn" onclick="editor.loadProject(event)"><i class='bx bx-folder-open' ></i></div>
+        </div>
         <div class="tools">
             <div class="move ripple-btn active" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="move"><i class='bx bx-move'></i></div>
             <div class="connect ripple-btn" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="connect"><i class='bx bx-link'></i></div>
@@ -54,6 +58,8 @@
                 Nothing selected
             </div>
         </div>
+
+        <input id="file-input" type="file" name="name" style="display: none;" />
     </div>
     <script src="js/ripple.js"></script>
     <script src="js/state.js"></script>

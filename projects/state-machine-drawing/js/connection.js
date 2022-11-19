@@ -1,9 +1,9 @@
 class Connection{
-    constructor(source, target){
+    constructor(source, target, input){
         this.source = source;
         this.target = target;
         this.progress = 0;
-        this.input = '0';
+        this.input = input || '0';
         this.selected = false;
     }
 
@@ -104,6 +104,7 @@ class Connection{
                 ctx.stroke();
                 ctx.closePath();
             } else {
+                if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
                 ctx.moveTo(this.source.x - 10, this.source.y - 15);
                 ctx.lineTo(this.source.x - 10, this.source.y - 35);
@@ -130,6 +131,7 @@ class Connection{
                 ctx.stroke();
                 ctx.closePath();
             } else {
+                if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
                 ctx.moveTo(this.source.x - 10, this.source.y - 35);
                 ctx.lineTo(this.source.x + 10, this.source.y - 35);
@@ -156,6 +158,7 @@ class Connection{
                 ctx.stroke();
                 ctx.closePath();
             } else {
+                if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
                 ctx.moveTo(this.source.x + 10, this.source.y - 35);
                 ctx.lineTo(this.source.x + 10, this.source.y - 15);
@@ -352,6 +355,18 @@ class Connection{
         const dx = x - middle.x - this.offsetX;
         const dy = y - middle.y - this.offsetY;
         const distance = Math.sqrt(dx * dx + dy * dy);
+
+        return {isNear: distance < 25, distance: distance};
+    }
+
+    isSelfNear(x,y){
+        const line2 = {source: {x: this.source.x - 10, y: this.source.y - 35}, target: {x: this.source.x + 10, y: this.source.y - 35}};
+        const middle2 = this.getPointOnCustomLine(this.calcLength(line2.source, line2.target) * 0.5,line2);
+
+        const dx = x - middle2.x;
+        const dy = y - middle2.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        // console.log(distance);
 
         return {isNear: distance < 25, distance: distance};
     }

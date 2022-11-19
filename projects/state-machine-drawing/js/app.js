@@ -1,3 +1,1 @@
-document.onreadystatechange = function () {
-    editor = new Editor();
-};
+editor = new Editor();

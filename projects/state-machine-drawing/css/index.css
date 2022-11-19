@@ -52,6 +52,31 @@ body,html{
     pointer-events: none;
 }
 
+.save-load-wrapper{
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 10px;
+    height: fit-content;
+}
+
+.save-load-wrapper .save-btn,
+.save-load-wrapper .load-btn{
+    background-color: var(--accent-color);
+    width: calc(50% - 5px);
+    height: 30px;
+    border-radius: 4px;
+    color:white;
+    padding: 2px 10px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    will-change: transform;
+    transition: all .15s ease;
+}
+
 .tools{
     display: flex;
     justify-content: center;
