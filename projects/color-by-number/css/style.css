@@ -1,0 +1,88 @@
+:root{
+    --accent-color: rgb(74, 187, 74);
+    --light-accent: rgb(122, 229, 122);
+}
+
+body,html{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #202020;
+    overflow: hidden;
+}
+
+*{
+    box-sizing: border-box;
+    font-family: 'Poppins',sans-serif;
+}
+
+#file-input{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#input-img{
+    display:none;
+}
+
+.colors{
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 50px;
+    background-color: #505050;
+    padding: 10px;
+    height: 100%;
+    overflow: auto;
+}
+
+.stats{
+    position: absolute;
+    top: 50px;
+    left: 0px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 200px;
+    color:white;
+    background-color: #505050;
+    padding: 10px;
+    height: fit-content;
+    overflow: auto;
+}
+
+.colors div{
+    width: 40px;
+    height: 30px;
+    border-radius: 5px;
+    margin: 5px;
+    display:flex;
+    font-weight: normal;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins',sans-serif;
+    cursor: pointer;
+    border: 4px solid transparent;
+    transition: all 0.2s ease-in-out;;
+}
+
+.colors div.selected{
+    border-color: black;
+    font-weight: bold;
+}
+
+.colors div.disabled{
+    opacity: 0.5;
+    cursor: not-allowed !important;
+}
+
+.colors::-webkit-scrollbar{
+    width: 0px;
+}
