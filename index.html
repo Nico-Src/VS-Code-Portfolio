@@ -267,15 +267,13 @@
                                 item.classList.add('loaded');
                             }, 100*index);
                         });
-                        setTimeout(() => {
-                            sections[0].classList.add('loaded');
-                        }, 250);
                     }, 150);
                 });
                 
-                $(".section.projects .item").each(function(){
+                $(".item-wrapper .item").each(function(){
                     const visitBtn = this.querySelector('.visit-btn');
                     visitBtn.onclick = () => {
+                        console.log(visitBtn);
                         visitProject(visitBtn.getAttribute('url'));
                     };
                 });
