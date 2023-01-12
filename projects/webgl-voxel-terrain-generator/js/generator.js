@@ -8,7 +8,7 @@ class Generator {
     this.biome = biome;
     this.options = {
         cubeSize: config?.cubeSize || 0.1,
-        chunkSize: config?.chunkSize || {x: 64, y: 64, z: 64},
+        chunkSize: config?.chunkSize || {x: 32, y: 72, z: 32},
         noiseSmoothness: this.biome.smoothness || config?.noiseSmoothness || 1,
         minHeight: config?.minHeight || 6,
         fallSpeed: config?.fallSpeed || 0.1,
@@ -34,6 +34,11 @@ class Generator {
     this.initBlockMap();
     this.renderLoop();
     this.render();
+
+    /*setInterval(()=>{
+        this.options.noiseOffsetX += 2;
+        this.reinit(this.biome,false,false);
+    },50);*/
   }
 
   changeConfig(key,value,subKey){
@@ -57,19 +62,19 @@ class Generator {
   }
 
   reinit(biome,overrideSmoothness,transition){
-    // remove old instances fast
-    for(const block in this.blockMap){
-        this.scene.remove(this.blockMap[block]);
-    }
     this.biome = biome;
     if(overrideSmoothness === true) this.options.noiseSmoothness = this.biome.smoothness;
     document.querySelector('#noiseSmoothnessInput').value = this.options.noiseSmoothness;
     this.generateHeightmap();
+    // remove old instances fast
+    for(const block in this.blockMap){
+        this.scene.remove(this.blockMap[block]);
+    }
     this.cubeMap = [];
     this.blockMap = [];
     this.blockIDMap = [];
     if(transition){
-        this.blockTransition = -10;
+        this.blockTransition = -2;
         this.blockTransitionOffsets = [];
     } else {
         this.blockTransition = 0;
@@ -90,6 +95,11 @@ class Generator {
     this.blockMap['sand'] = this.generateInstance('sand.png', this.cubeMap['sand']);
     this.blockMap['sandstone'] = this.generateInstance('sandstone.png', this.cubeMap['sandstone']);
     this.blockMap['blackstone'] = this.generateInstance('blackstone.png', this.cubeMap['blackstone']);
+    this.blockMap['feih'] = this.generateInstance('feih.jpg', this.cubeMap['feih']);
+    this.blockMap['dawu'] = this.generateInstance('dawu.jpg', this.cubeMap['dawu']);
+    this.blockMap['f#'] = this.generateInstance('fsharp.png', this.cubeMap['f#']);
+    this.blockMap['c#'] = this.generateInstance('csharp.png', this.cubeMap['c#']);
+    this.blockMap['water'] = this.generateInstance('water.webp', this.cubeMap['water']);
   }
 
   initCubeMap(transition){
@@ -122,6 +132,7 @@ class Generator {
                                     this.cubeMap[mineral.name]++;
                                     this.blockIDMap[`${x},${y},${z}`] = mineral.id;
                                     blockPlaced = true;
+                                    sum++;
                                     break;
                                 }
                             }
@@ -129,12 +140,14 @@ class Generator {
                             if(!blockPlaced){
                                 if(this.cubeMap[defaultTreasureBlock.name] == undefined) this.cubeMap[defaultTreasureBlock.name] = 0;
                                 this.cubeMap[defaultTreasureBlock.name]++;
+                                sum++;
                                 this.blockIDMap[`${x},${y},${z}`] = defaultTreasureBlock.name;
                             }
                         } else {
                             this.cubeMap[range.block] = this.cubeMap[range.block] || 0;
                             this.cubeMap[range.block]++;
                             this.blockIDMap[`${x},${y},${z}`] = range.block;
+                            sum++;
                             break;
                         }
                     }
@@ -145,8 +158,6 @@ class Generator {
                 } else {
                     this.blockTransitionOffsets[`${x},${y},${z}`] = 0;
                 }
-
-                sum++;
             }
         }
     }
@@ -165,7 +176,6 @@ class Generator {
             if(this.heightmap[x][z] <= this.options.minHeight) this.heightmap[x][z] = this.options.minHeight;
         }
     }
-    console.log(this.heightmap);
   }
 
   generateInstance(texturePath, num){
@@ -207,7 +217,7 @@ class Generator {
                 let matrix = new THREE.Matrix4();
                 // get deltatime
                 matrix.setPosition(x*this.options.cubeSize,(y*this.options.cubeSize)+this.blockTransition+this.blockTransitionOffsets[`${x},${y},${z}`],z*this.options.cubeSize);
-                this.blockTransitionOffsets[`${x},${y},${z}`]+=.4;
+                this.blockTransitionOffsets[`${x},${y},${z}`]+=.8;
                 if(this.blockTransitionOffsets[`${x},${y},${z}`] >= 0) this.blockTransitionOffsets[`${x},${y},${z}`] = 0;
                 let block = this.blockIDMap[`${x},${y},${z}`];
                 this.blockMap[block].setMatrixAt(blockIndizes[block], matrix);
@@ -219,7 +229,7 @@ class Generator {
     for(const block in this.blockMap){
         if(this.blockMap[block]) this.blockMap[block].instanceMatrix.needsUpdate = true;
     }
-    this.blockTransition += 0.75;
+    this.blockTransition += 1.5;
     if(this.blockTransition >= 0) this.blockTransition = 0;
     if(this.biomeChanged === true){
         this.reinitiated = false;

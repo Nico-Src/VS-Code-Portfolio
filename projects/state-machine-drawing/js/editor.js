@@ -12,7 +12,7 @@ class Editor{
             left: false,
             right: false,
             middle: false
-        }
+        };
 
         this.mouseMap = {
             0: "left",
@@ -57,6 +57,7 @@ class Editor{
         this.tempConnection = new Connection();
 
         this.inputSequence = ['0'];
+        this.output = "";
         this.currentInput = 0;
 
         this.init();
@@ -79,6 +80,7 @@ class Editor{
         this.canvas.addEventListener("mouseup", this.mouseUp.bind(this));
         this.canvas.addEventListener("mousemove", this.mouseMove.bind(this));
         this.canvas.addEventListener('mousewheel',this.scroll.bind(this));
+        this.canvas.addEventListener('DOMMouseScroll',this.scroll.bind(this));
         this.canvas.addEventListener("contextmenu", e => e.preventDefault());
 
         requestAnimationFrame(this.draw.bind(this));
@@ -102,12 +104,19 @@ class Editor{
         for(const connection of this.connections){
             connection.draw(ctx,this.connections);
             // if animation has started and this connection is currently being animated increase progress
-            if(this.controls.animate && connection.source === this.activeState && connection.input === this.inputSequence[this.currentInput]) connection.progress += (0.001 * this.options.animation.speeds[this.options.animation.speed]);
+            if(connection.input.includes('!')){
+                if(this.controls.animate && connection.source === this.activeState && connection.input.substring(1,connection.input.length) !== this.inputSequence[this.currentInput]) connection.progress += (0.001 * this.options.animation.speeds[this.options.animation.speed]);
+            } else {
+                if(this.controls.animate && connection.source === this.activeState && connection.input === this.inputSequence[this.currentInput]) connection.progress += (0.001 * this.options.animation.speeds[this.options.animation.speed]);
+            }
+            
 
             // if progress finished reset progress and set active state to the next state
             if(connection.progress >= 1){
                 connection.progress = 0;
                 this.activeState = connection.target;
+                this.output += connection.output;
+                document.querySelector('.output').value = this.output;
                 this.currentInput++;
                 // check if the active state is a final state
                 if(this.currentInput > this.inputSequence.length - 1){
@@ -307,7 +316,8 @@ class Editor{
 
     /** mouse wheel handler for canvas */
     scroll(e){ // ANCHOR scroll
-        this.controls.scale += e.deltaY * -0.0005;
+        var delta = e.deltaY ? e.deltaY : (e.detail * 10);
+        this.controls.scale += delta * -0.0005;
         this.controls.scale = Math.min(Math.max(.125, this.controls.scale), 4);
     }
 
@@ -452,6 +462,8 @@ class Editor{
         this.activeState = this.states.find((state)=>{ return state.isStart; });
         this.currentInput = 0;
         this.controls.animationFinished = false;
+
+        this.output = "";
     }
 
     toggleAnimation(e){
@@ -512,6 +524,10 @@ class Editor{
                 document.querySelector('#condition input').value = this.editElement.element.input;
                 document.querySelector('#condition input').oninput = (e)=>{
                     this.editElement.element.input = e.target.value;
+                };
+                document.querySelector('#output input').value = this.editElement.element.output;
+                document.querySelector('#output input').oninput = (e)=>{
+                    this.editElement.element.output = e.target.value;
                 };
             } else {
                 document.querySelector('.edit-menu .type').innerHTML = `State ("${this.editElement.element.name}")`;

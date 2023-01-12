@@ -44,6 +44,29 @@ biomes.desert = new Biome('desert',[
     {chance: 1, name: 'sandstone', id: 'sandstone'},
 ], 1);
 
+biomes.mines = new Biome('mines',[
+    {block: 'coal_ore', height: 0.95, minerals: false},
+    {block: 'iron_ore', height: 0.00, minerals: false},
+], [], 1);
+
+biomes.goldmines = new Biome('goldmines',[
+    {block: 'dawu', height: 0.95, minerals: false},
+    {block: 'feih', height: 0.00, minerals: true},
+], [
+    {chance: 0.02, name: 'c#', id: 'c#'},
+    {chance: 0.2, name: 'f#', id: 'f#'},
+    {chance: 1, name: 'feih', id: 'feih'},
+], 1);
+
+biomes.water = new Biome('water',[
+    {block: 'water', height: 0.95, minerals: false},
+    {block: 'water', height: 0.00, minerals: false},
+], [
+    {chance: 0.02, name: 'c#', id: 'c#'},
+    {chance: 0.2, name: 'f#', id: 'f#'},
+    {chance: 1, name: 'feih', id: 'feih'},
+], 12);
+
 const generator = new Generator({},scene,renderer,camera,controls,stats,biomes.plains);
 
 document.querySelector('#biomeSelect').addEventListener('change',(e)=>{

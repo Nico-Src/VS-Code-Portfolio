@@ -37,6 +37,7 @@
         </div>
         <hr>
         <input class="input-sequence" type="text" onchange="editor.inputSequence = this.value.split('');">
+        <input class="output" type="text" readonly>
         <hr>
         <div class="inspector">
 
@@ -47,6 +48,10 @@
                 <div class="type" style="text-align: flex-start;"></div>
                 <div class="input-wrapper" id="condition" setting-type="connection">
                     <label>Input:</label>
+                    <input type="text">
+                </div>
+                <div class="input-wrapper" id="output" setting-type="connection">
+                    <label>Ouput:</label>
                     <input type="text">
                 </div>
                 <div class="input-wrapper" id="name" setting-type="state">

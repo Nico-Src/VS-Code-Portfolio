@@ -4,6 +4,7 @@ class Connection{
         this.target = target;
         this.progress = 0;
         this.input = input || '0';
+        this.output = output || '0';
         this.selected = false;
     }
 
