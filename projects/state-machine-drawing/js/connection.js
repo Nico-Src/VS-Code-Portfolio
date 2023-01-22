@@ -27,12 +27,15 @@ class Connection{
         // calculate the point on the line where the progress stops right now
         const progressPoint = this.getPointOnLine(currentProgress);
 
+        const sourceSize = this.source.radius;
+        const targetSize = this.target.radius;
+
         // if source and target are the same state (loop)
         if(this.source === this.target){
             // 3 lines to draw
-            const line1 = {source: {x: this.source.x - 10, y: this.source.y - 15}, target: {x: this.source.x - 10, y: this.source.y - 35}};
-            const line2 = {source: {x: this.source.x - 10, y: this.source.y - 35}, target: {x: this.source.x + 10, y: this.source.y - 35}};
-            const line3 = {source: {x: this.source.x + 10, y: this.source.y - 35}, target: {x: this.source.x + 10, y: this.source.y - 15}};
+            const line1 = {source: {x: this.source.x - (this.source.radius / 2), y: this.source.y - (this.source.radius / 2 + 5)}, target: {x: this.source.x - (this.source.radius / 2), y: this.source.y - (this.source.radius * 2)}};
+            const line2 = {source: {x: this.source.x - (this.source.radius / 2), y: this.source.y - (this.source.radius * 2)}, target: {x: this.source.x + (this.source.radius / 2), y: this.source.y - (this.source.radius * 2)}};
+            const line3 = {source: {x: this.source.x + (this.source.radius / 2), y: this.source.y - (this.source.radius * 2)}, target: {x: this.source.x + (this.source.radius / 2), y: this.source.y - (this.source.radius / 2 + 5)}};
 
             // progress set to progress * 3 (because there are 3 lines)
             let tmpProgress = Math.min(this.progress, 1) * 3;
@@ -91,7 +94,7 @@ class Connection{
                 ctx.strokeStyle = 'green';
                 if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
-                ctx.moveTo(this.source.x - 10, this.source.y - 15);
+                ctx.moveTo(this.source.x - (this.source.radius / 2), this.source.y - (this.source.radius * 2));
                 ctx.lineTo(progressP1.x, progressP1.y);
                 ctx.stroke();
                 ctx.closePath();
@@ -101,14 +104,14 @@ class Connection{
                 if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
                 ctx.moveTo(progressP1.x, progressP1.y);
-                ctx.lineTo(this.source.x - 10, this.source.y - 35);
+                ctx.lineTo(this.source.x - (this.source.radius / 2), this.source.y - (this.source.radius * 2));
                 ctx.stroke();
                 ctx.closePath();
             } else {
                 if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
-                ctx.moveTo(this.source.x - 10, this.source.y - 15);
-                ctx.lineTo(this.source.x - 10, this.source.y - 35);
+                ctx.moveTo(this.source.x - (this.source.radius / 2), this.source.y - (this.source.radius / 2 + 5));
+                ctx.lineTo(this.source.x - (this.source.radius / 2), this.source.y - (this.source.radius * 2));
                 ctx.closePath();
                 ctx.stroke();
             }
@@ -118,7 +121,7 @@ class Connection{
                 ctx.strokeStyle = 'green';
                 if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
-                ctx.moveTo(this.source.x - 10, this.source.y - 35);
+                ctx.moveTo(this.source.x - (this.source.radius / 2), this.source.y - (this.source.radius * 2));
                 ctx.lineTo(progressP2.x, progressP2.y);
                 ctx.stroke();
                 ctx.closePath();
@@ -128,14 +131,14 @@ class Connection{
                 if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
                 ctx.moveTo(progressP2.x, progressP2.y);
-                ctx.lineTo(this.source.x + 10, this.source.y - 35);
+                ctx.lineTo(this.source.x + (this.source.radius / 2), this.source.y - (this.source.radius * 2));
                 ctx.stroke();
                 ctx.closePath();
             } else {
                 if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
-                ctx.moveTo(this.source.x - 10, this.source.y - 35);
-                ctx.lineTo(this.source.x + 10, this.source.y - 35);
+                ctx.moveTo(this.source.x - (this.source.radius / 2), this.source.y - (this.source.radius * 2));
+                ctx.lineTo(this.source.x + (this.source.radius / 2), this.source.y - (this.source.radius * 2));
                 ctx.closePath();
                 ctx.stroke();
             }
@@ -145,7 +148,7 @@ class Connection{
                 ctx.strokeStyle = 'green';
                 if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
-                ctx.moveTo(this.source.x + 10, this.source.y - 35);
+                ctx.moveTo(this.source.x + 10, this.source.y - (this.source.radius * 2));
                 ctx.lineTo(progressP3.x, progressP3.y);
                 ctx.stroke();
                 ctx.closePath();
@@ -155,14 +158,14 @@ class Connection{
                 if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
                 ctx.moveTo(progressP3.x, progressP3.y);
-                ctx.lineTo(this.source.x + 10, this.source.y - 15);
+                ctx.lineTo(this.source.x + (this.source.radius / 2), this.source.y - (this.source.radius / 2 + 5));
                 ctx.stroke();
                 ctx.closePath();
             } else {
                 if(this.selected) ctx.strokeStyle = 'yellow';
                 ctx.beginPath();
-                ctx.moveTo(this.source.x + 10, this.source.y - 35);
-                ctx.lineTo(this.source.x + 10, this.source.y - 15);
+                ctx.moveTo(this.source.x + (this.source.radius / 2), this.source.y - (this.source.radius * 2));
+                ctx.lineTo(this.source.x + (this.source.radius / 2), this.source.y - (this.source.radius / 2 + 5));
                 ctx.closePath();
                 ctx.stroke();
             }

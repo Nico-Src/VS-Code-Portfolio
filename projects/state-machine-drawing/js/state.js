@@ -23,6 +23,10 @@ class State{
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.font = "12px Poppins";
+        // measure text width
+        let textWidth = ctx.measureText(this.name).width;
+        this.radius = textWidth / 2 + 10;
+        if(this.radius < 20) this.radius = 20;
         ctx.stroke();
         ctx.fill();
         ctx.closePath();

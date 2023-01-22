@@ -2,7 +2,6 @@ class App{
     constructor(img){
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d',{willReadFrequently:true, alpha:true});
-        this.ctx.read
         this.image = img;
         this.imageData = [];
         this.revealed = [];
@@ -13,8 +12,8 @@ class App{
 
         this.firstDraw = true;
 
-        this.rows = 100;
-        this.cols = 100;
+        this.rows = 50;
+        this.cols = 50;
 
         this.mouse = {
             x: 0,
