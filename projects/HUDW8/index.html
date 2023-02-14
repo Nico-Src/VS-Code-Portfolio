@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <title>HUDW8</title>
+    <style>
+        :root{
+            --accent-color: #45b649;
+            --dark-accent-color: #3a9b3f;
+        }
+
+        body,html{
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background-color: #151515;
+        }
+
+        *{
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        canvas{
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .controls{
+            height: 100%;
+            width: 400px;
+            position: fixed;
+            z-index: 5;
+            top: 0;
+            left: 0;
+            background-color: #404040;
+            padding: 10px !important;
+            overflow: auto;
+        }
+
+        .controls .solutions{
+            height:fit-content;
+            max-height: 500px;
+            overflow: auto;
+            width: 100%;
+            background-color: #606060;
+            border-radius: 4px;
+            color: white;
+            text-align: center;
+        }
+
+        .controls .solutions::-webkit-scrollbar,
+        .controls::-webkit-scrollbar{
+            width: 0px;
+        }
+
+        .controls .solutions .solution{
+            width: calc(100% - 20px);
+            border-radius: 4px;
+            height: 230px;
+            background-color: #808080;
+            margin: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            color: #DDD;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .controls .solutions .solution .solution-number{
+            width: 30px;
+            height: 100%;
+            background-color: #353535;
+            border-radius: 4px 0px 0px 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .controls .solutions .solution .rotations{
+            width: calc(100% - 60px);
+            height: fit-content;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .controls .solutions .solution .rotations .rotation{
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .controls .solutions .solution .rotations .rotation .rotation-number{
+            height: fit-content;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-right: 10px;
+        }
+
+        .controls .solutions .solution .rotations .rotation span{
+            font-weight: bold;
+            color: #FFF;
+            font-size: 14px;
+        }
+
+        .controls .solutions .solution .rotations .rotation span img{
+            width: 20px;
+            height: 20px;
+            margin-right: 5px;
+        }
+
+        .controls .solutions .solution .show-solution{
+            width: 30px;
+            height: 100%;
+            background-color: #101010;
+            border-radius: 0px 4px 4px 0px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-left: auto;
+            cursor: pointer;
+        }
+
+        .controls .progress{
+            width: 100%;
+            height: 30px;
+            background-color: #303030;
+            border-radius: 4px;
+            margin-top: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .controls .progress .progress-value{
+            background-color: var(--accent-color);
+            border-radius: 0px 4px 4px 0px;
+            height: 100%;
+            width: 0%;
+        }
+
+        .controls .progress .progress-text{
+            position: absolute;
+            inset: 0;
+            width: fit-content;
+            height: fit-content;
+            margin: auto;
+            color: #FFF;
+            font-weight: bold;
+        }
+
+        .controls .bruteforce-btn,
+        .controls .randombrute-btn,
+        .controls .reset-btn,
+        .controls .cancel-btn{
+            width: 100%;
+            height: 40px;
+            background-color: var(--accent-color);
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FFF;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 10px;
+            cursor: pointer;
+            transition: all .25s ease;
+        }
+
+        .controls .reset-btn,
+        .controls .cancel-btn{
+            background-color: #505050 !important;
+        }
+
+        .controls .bruteforce-btn:hover,
+        .controls .randombrute-btn:hover{
+            background-color: var(--dark-accent-color);
+        }
+
+        .controls .reset-btn:hover,
+        .controls .cancel-btn:hover{
+            background-color: #606060 !important;
+        }
+
+        .controls .bruteforce-btn.disabled,
+        .controls .reset-btn.disabled,
+        .controls .randombrute-btn.disabled,
+        .controls .cancel-btn.disabled{
+            opacity: .5;
+            background-color: #505050;
+            pointer-events: none;
+        }
+
+        .controls #bruteforce-interval{
+            width: 100%;
+            height: 40px;
+            background-color: #303030;
+            border-radius: 4px;
+            color: #FFF;
+            font-weight: bold;
+            font-size: 16px;
+            margin-top: 10px;
+            padding: 0px 10px;
+            text-align: center;
+            outline:none;
+            border:none;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <div class="solutions">
+            No Solutions yet.
+        </div>
+        <div class="progress">
+            <div class="progress-value">
+
+            </div>
+            <div class="progress-text">
+                0%
+            </div>
+        </div>
+        <input type="number" id="bruteforce-interval" value="1">
+        <div class="bruteforce-btn">Bruteforce</div>
+        <div class="randombrute-btn">Random Bruteforce</div>
+        <div class="cancel-btn disabled">Cancel</div>
+        <div class="reset-btn disabled">Reset</div>
+    </div>
+</body>
+<script async src="https://unpkg.com/es-module-shims@1.3.6/dist/es-module-shims.js"></script>
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.149.0/build/three.module.js",
+            "three-orbit-controls": "https://unpkg.com/three@0.149.0/examples/jsm/controls/OrbitControls.js",
+            "three-font-loader": "https://unpkg.com/three@0.149.0/examples/jsm/loaders/FontLoader.js",
+            "three-text-geometry": "https://unpkg.com/three@0.149.0/examples/jsm/geometries/TextGeometry.js"
+        }
+    }
+</script>
+<script type="module">
+    class Cube{
+        constructor(object, values, rotation){
+            this.object = object;
+            this.originalValues = JSON.parse(JSON.stringify(values));
+            this.values = values;
+            this.rotation = rotation;
+        }
+
+        updateValues(){
+            // update values after rotation is applied
+            let [x,y,z] = this.rotation;
+
+            this.object.rotation.x = x;
+            this.object.rotation.y = y;
+            this.object.rotation.z = z;
+
+            if(x == 0 && y == 0 && z == 0){
+                this.values = this.originalValues;
+                return;
+            }
+
+            // rotate x
+            if(x == Math.PI/2){
+                this.values = {
+                    top: this.originalValues.back,
+                    front: this.originalValues.top,
+                    bottom: this.originalValues.front,
+                    back: this.originalValues.bottom,
+                    left: this.originalValues.left,
+                    right: this.originalValues.right
+                }
+            }else if(x == -Math.PI/2){
+                this.values = {
+                    top: this.originalValues.front,
+                    front: this.originalValues.bottom,
+                    bottom: this.originalValues.back,
+                    back: this.originalValues.top,
+                    left: this.originalValues.left,
+                    right: this.originalValues.right
+                }
+            }
+
+            // rotate y
+            if(y == Math.PI/2){
+                this.values = {
+                    top: this.originalValues.top,
+                    right: this.originalValues.front,
+                    bottom: this.originalValues.bottom,
+                    left: this.originalValues.back,
+                    front: this.originalValues.left,
+                    back: this.originalValues.right
+                }
+            }else if(y == -Math.PI/2){
+                this.values = {
+                    top: this.originalValues.top,
+                    right: this.originalValues.back,
+                    bottom: this.originalValues.bottom,
+                    left: this.originalValues.front,
+                    front: this.originalValues.right,
+                    back: this.originalValues.left
+                }
+            }
+
+            // rotate z
+            if(z == Math.PI/2){
+                this.values = {
+                    front: this.originalValues.front,
+                    back: this.originalValues.back,
+                    right: this.originalValues.bottom,
+                    left: this.originalValues.top,
+                    top: this.originalValues.right,
+                    bottom: this.originalValues.left
+                }
+            } else if(z == Math.PI){
+                this.values = {
+                    front: this.originalValues.front,
+                    right: this.originalValues.left,
+                    back: this.originalValues.back,
+                    left: this.originalValues.right,
+                    top: this.originalValues.bottom,
+                    bottom: this.originalValues.top
+                }
+            } else if(z == 3*Math.PI/2){
+                this.values = {
+                    front: this.originalValues.front,
+                    right: this.originalValues.top,
+                    back: this.originalValues.back,
+                    left: this.originalValues.bottom,
+                    top: this.originalValues.left,
+                    bottom: this.originalValues.right
+                }
+            }
+        }
+    }
+
+    const rotations = [
+        [0,0,0],
+        [0,0,Math.PI/2],
+        [0,0,Math.PI],
+        [0,0,3*Math.PI/2],
+        [0,Math.PI/2,0],
+        [0,-Math.PI/2,0],
+        [Math.PI/2,0,0],
+        [-Math.PI/2,0,0]
+    ];
+
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three-orbit-controls';
+    import { FontLoader } from 'three-font-loader';
+    import { TextGeometry } from 'three-text-geometry';
+    
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    const loader = new THREE.TextureLoader();
+    const raycaster = new THREE.Raycaster();
+    var solutionDictionary = [];
+    var solutions = [];
+    var bruteForceInterval = undefined;
+    var bruteForceIndex = 0;
+    var bruteForceDuration = 1;
+    
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    document.body.appendChild( renderer.domElement );
+
+    const ambient = new THREE.AmbientLight(0xffffff);
+    scene.add(ambient);
+
+    const directLight = new THREE.DirectionalLight(0xffffff, .8);
+    directLight.position.set(0,0,1.85);
+    scene.add(directLight);
+    
+    const geometry = new THREE.BoxGeometry( 1, 1, 1 );
+
+    // define urls for textures [0 = Right, 1 = Left, 2 = Top, 3 = Bottom, 4 = Front, 5 = Back]
+    const urlsCube1 = [
+        `green-4.jpg`,"green-4.jpg",
+        "yellow-1.jpg","blue-2.jpg",
+        `blue-2.jpg`,`red-3.jpg`
+    ];
+    
+    // setup materials with the given textures
+    const materialsCube1 = urlsCube1.map(url => {
+        const tex = loader.load(url);
+        // set anisotropy to max for better quality
+        tex.anisotropy =  renderer.capabilities.getMaxAnisotropy();
+        const mat = new THREE.MeshPhongMaterial({ map: tex });
+        mat.specular = new THREE.Color(0x000000);
+        mat.map.minFilter = THREE.LinearFilter;
+        mat.map.maxFilter = THREE.LinearFilter;
+        return mat;
+    });
+
+    // define urls for textures [0 = Right, 1 = Left, 2 = Top, 3 = Bottom, 4 = Front, 5 = Back]
+    const urlsCube2 = [
+        `yellow-1.jpg`,"blue-2.jpg",
+        "yellow-1.jpg","green-4.jpg",
+        `blue-2.jpg`,`red-3.jpg`
+    ];
+    
+    // setup materials with the given textures
+    const materialsCube2 = urlsCube2.map(url => {
+        const tex = loader.load(url);
+        // set anisotropy to max for better quality
+        tex.anisotropy =  renderer.capabilities.getMaxAnisotropy();
+        const mat = new THREE.MeshPhongMaterial({ map: tex });
+        mat.specular = new THREE.Color(0x000000);
+        mat.map.minFilter = THREE.LinearFilter;
+        mat.map.maxFilter = THREE.LinearFilter;
+        return mat;
+    });
+
+    // define urls for textures [0 = Right, 1 = Left, 2 = Top, 3 = Bottom, 4 = Front, 5 = Back]
+    const urlsCube3 = [
+        `red-3.jpg`,"green-4.jpg",
+        "red-3.jpg","blue-2.jpg",
+        `yellow-1.jpg`,`green-4.jpg`
+    ];
+    
+    // setup materials with the given textures
+    const materialsCube3 = urlsCube3.map(url => {
+        const tex = loader.load(url);
+        // set anisotropy to max for better quality
+        tex.anisotropy =  renderer.capabilities.getMaxAnisotropy();
+        const mat = new THREE.MeshPhongMaterial({ map: tex });
+        mat.specular = new THREE.Color(0x000000);
+        mat.map.minFilter = THREE.LinearFilter;
+        mat.map.maxFilter = THREE.LinearFilter;
+        return mat;
+    });
+
+    // define urls for textures [0 = Right, 1 = Left, 2 = Top, 3 = Bottom, 4 = Front, 5 = Back]
+    const urlsCube4 = [
+        `green-4.jpg`,"red-3.jpg",
+        "red-3.jpg","yellow-1.jpg",
+        `yellow-1.jpg`,`blue-2.jpg`
+    ];
+    
+    // setup materials with the given textures
+    const materialsCube4 = urlsCube4.map(url => {
+        const tex = loader.load(url);
+        // set anisotropy to max for better quality
+        tex.anisotropy =  renderer.capabilities.getMaxAnisotropy();
+        const mat = new THREE.MeshPhongMaterial({ map: tex });
+        mat.specular = new THREE.Color(0x000000);
+        mat.map.minFilter = THREE.LinearFilter;
+        mat.map.maxFilter = THREE.LinearFilter;
+        return mat;
+    });
+
+    const fontLoader = new FontLoader();
+    var topTextMesh, bottomTextMesh, leftTextMesh, rightTextMesh, frontTextMesh, backTextMesh;
+    var font = undefined;
+	fontLoader.load( 'font.json', function ( response ) {
+		font = response;
+        rotateCube();
+	});
+
+    const cube = new THREE.Mesh( geometry, materialsCube1 );
+    cube.currentRotation = rotations[0];
+    cube.position.set(-1.65,0,0);
+    scene.add( cube );
+
+    const cube2 = new THREE.Mesh( geometry, materialsCube2 );
+    cube.currentRotation = rotations[0];
+    cube2.position.set(-0.55,0,0);
+    scene.add( cube2 );
+
+    const cube3 = new THREE.Mesh( geometry, materialsCube3 );
+    cube.currentRotation = rotations[0];
+    cube3.position.set(0.55,0,0);
+    scene.add( cube3 );
+
+    const cube4 = new THREE.Mesh( geometry, materialsCube4 );
+    cube.currentRotation = rotations[0];
+    cube4.position.set(1.65,0,0);
+    scene.add( cube4 );
+
+    const cubes = [
+        new Cube(cube, {top: 'yellow-1', bottom: 'blue-2', left: 'green-4', right: 'green-4', front: 'blue-2', back: 'red-3'}, 'front'),
+        new Cube(cube2, {top: 'yellow-1', bottom: 'green-4', left: 'blue-2', right: 'yellow-1', front: 'blue-2', back: 'red-3'}, 'front'),
+        new Cube(cube3, {top: 'red-3', bottom: 'blue-2', left: 'green-4', right: 'red-3', front: 'yellow-1', back: 'green-4'}, 'front'),
+        new Cube(cube4, {top: 'red-3', bottom: 'yellow-1', left: 'red-3', right: 'green-4', front: 'yellow-1', back: 'blue-2'}, 'front')
+    ];
+    
+    camera.position.set(0,0,5);
+    
+    const controls = new OrbitControls( camera, renderer.domElement );
+    controls.target = new THREE.Vector3(0,0,0);
+    controls.enablePan = false;
+    
+    function animate() {
+        requestAnimationFrame( animate );
+        if(topTextMesh){
+            topTextMesh.lookAt( camera.position );
+            bottomTextMesh.lookAt( camera.position );
+            frontTextMesh.lookAt( camera.position );
+            backTextMesh.lookAt( camera.position );
+        }
+        renderer.render( scene, camera );
+    }
+    animate();
+
+    // click event
+    renderer.domElement.onmousedown = (event) => {
+        // return if not right mouse button
+        if(event.button !== 2) return;
+        var vector = new THREE.Vector3(( event.clientX / window.innerWidth ) * 2 - 1, - ( event.clientY / window.innerHeight ) * 2 + 1, 0.5 );
+        // unproject camera to vector
+        vector.unproject( camera );
+        // set raycaster vector (camera position, vector from camera to mouse)
+        raycaster.set( camera.position, vector.sub( camera.position ).normalize() );
+
+        // check which cube was clicked
+        for(const c of cubes){
+            var intersects = raycaster.intersectObject(c.object);
+            if (intersects.length > 0) {
+                rotateCube(c);
+                // break loop after first intersection
+                break;
+            }
+        }
+    };
+
+    function showSolution(index){
+        const solution = solutions[index];
+        for(let i = 0; i < solution.rotations.length; i++){
+            const cube = cubes[i];
+            const rotation = solution.rotations[i];
+            cube.rotation = [rotation.x,rotation.y,rotation.z];
+            cube.updateValues();
+        }
+        updateText();
+    }
+
+    // rotate given cube
+    function rotateCube(c,rot){
+        // check if cube is defined
+        if(c){
+            // set rotation and update values
+            c.previousRotation = c.rotation;
+            const rotationIndex = rotations.indexOf(c.rotation);
+            c.rotation = rot || rotations[(rotationIndex + 1) % rotations.length];
+            c.updateValues();
+        }
+
+        // calculate sums;
+        var topSum = 0,bottomSum = 0,frontSum = 0,backSum = 0;
+        for(const cube of cubes){
+            topSum += parseInt(cube.values.top.split('-')[1]);
+            bottomSum += parseInt(cube.values.bottom.split('-')[1]);
+            frontSum += parseInt(cube.values.front.split('-')[1]);
+            backSum += parseInt(cube.values.back.split('-')[1]);
+        }
+
+        let counter = 0;
+        if(topSum == 10) counter++;
+        if(bottomSum == 10) counter++;
+        if(frontSum == 10) counter++;
+        if(backSum == 10) counter++;
+        if(counter == 4 && !solutionDictionary.includes(cubes.map(c => [...c.rotation].join('')).join(''))){
+            const solution = document.createElement('div');
+            solution.classList.add('solution');
+            const solutionNumber = document.createElement('div');
+            solutionNumber.classList.add('solution-number');
+            solutionNumber.innerText = document.querySelectorAll('.solution').length + 1;
+            solution.appendChild(solutionNumber);
+            const rotations = document.createElement('div');
+            rotations.classList.add('rotations');
+            for(const cube of cubes){
+                const rotation = document.createElement('div');
+                rotation.classList.add('rotation');
+                const rotationNumber = document.createElement('div');
+                rotationNumber.classList.add('rotation-number');
+                rotationNumber.innerText = `Cube ${cubes.indexOf(cube) + 1}`;
+                rotation.appendChild(rotationNumber);
+                const top = document.createElement('span');
+                top.innerHTML = `Top: <img src="${cube.values.top}.jpg"/>`;
+                const front = document.createElement('span');
+                front.innerHTML = `Front: <img src="${cube.values.front}.jpg"/>`;
+                const back = document.createElement('span');
+                back.innerHTML = `Back: <img src="${cube.values.back}.jpg"/>`;
+                const bottom = document.createElement('span');
+                bottom.innerHTML = `Bottom: <img src="${cube.values.bottom}.jpg"/>`;
+                rotation.appendChild(top);
+                rotation.appendChild(front);
+                rotation.appendChild(back);
+                rotation.appendChild(bottom);
+                rotations.appendChild(rotation);
+            }
+            solution.appendChild(rotations);
+            const showSolutionBtn = document.createElement('div');
+            showSolutionBtn.classList.add('show-solution');
+            showSolutionBtn.innerHTML = '<i class="bx bx-show"></i>';
+            showSolutionBtn.setAttribute('index', document.querySelectorAll('.solution').length);
+            showSolutionBtn.onclick = () => {
+                showSolution(showSolutionBtn.getAttribute('index'));
+            }
+            solution.appendChild(showSolutionBtn);
+            document.querySelector('.solutions').appendChild(solution);
+            solutionDictionary.push(cubes.map(c => [...c.rotation].join('')).join(''));
+            let rotationSolution = [];
+            let sides = [];
+            for(let i = 0; i < cubes.length; i++){
+                rotationSolution[i] = {x: cubes[i].object.rotation.x, y: cubes[i].object.rotation.y, z: cubes[i].object.rotation.z};
+                sides[i] = {top: cubes[i].values.top, bottom: cubes[i].values.bottom, front: cubes[i].values.front, back: cubes[i].values.back};
+            }
+            solutions.push({rotations: rotationSolution, sides: sides});
+        }
+
+        updateText(topSum, bottomSum, frontSum, backSum);
+    }
+
+    function randomBruteforce(){
+        document.querySelector('.solutions').innerHTML = '';
+        document.querySelector('.bruteforce-btn').classList.add('disabled');
+        document.querySelector('.randombrute-btn').classList.add('disabled');
+        document.querySelector('.randombrute-btn').innerHTML = '<i class="bx bx-loader bx-spin"></i>';
+        document.querySelector('.reset-btn').classList.add('disabled');
+        document.querySelector('.cancel-btn').classList.remove('disabled');
+        solutions = [];
+        solutionDictionary = [];
+        var counter = 0;
+        const uniqueCombinations = [];
+        const preCalculatedCombinations = Math.pow(rotations.length, 4);
+        bruteForceInterval = setInterval(function(){
+            const randomCubeIndex = Math.floor(Math.random() * cubes.length);
+            const randomCube = cubes[randomCubeIndex];
+            rotateCube(randomCube);
+            const combination = cubes.map(c => [...c.rotation].join('')).join('');
+            counter++;
+            if(!uniqueCombinations.includes(combination)){
+                uniqueCombinations.push(combination);
+            }
+            const progressPercentage = ((uniqueCombinations.length / preCalculatedCombinations) * 100).toFixed(1);
+            document.querySelector('.progress .progress-value').style.width = `${progressPercentage}%`;
+            document.querySelector('.progress .progress-text').innerText = `${progressPercentage}% (${(uniqueCombinations.length)}/${preCalculatedCombinations}) - Total: ${counter}`;
+            if(uniqueCombinations.length == preCalculatedCombinations){
+                clearInterval(bruteForceInterval);
+                document.querySelector('.bruteforce-btn').classList.remove('disabled');
+                document.querySelector('.randombrute-btn').classList.remove('disabled');
+                document.querySelector('.randombrute-btn').innerHTML = 'Random Bruteforce';
+                document.querySelector('.reset-btn').classList.remove('disabled');
+                document.querySelector('.cancel-btn').classList.add('disabled');
+                document.querySelector('.progress .progress-value').style.width = `0%`;
+                document.querySelector('.progress .progress-text').innerText = `0% (0/${preCalculatedCombinations}) - Total: ${counter}`;
+            };
+        }, bruteForceDuration);
+    }
+
+    function bruteforce(){
+        document.querySelector('.solutions').innerHTML = '';
+        document.querySelector('.bruteforce-btn').classList.add('disabled');
+        document.querySelector('.bruteforce-btn').innerHTML = '<i class="bx bx-loader bx-spin"></i>';
+        document.querySelector('.reset-btn').classList.add('disabled');
+        document.querySelector('.cancel-btn').classList.remove('disabled');
+        solutionDictionary = [];
+        solutions = [];
+        const combinations = [];
+        const currentCombination = ['front', 'front', 'front', 'front'];
+        for(const rotation1 of rotations){
+            for(const rotation2 of rotations){
+                for(const rotation3 of rotations){
+                    for(const rotation4 of rotations){
+                        combinations.push([rotation1, rotation2, rotation3, rotation4]);
+                    }
+                }
+            }
+        }
+
+        bruteForceIndex = 0;
+        bruteForceInterval = setInterval(function(){
+            const currentCombination = combinations[bruteForceIndex];
+            for(let i = 0; i < currentCombination.length; i++){
+                rotateCube(cubes[i], currentCombination[i]);
+            }
+            var topSum = 0,bottomSum = 0,frontSum = 0,backSum = 0;
+            for(const cube of cubes){
+                topSum += parseInt(cube.values.top.split('-')[1]);
+                bottomSum += parseInt(cube.values.bottom.split('-')[1]);
+                frontSum += parseInt(cube.values.front.split('-')[1]);
+                backSum += parseInt(cube.values.back.split('-')[1]);
+            }
+            currentCombination.topSum = topSum;
+            currentCombination.bottomSum = bottomSum;
+            currentCombination.frontSum = frontSum;
+            currentCombination.backSum = backSum;
+            const progressPercentage = (((bruteForceIndex+1) / combinations.length) * 100).toFixed(1);
+            document.querySelector('.progress .progress-value').style.width = `${progressPercentage}%`;
+            document.querySelector('.progress .progress-text').innerText = `${progressPercentage}% (${(bruteForceIndex+1)}/${combinations.length})`;
+            bruteForceIndex++;
+
+            if(bruteForceIndex >= combinations.length){
+                clearInterval(bruteForceInterval);
+                for(const combination of combinations){
+                    let counter = 0;
+                    if(combination.topSum == 10){
+                        counter++;
+                    }
+                    if(combination.bottomSum == 10){
+                        counter++;
+                    }
+                    if(combination.frontSum == 10){
+                        counter++;
+                    }
+                    if(combination.backSum == 10){
+                        counter++;
+                    }
+                    combination.solutionPriority = counter;
+                }
+
+                document.querySelector('.bruteforce-btn').classList.remove('disabled');
+                document.querySelector('.bruteforce-btn').innerHTML = 'Bruteforce';
+                document.querySelector('.reset-btn').classList.remove('disabled');
+                document.querySelector('.cancel-btn').classList.add('disabled');
+            }
+        }, bruteForceDuration);
+    }
+
+    function degrees(radians) {
+        return Math.round(radians * 180 / Math.PI);
+    }
+
+    function reset(){
+        solutions = [];
+        solutionDictionary = [];
+        document.querySelector('.progress .progress-value').style.width = `0%`;
+        document.querySelector('.progress .progress-text').innerText = `0%`;
+        document.querySelector('.solutions').innerHTML = '';
+        for(const cube of cubes){
+            rotateCube(cube, rotations[0]);
+            cube.updateValues();
+        }
+        updateText();
+    }
+
+    function toggleBruteforce(){
+        if(bruteForceInterval){
+            clearInterval(bruteForceInterval);
+            bruteForceInterval = null;
+        }else{
+            bruteforce();
+        }
+    }
+
+    function updateText(top,bottom,front,back){
+        var topSum = 0,bottomSum = 0,frontSum = 0,backSum = 0;
+        if(top) topSum = top;
+        if(bottom) bottomSum = bottom;
+        if(front) frontSum = front;
+        if(back) backSum = back;
+
+        if(topSum == 0 || bottomSum == 0 || frontSum == 0 || backSum == 0){
+            for(const cube of cubes){
+                topSum += parseInt(cube.values.top.split('-')[1]);
+                bottomSum += parseInt(cube.values.bottom.split('-')[1]);
+                frontSum += parseInt(cube.values.front.split('-')[1]);
+                backSum += parseInt(cube.values.back.split('-')[1]);
+            }
+        }
+
+        // remove all previous text
+        scene.remove(topTextMesh);
+        scene.remove(bottomTextMesh);
+        scene.remove(frontTextMesh);
+        scene.remove(backTextMesh);
+
+        // add texts
+        const topText = new TextGeometry( topSum.toString(), {
+            font: font,
+            size: 0.4,
+            height: 0.1,
+            curveSegments: 12,
+            bevelEnabled: false,
+        });
+
+        topTextMesh = new THREE.Mesh(topText, new THREE.MeshPhongMaterial( { color: 0xFFFFFF } ) );
+        // compute the center of the text
+        topTextMesh.geometry.computeBoundingBox();
+        const centerOffset = -0.5 * ( topTextMesh.geometry.boundingBox.max.x - topTextMesh.geometry.boundingBox.min.x );
+        topTextMesh.position.set( centerOffset, 2, 0 );
+        scene.add( topTextMesh );
+
+        const bottomText = new TextGeometry( bottomSum.toString(), {
+            font: font,
+            size: 0.4,
+            height: 0.1,
+            curveSegments: 12,
+            bevelEnabled: false,
+        });
+        bottomTextMesh = new THREE.Mesh(bottomText, new THREE.MeshPhongMaterial( { color: 0xFFFFFF } ) );
+        // compute the center of the text
+        bottomTextMesh.geometry.computeBoundingBox();
+        const centerOffset2 = -0.5 * ( bottomTextMesh.geometry.boundingBox.max.x - bottomTextMesh.geometry.boundingBox.min.x );
+        bottomTextMesh.position.set( centerOffset2, -2, 0 );
+        scene.add( bottomTextMesh );
+
+        const frontText = new TextGeometry( frontSum.toString(), {
+            font: font,
+            size: 0.4,
+            height: 0.1,
+            curveSegments: 12,
+            bevelEnabled: false,
+        });
+        frontTextMesh = new THREE.Mesh(frontText, new THREE.MeshPhongMaterial( { color: 0xFFFFFF } ) );
+        // compute the center of the text
+        frontTextMesh.geometry.computeBoundingBox();
+        const centerOffset3 = -0.5 * ( frontTextMesh.geometry.boundingBox.max.x - frontTextMesh.geometry.boundingBox.min.x );
+        frontTextMesh.position.set( centerOffset3, 0, 2 );
+        scene.add( frontTextMesh );
+
+        const backText = new TextGeometry( backSum.toString(), {
+            font: font,
+            size: 0.4,
+            height: 0.1,
+            curveSegments: 12,
+            bevelEnabled: false,
+        });
+        backTextMesh = new THREE.Mesh(backText, new THREE.MeshPhongMaterial( { color: 0xFFFFFF } ) );
+        // compute the center of the text
+        backTextMesh.geometry.computeBoundingBox();
+        const centerOffset4 = -0.5 * ( backTextMesh.geometry.boundingBox.max.x - backTextMesh.geometry.boundingBox.min.x );
+        backTextMesh.position.set( centerOffset4, 0, -2 );
+        scene.add( backTextMesh );
+    }
+
+    window.onresize = function() {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize( window.innerWidth, window.innerHeight );
+    };
+
+    document.querySelector('.bruteforce-btn').onclick = () => {
+        toggleBruteforce();
+    };
+
+    document.querySelector('.randombrute-btn').onclick = () => {
+        randomBruteforce();
+    };
+
+    document.querySelector('.reset-btn').onclick = () => {
+        reset();
+    };
+
+    document.querySelector('.cancel-btn').onclick = () => {
+        if(bruteForceInterval) clearInterval(bruteForceInterval);
+        document.querySelector('.bruteforce-btn').classList.remove('disabled');
+        document.querySelector('.reset-btn').classList.remove('disabled');
+        document.querySelector('.cancel-btn').classList.add('disabled');
+        document.querySelector('.bruteforce-btn').innerHTML = 'Bruteforce';
+        document.querySelector('.randombrute-btn').classList.remove('disabled');
+        document.querySelector('.randombrute-btn').innerHTML = 'Random Bruteforce';
+    };
+
+    document.querySelector("#bruteforce-interval").onchange = (e) => {
+        bruteForceDuration = parseInt(e.target.value);
+
+        if(bruteForceDuration <= 0 || bruteForceDuration > 1000) e.target.value = bruteForceDuration = 1;
+    }
+</script>
+</html>
