@@ -4,6 +4,8 @@ class Editor{
 
         this.blocks = [];
         this.connections = [];
+        this.TREE = btree.create(4, btree.numcmp);
+        this.btree = new this.TREE();
 
         this.mouse = {
             x: 0,
@@ -22,14 +24,15 @@ class Editor{
         this.options = {
             blocks: {
                 size: 4,
-                height: 20,
+                height: 25,
                 width: 40,
                 horizontalSpacing: 50,
 
                 strokeColor: 'white',
                 stroke: 2,
                 fillColor: 'white',
-                tolerance: 10
+                tolerance: 10,
+                fontStyle: 'bold'
             },
             fields: {
                 tolerance: 10,
@@ -66,6 +69,16 @@ class Editor{
         this.tempConnection = new Connection();
 
         this.init();
+    }
+
+    openSettingsWindow(){
+        document.querySelector('.window-overlay').classList.remove('hidden');
+        document.querySelector('.settings-window').classList.remove('hidden');
+    }
+
+    closeSettingsWindow(){
+        document.querySelector('.window-overlay').classList.add('hidden');
+        document.querySelector('.settings-window').classList.add('hidden');
     }
 
     init(){
@@ -130,6 +143,10 @@ class Editor{
     }
 
     keyDown(e){ // ANCHOR keyDown
+        if(e.key === 'Escape'){
+            this.openSettingsWindow();
+        }
+
         if(this.selectedTool === 'edit' && this.selectedField){
             if(e.key === 'Backspace'){
                 this.selectedField.text = this.selectedField.text.slice(0,-1);
@@ -140,6 +157,32 @@ class Editor{
             // remove non numeric characters
             this.selectedField.text = this.selectedField.text.replace(/[^0-9]/g,'');
             this.selectedField.parent.values[this.selectedField.parent.fields.indexOf(this.selectedField)] = this.selectedField.text;
+        }
+
+        if(this.selectedTool === 'select' && e.key === 'Delete'){
+            const blocksToDelete = [];
+            const connectionsToDelete = [];
+            for(const block of this.blocks){
+                if(block.selected){
+                    // remove connections
+                    for(const connection of this.connections){
+                        if(block.dots.find(dot => dot.id === connection.source.id) || block.dots.find(dot => dot.id === connection.target.id)){
+                            connectionsToDelete.push(connection);
+                        }
+                    }
+
+                    // remove block
+                    blocksToDelete.push(block);
+                }
+            }
+
+            for(const block of blocksToDelete){
+                this.blocks.splice(this.blocks.indexOf(block),1);
+            }
+
+            for(const connection of connectionsToDelete){
+                this.connections.splice(this.connections.indexOf(connection),1);
+            }
         }
     }
 
@@ -187,7 +230,6 @@ class Editor{
         if(this.mouse.left && this.selectedTool === 'connect'){
             // get nearest state
             const start = this.getNearPointDot(e,this.selectedDot);
-            console.log(start);
             
             // if there is a state near the mouse create a new connection
             if(start){
@@ -242,6 +284,23 @@ class Editor{
             middle: this.mouse.middle
         };
         this.mouse[this.mouseMap[e.button]] = false;
+
+        if(previousMouse.left && this.selectedTool === 'select'){
+            // select all states in selection rect
+            for(const block of this.blocks){
+                if(this.selectionRect.width < 0){
+                    this.selectionRect.x += this.selectionRect.width;
+                    this.selectionRect.width *= -1;
+                }
+
+                if(this.selectionRect.height < 0){
+                    this.selectionRect.y += this.selectionRect.height;
+                    this.selectionRect.height *= -1;
+                }
+
+                block.selected = this.selectionRect.x < block.x + block.width && this.selectionRect.x + this.selectionRect.width > block.x && this.selectionRect.y < block.y + block.height && this.selectionRect.y + this.selectionRect.height > block.y;
+            }
+        }
 
         // reset selected state on mouse up
         this.selectedBlock = undefined;
@@ -404,6 +463,120 @@ class Editor{
         }
 
         return near;
+    }
+
+    addValue(val){
+        if(val.includes(',')){
+            const values = val.split(',');
+            console.log(values)
+            for(const value of values){
+                if(!this.btree.get(value)) this.btree.put(value,value);
+            }
+        }
+        else {
+            if(!this.btree.get(val));
+            this.btree.put(val,val);
+        }
+
+        // update blocks
+        this.blocks = [];
+        this.connections = [];
+
+        // calculate middle of canvas
+        const middle = {x: this.canvas.width / 2, y: this.canvas.height / 2};
+        const x = middle.x - (this.options.blocks.width / 2);
+        const y = middle.y - (this.options.blocks.height / 2);
+        const root = new Block(x,y,this.options.blocks.size * this.options.blocks.width, this.options.blocks.height, this.options.blocks.size);
+        for(let i = 0; i < this.btree.root.leaves.length; i++){
+            root.fields[i].text = this.btree.root.leaves[i].key;
+            root.values[i] = parseInt(this.btree.root.leaves[i].key);
+            console.log(this.btree.root.leaves[i].key, root.fields[i].text)
+        }
+
+        this.blocks.push(root);
+
+        let nodes = this.btree.root.nodes;
+        this.processNodes(nodes, root, 0, x, y);
+    }
+
+    processNodes(nodes, connectedBlock, level, x, y){
+        if(nodes.filter(n => n != null).length == 0) return;
+        for(let i = 0; i < nodes.length; i++){
+            if(nodes[i] == null) continue;
+
+            // calculate x and y position (based on level and the x and y of the block above)
+            const blocksOnLevel = this.getBlocksOnLevel(0, level, [], this.btree.root).length;
+            const parentCenter = connectedBlock.x + (connectedBlock.width / 2);
+            const levelWidth = blocksOnLevel * (this.options.blocks.width * this.options.blocks.size) + ((blocksOnLevel-1) * (this.options.blocks.width));
+            const parentCenterOffset = parentCenter - (levelWidth / 2);
+            // distribute evenly on the level (based on the number of blocks on the level)
+            const index = this.getBlockIndexOnLevel(nodes[i], level);
+            const tmpX = parentCenterOffset + (index * this.options.blocks.width * this.options.blocks.size) + (this.options.blocks.width * index);
+            const tmpY = y + (level * this.options.blocks.height) + (this.options.blocks.height * 3);
+
+            const block = new Block(tmpX,tmpY,this.options.blocks.size * this.options.blocks.width, this.options.blocks.height, this.options.blocks.size);
+            block.index = index;
+            for(let j = 0; j < nodes[i].leaves.length; j++){
+                block.fields[j].text = nodes[i].leaves[j].key;
+                block.values[j] = parseInt(nodes[i].leaves[j].key);
+            }
+
+            let maxConnectionValue = -1;
+            let maxConnectionIndex = -1;
+            let minConnectionValue = Number.MAX_SAFE_INTEGER;
+            let minConnectionIndex = -1;
+            const maxBlockValue = Math.max(...block.values);
+            for(let j = 0; j < connectedBlock.values.length; j++){
+                if(connectedBlock.values[j] > maxBlockValue){
+                    if(connectedBlock.values[j] < minConnectionValue){
+                        minConnectionValue = connectedBlock.values[j];
+                        minConnectionIndex = j+1;
+                    }
+                } else if(connectedBlock.values[j] < maxBlockValue){
+                    if(connectedBlock.values[j] > maxConnectionValue){
+                        maxConnectionValue = connectedBlock.values[j];
+                        maxConnectionIndex = j+2;
+                    }
+                }
+            }
+
+            if(maxConnectionIndex != -1){
+                const connection = new Connection(connectedBlock.dots[maxConnectionIndex], block.dots[0]);
+                this.connections.push(connection);
+            } else if(minConnectionIndex != -1){
+                const connection = new Connection(connectedBlock.dots[minConnectionIndex], block.dots[0]);
+                this.connections.push(connection);
+            }
+
+            this.blocks.push(block);
+            this.processNodes(nodes[i].nodes, block, level+1, tmpX, tmpY);
+        }
+    }
+
+    getBlocksOnLevel(currentLevel, level, blocks, currentBlock){
+        for(let i = 0; i < currentBlock.nodes.length; i++){
+            if(currentBlock.nodes[i] == null) continue;
+
+            if(currentLevel == level) blocks.push(currentBlock.nodes[i]);
+        }
+
+        if(currentLevel == level){
+            console.log(currentBlock.nodes);
+            return blocks;
+        }
+
+        for(let i = 0; i < currentBlock.nodes.length; i++){
+            if(currentBlock.nodes[i] == null) continue;
+
+            blocks = this.getBlocksOnLevel(currentLevel+1, level, blocks, currentBlock.nodes[i]);
+        }
+
+        return blocks;
+    }
+
+    getBlockIndexOnLevel(block, level){
+        const blocks = this.getBlocksOnLevel(0, level, [], this.btree.root);
+        return blocks.indexOf(block);
     }
 
     /** add new state */

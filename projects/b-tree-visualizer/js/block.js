@@ -9,6 +9,7 @@ class Block{
         this.size = size;
         this.values = []; // list of values
         this.children = []; // list of children
+        this.selected = false; // is this block selected
 
         this.tree = null; // the tree this block belongs to
         this.parent = null; // the parent of this block
@@ -49,6 +50,9 @@ class Block{
     }
 
     draw(ctx){
+        if(this.selected == true) ctx.strokeStyle = "rgb(74, 187, 74)";
+        else ctx.strokeStyle = "white";
+
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
         ctx.lineTo(this.x + this.width, this.y);
@@ -69,7 +73,7 @@ class Block{
         }
 
         // draw block values in the spaces between the lines
-        ctx.font = "14px Poppins";
+        ctx.font = editor.options.blocks.fontStyle + " 14px Poppins";
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -80,14 +84,14 @@ class Block{
         ctx.stroke();
 
         ctx.fillStyle = "black";
-        ctx.strokeStyle = "white";
-
-        for(let i = 0; i < this.fields.length; i++){
-            this.fields[i].draw(ctx);
-        }
+        ctx.fillStyle = "white";
 
         for(let i = 0; i < this.dots.length; i++){
             this.dots[i].draw(ctx);
+        }
+
+        for(let i = 0; i < this.fields.length; i++){
+            this.fields[i].draw(ctx);
         }
     }
 }

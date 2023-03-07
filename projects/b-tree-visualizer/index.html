@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>State Machine Drawer</title>
+    <title>B-Tree Playground</title>
     <link rel="stylesheet" href="css/index.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +13,21 @@
 </head>
 <body>
     <canvas id="canvas"></canvas>
+    <div class="window-overlay hidden"></div>
+    <div class="settings-window hidden">
+        <div class="header">
+            <div class="title">Settings</div>
+            <div class="close-btn ripple-btn" onclick="editor.closeSettingsWindow(event)"><i class='bx bx-x'></i></div>
+        </div>
+        <div class="content">
+            <input type="number" id="block-line-width" value="2" onchange="editor.options.blocks.stroke = parseInt(this.value);">
+            <select @change="editor.options.blocks.fontStyle = this.value">
+                <option value="normal">Normal</option>
+                <option value="bold">Bold</option>
+                <option value="bolder">Bolder</option>
+            </select>
+        </div>
+    </div>
     <div class="controls">
         <div class="add-btn ripple-btn" onclick="editor.addBlock(event)">
             <i class='bx bx-folder-plus'></i>&nbsp;<span>Add State</span>
@@ -27,6 +42,8 @@
             <div class="select ripple-btn" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="select"><i class='bx bx-rectangle'></i></div>
             <div class="edit ripple-btn" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="edit"><i class='bx bx-pencil'></i></div>
         </div>
+
+        <input type="text" id="insert" onkeydown="if(event.keyCode == 13){editor.addValue(this.value);this.value = '';}">
 
         <input id="file-input" type="file" name="name" style="display: none;"/>
     </div>
