@@ -8,7 +8,7 @@ class Dot{
     }
 
     draw(ctx){
-        ctx.fillStyle='white';
+        ctx.fillStyle='black';
         ctx.beginPath();
         ctx.arc(this.x, this.y, 4, 0, 2 * Math.PI);
         ctx.closePath();

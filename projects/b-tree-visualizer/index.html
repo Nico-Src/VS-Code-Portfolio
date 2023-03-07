@@ -35,6 +35,7 @@
         <div class="save-load-wrapper">
             <div class="save-btn ripple-btn" onclick="editor.saveProject(event)"><i class='bx bx-save'></i></div>
             <div class="load-btn ripple-btn" onclick="editor.loadProject(event)"><i class='bx bx-folder-open' ></i></div>
+            <div class="export-btn ripple-btn" onclick="editor.saveImage(event)"><i class='bx bx-image'></i></div>
         </div>
         <div class="tools">
             <div class="move ripple-btn active" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="move"><i class='bx bx-move'></i></div>
@@ -56,4 +57,9 @@
     <script src="js/editor.js"></script>
     <script src="js/app.js"></script>
 </body>
+<script>
+    window.onbeforeunload = function() {
+        return "Are you sure you want to leave, you might have unsaved changes?";
+    }
+</script>
 </html>

@@ -62,9 +62,10 @@ body,html{
 }
 
 .save-load-wrapper .save-btn,
-.save-load-wrapper .load-btn{
+.save-load-wrapper .load-btn,
+.save-load-wrapper .export-btn{
     background-color: var(--accent-color);
-    width: calc(50% - 5px);
+    width: calc(33.3% - 5px);
     height: 30px;
     border-radius: 4px;
     color:white;

@@ -108,6 +108,8 @@ class Editor{
     draw(){
         const ctx = this.canvas.getContext("2d");
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // draw grid that moves with the canvas
         this.drawGrid(ctx);
@@ -145,6 +147,10 @@ class Editor{
     keyDown(e){ // ANCHOR keyDown
         if(e.key === 'Escape'){
             this.openSettingsWindow();
+        }
+
+        if(e.ctrlKey && e.key === 'e'){
+            this.saveImage();
         }
 
         if(this.selectedTool === 'edit' && this.selectedField){
@@ -499,6 +505,17 @@ class Editor{
         this.processNodes(nodes, root, 0, x, y);
     }
 
+    saveImage(e){
+        createRipple(e);
+        // render whole canvas area to image
+        const image = this.canvas.toDataURL("image/png", 1.0);
+
+        const link = document.createElement('a');
+        link.download = 'btree.png';
+        link.href = image;
+        link.click();
+    }
+
     processNodes(nodes, connectedBlock, level, x, y){
         if(nodes.filter(n => n != null).length == 0) return;
         for(let i = 0; i < nodes.length; i++){
@@ -633,7 +650,7 @@ class Editor{
         ctx.lineWidth = 1;
 
         // set line color
-        ctx.strokeStyle = "#333";
+        ctx.strokeStyle = "#555";
 
         // draw vertical lines
         for(let x = offsetX; x < this.canvas.width; x += gridSize){
