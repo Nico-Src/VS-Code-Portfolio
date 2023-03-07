@@ -30,7 +30,7 @@
     </div>
     <div class="controls">
         <div class="add-btn ripple-btn" onclick="editor.addBlock(event)">
-            <i class='bx bx-folder-plus'></i>&nbsp;<span>Add State</span>
+            <i class='bx bx-folder-plus'></i>&nbsp;<span>Add Block</span>
         </div>
         <div class="save-load-wrapper">
             <div class="save-btn ripple-btn" onclick="editor.saveProject(event)"><i class='bx bx-save'></i></div>
@@ -45,6 +45,8 @@
         </div>
 
         <input type="text" id="insert" onkeydown="if(event.keyCode == 13){editor.addValue(this.value);this.value = '';}">
+        
+        <div class="insert-btn" onclick="editor.addValue(document.querySelector('#insert').value);document.querySelector('#insert').value = '';">Insert</div>
 
         <input id="file-input" type="file" name="name" style="display: none;"/>
     </div>

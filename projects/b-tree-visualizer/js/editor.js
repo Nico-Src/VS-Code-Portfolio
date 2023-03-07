@@ -71,17 +71,20 @@ class Editor{
         this.init();
     }
 
-    openSettingsWindow(){
+    /** open settings window */
+    openSettingsWindow(){ // ANCHOR openSettingsWindow
         document.querySelector('.window-overlay').classList.remove('hidden');
         document.querySelector('.settings-window').classList.remove('hidden');
     }
 
-    closeSettingsWindow(){
+    /** close settings window */
+    closeSettingsWindow(){ // ANCHOR closeSettingsWindow
         document.querySelector('.window-overlay').classList.add('hidden');
         document.querySelector('.settings-window').classList.add('hidden');
     }
 
-    init(){
+    /** initialize canvas */
+    init(){ // ANCHOR init
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
 
@@ -105,10 +108,11 @@ class Editor{
         requestAnimationFrame(this.draw.bind(this));
     }
 
-    draw(){
+    /** draw loop */
+    draw(){ // ANCHOR draw
         const ctx = this.canvas.getContext("2d");
         ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = '#151515';
         ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
         // draw grid that moves with the canvas
@@ -151,6 +155,13 @@ class Editor{
 
         if(e.ctrlKey && e.key === 'e'){
             this.saveImage();
+        }
+
+        if(e.key === 'Delete' && this.selectedField){
+            const value = parseInt(this.selectedField.text);
+            console.log(value);
+            this.btree.del(value);
+            this.updateTree();
         }
 
         if(this.selectedTool === 'edit' && this.selectedField){
@@ -396,7 +407,10 @@ class Editor{
         this.controls.scale = Math.min(Math.max(.125, this.controls.scale), 4);
     }
 
-    /** check if there is a point next to the mouse with a given threshold */
+    /** check if there is a point next to the mouse with a given threshold
+     * @param {MouseEvent} e mouse event
+     * @param {Block} selectedBlock block to ignore
+     */
     getNearPoint(e, selectedBlock){ // ANCHOR getNearPoint
         let x = e.clientX || e.x;
         let y = e.clientY || e.y;
@@ -421,6 +435,10 @@ class Editor{
         return near;
     }
 
+    /** check if there is a dot next to the mouse with a given threshold
+     * @param {MouseEvent} e mouse event
+     * @param {Dot} selectedDot dot that should be ignored
+     */
     getNearPointDot(e, selectedDot){ // ANCHOR getNearPointDot
         let x = e.clientX || e.x;
         let y = e.clientY || e.y;
@@ -446,6 +464,10 @@ class Editor{
         return near;
     }
 
+    /** checks if there is a field next to the clicked point
+     * @param {MouseEvent} e mouse event
+     * @param {Field} selectedField field that should be ignored
+     */
     getNearPointField(e, selectedField){ // ANCHOR getNearPointField
         let x = e.clientX || e.x;
         let y = e.clientY || e.y;
@@ -471,20 +493,32 @@ class Editor{
         return near;
     }
 
-    addValue(val){
+    /** add value to b tree
+     * @param {string} val value to add
+     */
+    addValue(val){ // ANCHOR addValue
+        if(val == undefined || val.trim() === '') return;
+        // check if there are multiple values (seperated by comma)
         if(val.includes(',')){
             const values = val.split(',');
-            console.log(values)
+            // add each value
             for(const value of values){
+                // only add if value is not already in tree
                 if(!this.btree.get(value)) this.btree.put(value,value);
             }
         }
         else {
+            // check if value is already in tree
             if(!this.btree.get(val));
             this.btree.put(val,val);
         }
 
-        // update blocks
+        this.updateTree();
+    }
+
+    /** update tree */
+    updateTree(){ // ANCHOR updateTree
+        // clear blocks
         this.blocks = [];
         this.connections = [];
 
@@ -492,7 +526,9 @@ class Editor{
         const middle = {x: this.canvas.width / 2, y: this.canvas.height / 2};
         const x = middle.x - (this.options.blocks.width / 2);
         const y = middle.y - (this.options.blocks.height / 2);
+        // create root block
         const root = new Block(x,y,this.options.blocks.size * this.options.blocks.width, this.options.blocks.height, this.options.blocks.size);
+        // add values to root block
         for(let i = 0; i < this.btree.root.leaves.length; i++){
             root.fields[i].text = this.btree.root.leaves[i].key;
             root.values[i] = parseInt(this.btree.root.leaves[i].key);
@@ -502,42 +538,60 @@ class Editor{
         this.blocks.push(root);
 
         let nodes = this.btree.root.nodes;
+        // build the rest of the tree
         this.processNodes(nodes, root, 0, x, y);
     }
 
-    saveImage(e){
+    /** Export Canvas to Image */
+    saveImage(e){ // ANCHOR saveImage
         createRipple(e);
         // render whole canvas area to image
-        const image = this.canvas.toDataURL("image/png", 1.0);
+        const image = this.canvas.toDataURL("image/png", 2.0);
 
+        // create link to download image
         const link = document.createElement('a');
         link.download = 'btree.png';
         link.href = image;
         link.click();
     }
 
+    /** Recursively process nodes in the b tree
+     * @param {Array} nodes nodes to process
+     * @param {Block} connectedBlock block these nodes are connected to
+     * @param {Number} level level the nodes are on
+     * @param {Number} x x position of the block above
+     * @param {Number} y y position of the block above
+     */
     processNodes(nodes, connectedBlock, level, x, y){
         if(nodes.filter(n => n != null).length == 0) return;
         for(let i = 0; i < nodes.length; i++){
             if(nodes[i] == null) continue;
 
-            // calculate x and y position (based on level and the x and y of the block above)
+            // check how many blocks are on the current level (to distribute evenly)
             const blocksOnLevel = this.getBlocksOnLevel(0, level, [], this.btree.root).length;
+            // calculate center of the parent block
             const parentCenter = connectedBlock.x + (connectedBlock.width / 2);
+            // calculate total width of the level
             const levelWidth = blocksOnLevel * (this.options.blocks.width * this.options.blocks.size) + ((blocksOnLevel-1) * (this.options.blocks.width));
+            // calculate position of each block on the level
             const parentCenterOffset = parentCenter - (levelWidth / 2);
-            // distribute evenly on the level (based on the number of blocks on the level)
+            // get index of the block (could be in another node)
             const index = this.getBlockIndexOnLevel(nodes[i], level);
+            // calculate x and y position of the block
             const tmpX = parentCenterOffset + (index * this.options.blocks.width * this.options.blocks.size) + (this.options.blocks.width * index);
             const tmpY = y + (level * this.options.blocks.height) + (this.options.blocks.height * 3);
 
+            // create block
             const block = new Block(tmpX,tmpY,this.options.blocks.size * this.options.blocks.width, this.options.blocks.height, this.options.blocks.size);
             block.index = index;
+
+            // set values of the block
             for(let j = 0; j < nodes[i].leaves.length; j++){
                 block.fields[j].text = nodes[i].leaves[j].key;
                 block.values[j] = parseInt(nodes[i].leaves[j].key);
             }
 
+            // add connections to the block
             let maxConnectionValue = -1;
             let maxConnectionIndex = -1;
             let minConnectionValue = Number.MAX_SAFE_INTEGER;
@@ -557,6 +611,7 @@ class Editor{
                 }
             }
 
+            // check if there is a connection to the block
             if(maxConnectionIndex != -1){
                 const connection = new Connection(connectedBlock.dots[maxConnectionIndex], block.dots[0]);
                 this.connections.push(connection);
@@ -565,44 +620,61 @@ class Editor{
                 this.connections.push(connection);
             }
 
+            // add block to the list of blocks
             this.blocks.push(block);
+            // process nodes of the block (till there are no more nodes)
             this.processNodes(nodes[i].nodes, block, level+1, tmpX, tmpY);
         }
     }
 
-    getBlocksOnLevel(currentLevel, level, blocks, currentBlock){
+    /** Returns all the blocks on the given level
+     * @param {Number} currentLevel current level
+     * @param {Number} level level to get the blocks from
+     * @param {Array} blocks array of blocks (will be returned)
+     * @param {Block} currentBlock current block (will be checked if it is on the given level)
+     */
+    getBlocksOnLevel(currentLevel, level, blocks, currentBlock){ // ANCHOR getBlocksOnLevel
+        // iterate through all the nodes of the current block
         for(let i = 0; i < currentBlock.nodes.length; i++){
             if(currentBlock.nodes[i] == null) continue;
 
+            // if the current level is the level we want to get the blocks from, add the block to the list
             if(currentLevel == level) blocks.push(currentBlock.nodes[i]);
         }
 
+        // if the current level is the level we want to get the blocks from, return the list of blocks
         if(currentLevel == level){
-            console.log(currentBlock.nodes);
             return blocks;
         }
 
+        // iterate through all the nodes of the current block
         for(let i = 0; i < currentBlock.nodes.length; i++){
             if(currentBlock.nodes[i] == null) continue;
 
+            // get the blocks on the next level
             blocks = this.getBlocksOnLevel(currentLevel+1, level, blocks, currentBlock.nodes[i]);
         }
 
         return blocks;
     }
 
-    getBlockIndexOnLevel(block, level){
+    /** Returns the index of the given block on the current level
+     * @param {Block} block block to get the index from
+     * @param {Number} level level to get the index from
+     */
+    getBlockIndexOnLevel(block, level){ // ANCHOR getBlockIndexOnLevel
         const blocks = this.getBlocksOnLevel(0, level, [], this.btree.root);
         return blocks.indexOf(block);
     }
 
-    /** add new state */
-    addBlock(e){ // ANCHOR addState
-        createRipple(e);
+    /** add new block */
+    addBlock(e){ // ANCHOR addBlock
+        createRipple(e); // create ripple effect on button
 
         this.controls.adding = true;
         document.querySelector('.add-btn').classList.add('disabled');
 
+        // add block
         const block = new Block(0,0,this.options.blocks.size * this.options.blocks.width, this.options.blocks.height, this.options.blocks.size);
         this.blocks.push(block);
     }
@@ -636,9 +708,10 @@ class Editor{
         }
     }
 
-    drawGrid(ctx){
-        // draw grid
-
+    /** draw the grid
+    * @param {CanvasRenderingContext2D} ctx canvas context to draw on
+    */
+    drawGrid(ctx){ // ANCHOR drawGrid
         // calculate grid size
         const gridSize = 50 * this.controls.scale;
 
@@ -669,7 +742,10 @@ class Editor{
         }
     }
 
-    drawSelectionRect(ctx){
+    /** draw the selection rectangle
+     * @param {CanvasRenderingContext2D} ctx canvas context to draw on
+     */
+    drawSelectionRect(ctx){ // ANCHOR drawSelectionRect
         ctx.fillStyle = "#ffffff22";
         ctx.strokeStyle = "#ffffff88";
         ctx.beginPath();
@@ -679,13 +755,17 @@ class Editor{
         ctx.stroke();
     }
 
-    saveProject(e){
+    /** save project */
+    saveProject(e){ // ANCHOR saveProject
         createRipple(e);
+
+        // create project object
         const project = {
             blocks: [],
             connections: []
         };
 
+        // convert blocks to json compatible format
         for(const block of this.blocks){
             project.blocks.push({
                 id: block.id,
@@ -711,6 +791,7 @@ class Editor{
             });
         }
 
+        // convert connections to json compatible format
         for(const con of this.connections){
             project.connections.push({
                 source: con.source.id,
@@ -723,7 +804,8 @@ class Editor{
         this.download('project.machine',json);
     }
 
-    loadProject(e){
+    /** load project file */
+    loadProject(e){ // ANCHOR loadProject
         createRipple(e);
         
         // trigger file input
@@ -731,6 +813,7 @@ class Editor{
             const file = e.target.files[0];
             if(!file) return;
 
+            // read file
             const reader = new FileReader();
             reader.onload = (e)=>{
                 const project = JSON.parse(e.target.result);
@@ -738,6 +821,7 @@ class Editor{
                 this.blocks = [];
                 this.connections = [];
 
+                // setup blocks and dots
                 for(const block of project.blocks){
                     const newBlock = new Block();
                     newBlock.id = block.id;
@@ -761,6 +845,7 @@ class Editor{
                     this.blocks.push(newBlock);
                 }
 
+                // setup edit fields
                 for(const block of project.blocks){
                     const newBlock = this.blocks.find((b)=>b.id === block.id);
                     for(const field of block.fields){
@@ -776,6 +861,7 @@ class Editor{
                     }
                 }
 
+                // setup connections
                 for(const con of project.connections){
                     const newCon = new Connection();
                     for(const block of project.blocks){
@@ -798,7 +884,12 @@ class Editor{
         document.querySelector('#file-input').click();
     }
 
-    download(filename, text) {
+    /** download file
+     * @param {string} filename name of the file
+     * @param {string} text text to save
+     */
+    download(filename, text) { // ANCHOR download
+        // create temporary link
         var element = document.createElement('a');
         element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
         element.setAttribute('download', filename);
@@ -806,8 +897,10 @@ class Editor{
         element.style.display = 'none';
         document.body.appendChild(element);
 
+        // click on link to download
         element.click();
 
+        // remove temporary link
         document.body.removeChild(element);
     }
 }
