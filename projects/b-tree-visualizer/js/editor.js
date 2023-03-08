@@ -153,6 +153,26 @@ class Editor{
             this.openSettingsWindow();
         }
 
+        if(e.key === 's' || e.key === 'S'){
+            const el = document.querySelector('.tools .select i');
+            this.selectTool({target: el, currentTarget: el, stopPropagation: ()=>{}});
+        }
+
+        if(e.key === 'm' || e.key === 'M'){
+            const el = document.querySelector('.tools .move i');
+            this.selectTool({target: el, currentTarget: el, stopPropagation: ()=>{}});
+        }
+
+        if(e.key === 'e' || e.key === 'E'){
+            const el = document.querySelector('.tools .edit i');
+            this.selectTool({target: el, currentTarget: el, stopPropagation: ()=>{}});
+        }
+
+        if(e.key === 'c' || e.key === 'C'){
+            const el = document.querySelector('.tools .connect i');
+            this.selectTool({target: el, currentTarget: el, stopPropagation: ()=>{}});
+        }
+
         if(e.ctrlKey && e.key === 'e'){
             this.saveImage();
         }
@@ -375,11 +395,15 @@ class Editor{
         }
 
         // if left mouse is pressed and tool is move move the selected state to the mouse position
-        if(this.mouse.left && this.selectedBlock && this.selectedTool === 'move'){
-            // move selected block
-            this.selectedBlock.x = this.mouse.x - (this.selectedBlock.width / 2);
-            this.selectedBlock.y = this.mouse.y - (this.selectedBlock.height / 2);
-            this.selectedBlock.update();
+        if(this.mouse.left && this.selectedTool === 'move'){
+            // move selected blocks
+            for(const block of this.blocks){
+                if(block.selected == true){
+                    block.x += e.movementX / this.controls.scale;
+                    block.y += e.movementY / this.controls.scale;
+                    block.update();
+                }
+            }
             return;
         }
 
@@ -426,7 +450,7 @@ class Editor{
             if(block === selectedBlock) continue;
             
             // check if mouse is inside block rectangle
-            if(x >= block.x - this.options.blocks.tolerance && x <= block.x + block.width + this.options.blocks.tolerance && y >= block.y - this.options.blocks.tolerance && y <= block.y + block.height + this.options.blocks.tolerance){
+            if(x >= block.x - this.options.blocks.tolerance && x <= block.x + block.width + this.options.blocks.tolerance && y >= block.y - this.options.blocks.tolerance && y <= block.y + block.height + this.options.blocks.tolerance && block.selected == true){
                 near = block;
                 break;
             }
@@ -692,20 +716,6 @@ class Editor{
         // add active class to selected
         e.target.parentElement.classList.add('active');
         this.selectedTool = tool;
-
-        if(this.selectedTool !== 'edit'){
-            for(const con of this.connections){
-                con.selected = false;
-            }
-
-            for(const block of this.blocks){
-                block.selected = false;
-
-                for(const field of block.fields){
-                    field.selected = false;
-                }
-            }
-        }
     }
 
     /** draw the grid
