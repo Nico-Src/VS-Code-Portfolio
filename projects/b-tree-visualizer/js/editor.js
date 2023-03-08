@@ -829,7 +829,7 @@ class Editor{
         }
 
         const json = JSON.stringify(project);
-        this.download('project.machine',json);
+        this.download('project.tree',json);
     }
 
     /** load project file */
