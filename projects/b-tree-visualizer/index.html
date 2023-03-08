@@ -44,6 +44,15 @@
             <div class="edit ripple-btn" ripple-duration="500ms" ripple-color="var(--light-accent)" data-tool="edit"><i class='bx bx-pencil'></i></div>
         </div>
 
+        <select id="size-select" onchange="editor.updateBlockSize(event)">
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+        </select>
         <input type="text" id="insert" onkeydown="if(event.keyCode == 13){editor.addValue(this.value);this.value = '';}">
         
         <div class="insert-btn" onclick="editor.addValue(document.querySelector('#insert').value);document.querySelector('#insert').value = '';">Insert</div>

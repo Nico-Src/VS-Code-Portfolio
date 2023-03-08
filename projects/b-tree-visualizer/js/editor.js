@@ -4,7 +4,7 @@ class Editor{
 
         this.blocks = [];
         this.connections = [];
-        this.TREE = btree.create(4, btree.numcmp);
+        this.TREE = btree.create(2, btree.numcmp);
         this.btree = new this.TREE();
 
         this.mouse = {
@@ -23,7 +23,7 @@ class Editor{
 
         this.options = {
             blocks: {
-                size: 4,
+                size: 2,
                 height: 25,
                 width: 40,
                 horizontalSpacing: 50,
@@ -69,6 +69,23 @@ class Editor{
         this.tempConnection = new Connection();
 
         this.init();
+    }
+
+    updateBlockSize(e){
+        this.options.blocks.size = parseInt(e.target.value);
+        this.TREE = btree.create(this.options.blocks.size, btree.numcmp);
+        // get all the values from the blocks
+        let values = [];
+        this.blocks.forEach((block)=>{
+            for(let i = 0; i < block.values.length; i++){
+                values.push(block.values[i]);
+            }
+        });
+        this.btree = new this.TREE();
+        for(let i = 0; i < values.length; i++){
+            this.btree.put(values[i], values[i]);
+        }
+        this.updateTree();
     }
 
     /** open settings window */
@@ -395,7 +412,7 @@ class Editor{
         }
 
         // if left mouse is pressed and tool is move move the selected state to the mouse position
-        if(this.mouse.left && this.selectedTool === 'move'){
+        if(this.mouse.left && this.selectedBlock && this.selectedTool === 'move'){
             // move selected blocks
             for(const block of this.blocks){
                 if(block.selected == true){
@@ -772,7 +789,8 @@ class Editor{
         // create project object
         const project = {
             blocks: [],
-            connections: []
+            connections: [],
+            options: this.options
         };
 
         // convert blocks to json compatible format
@@ -830,6 +848,7 @@ class Editor{
 
                 this.blocks = [];
                 this.connections = [];
+                this.options = project.options;
 
                 // setup blocks and dots
                 for(const block of project.blocks){
@@ -888,6 +907,20 @@ class Editor{
                     newCon.selected = con.selected;
                     this.connections.push(newCon);
                 }
+
+                this.TREE = btree.create(this.options.blocks.size, btree.numcmp);
+                // get all the values from the blocks
+                let values = [];
+                this.blocks.forEach((block)=>{
+                    for(let i = 0; i < block.values.length; i++){
+                        values.push(block.values[i]);
+                    }
+                });
+                this.btree = new this.TREE();
+                for(let i = 0; i < values.length; i++){
+                    this.btree.put(values[i], values[i]);
+                }
+                this.updateTree();
             }
             reader.readAsText(file);
         };

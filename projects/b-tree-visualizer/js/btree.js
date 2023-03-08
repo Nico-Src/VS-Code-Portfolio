@@ -116,6 +116,7 @@
         }
         if (order < 1) order = 1;
         var minOrder = order > 1 ? Math.floor(order/2) : 1;
+        console.log(order);
 
         // Use numcmp by default
         if (typeof compare != 'function') {
