@@ -7,6 +7,8 @@ class Editor{
         this.TREE = btree.create(2, btree.numcmp);
         this.btree = new this.TREE();
 
+        this.previouslyAddedValues = [];
+
         this.mouse = {
             x: 0,
             y: 0,
@@ -71,7 +73,9 @@ class Editor{
         this.init();
     }
 
-    updateBlockSize(e){
+    /** update the trees block size */
+    updateBlockSize(e){ // ANCHOR updateBlockSize
+        // parse input value
         this.options.blocks.size = parseInt(e.target.value);
         this.TREE = btree.create(this.options.blocks.size, btree.numcmp);
         // get all the values from the blocks
@@ -81,10 +85,14 @@ class Editor{
                 values.push(block.values[i]);
             }
         });
+        // create new tree
         this.btree = new this.TREE();
+        // readd all the values
         for(let i = 0; i < values.length; i++){
             this.btree.put(values[i], values[i]);
         }
+
+        // update the blocks and connections
         this.updateTree();
     }
 
@@ -105,11 +113,13 @@ class Editor{
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
 
+        // resize canvas on window resize
         window.addEventListener('resize',()=>{
             this.canvas.width = window.innerWidth;
             this.canvas.height = window.innerHeight;
         });
 
+        // add event listeners to tools
         Array.from(document.querySelectorAll(".tools div")).forEach((el)=>{
             el.addEventListener('click',this.selectTool.bind(this));
         });
@@ -122,6 +132,7 @@ class Editor{
         this.canvas.addEventListener('DOMMouseScroll',this.scroll.bind(this));
         this.canvas.addEventListener("contextmenu", e => e.preventDefault());
 
+        // start draw loop
         requestAnimationFrame(this.draw.bind(this));
     }
 
@@ -139,7 +150,8 @@ class Editor{
         ctx.save();
         ctx.translate(this.controls.translation.x, this.controls.translation.y);
         ctx.scale(this.controls.scale, this.controls.scale);
-
+        
+        // if select tool is selected draw selection rect
         if(this.selectedTool === 'select'){
             this.drawSelectionRect(ctx);
         }
@@ -147,6 +159,7 @@ class Editor{
         ctx.strokeStyle = this.options.connections.strokeColor;
         ctx.lineWidth = this.options.connections.stroke;
 
+        // draw connections
         for(const connection of this.connections){
             connection.draw(ctx,this.connections);
         }
@@ -155,21 +168,24 @@ class Editor{
         ctx.fillStyle = this.options.blocks.fillColor;
         ctx.lineWidth = this.options.blocks.stroke;
 
+        // draw blocks
         for(const block of this.blocks){
             block.draw(ctx);
         }
 
-        // restore canvas to normal
+        // restore canvas to normal (no scale or translate)
         ctx.restore();
 
         requestAnimationFrame(this.draw.bind(this));
     }
 
     keyDown(e){ // ANCHOR keyDown
+        // escape should open settings window
         if(e.key === 'Escape'){
             this.openSettingsWindow();
         }
 
+        // s = Select tool, m = Move tool, e = Edit tool, c = Connect tool
         if(e.key === 's' || e.key === 'S'){
             const el = document.querySelector('.tools .select i');
             this.selectTool({target: el, currentTarget: el, stopPropagation: ()=>{}});
@@ -190,17 +206,26 @@ class Editor{
             this.selectTool({target: el, currentTarget: el, stopPropagation: ()=>{}});
         }
 
+        // ctrl + z = undo
+        if(e.ctrlKey && e.key === 'z'){
+            const lastAction = this.previouslyAddedValues.pop();
+            this.btree.del(lastAction);
+            this.updateTree();
+        }
+
+        // ctrl + e = export image
         if(e.ctrlKey && e.key === 'e'){
             this.saveImage();
         }
 
+        // delete key in tree
         if(e.key === 'Delete' && this.selectedField){
             const value = parseInt(this.selectedField.text);
-            console.log(value);
             this.btree.del(value);
             this.updateTree();
         }
 
+        // input handler for edit tool
         if(this.selectedTool === 'edit' && this.selectedField){
             if(e.key === 'Backspace'){
                 this.selectedField.text = this.selectedField.text.slice(0,-1);
@@ -213,6 +238,7 @@ class Editor{
             this.selectedField.parent.values[this.selectedField.parent.fields.indexOf(this.selectedField)] = this.selectedField.text;
         }
 
+        // delete selected blocks
         if(this.selectedTool === 'select' && e.key === 'Delete'){
             const blocksToDelete = [];
             const connectionsToDelete = [];
@@ -384,6 +410,7 @@ class Editor{
         this.mouse.x = (this.mouse.x - this.controls.translation.x) / this.controls.scale;
         this.mouse.y = (this.mouse.y - this.controls.translation.y) / this.controls.scale;
 
+        // calculate selection rect width and height if select tool is active and left mouse is pressed
         if(this.selectedTool === 'select' && this.mouse.left){
             this.selectionRect.width = this.mouse.x - this.selectionRect.x;
             this.selectionRect.height = this.mouse.y - this.selectionRect.y;
@@ -445,6 +472,7 @@ class Editor{
     scroll(e){ // ANCHOR scroll
         var delta = e.deltaY ? e.deltaY : (e.detail * 10);
         this.controls.scale += delta * -0.0005;
+        // max scale 4x min scale 0.125x
         this.controls.scale = Math.min(Math.max(.125, this.controls.scale), 4);
     }
 
@@ -545,13 +573,18 @@ class Editor{
             // add each value
             for(const value of values){
                 // only add if value is not already in tree
-                if(!this.btree.get(value)) this.btree.put(value,value);
+                if(!this.btree.get(value)){
+                    this.btree.put(value,value);
+                    this.previouslyAddedValues.push(value);
+                }
             }
         }
         else {
             // check if value is already in tree
-            if(!this.btree.get(val));
-            this.btree.put(val,val);
+            if(!this.btree.get(val)){
+                this.btree.put(val,val);
+                this.previouslyAddedValues.push(val);
+            }
         }
 
         this.updateTree();
@@ -563,6 +596,8 @@ class Editor{
         this.blocks = [];
         this.connections = [];
 
+        if(this.btree.root == undefined) return;
+
         // calculate middle of canvas
         const middle = {x: this.canvas.width / 2, y: this.canvas.height / 2};
         const x = middle.x - (this.options.blocks.width / 2);
@@ -573,7 +608,6 @@ class Editor{
         for(let i = 0; i < this.btree.root.leaves.length; i++){
             root.fields[i].text = this.btree.root.leaves[i].key;
             root.values[i] = parseInt(this.btree.root.leaves[i].key);
-            console.log(this.btree.root.leaves[i].key, root.fields[i].text)
         }
 
         this.blocks.push(root);

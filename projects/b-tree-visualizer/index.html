@@ -45,15 +45,15 @@
         </div>
 
         <select id="size-select" onchange="editor.updateBlockSize(event)">
-            <option value="2">2</option>
-            <option value="3">3</option>
-            <option value="4">4</option>
-            <option value="5">5</option>
-            <option value="6">6</option>
-            <option value="7">7</option>
-            <option value="8">8</option>
+            <option value="2">blocks of 2</option>
+            <option value="3">blocks of 3</option>
+            <option value="4">blocks of 4</option>
+            <option value="5">blocks of 5</option>
+            <option value="6">blocks of 6</option>
+            <option value="7">blocks of 7</option>
+            <option value="8">blocks of 8</option>
         </select>
-        <input type="text" id="insert" onkeydown="if(event.keyCode == 13){editor.addValue(this.value);this.value = '';}">
+        <input type="text" id="insert" placeholder="e.g: 10 (10,20,... comma seperated values)" onkeydown="if(event.keyCode == 13){editor.addValue(this.value);this.value = '';}">
         
         <div class="insert-btn" onclick="editor.addValue(document.querySelector('#insert').value);document.querySelector('#insert').value = '';">Insert</div>
 
