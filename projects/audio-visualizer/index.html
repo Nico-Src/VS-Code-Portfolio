@@ -51,6 +51,14 @@
                     <i class='bx bx-circle'></i>
                     <span>Circle - Wave</span>
                 </div>
+                <div class="type" data-type="point-cloud">
+                    <i class='bx bx-scatter-chart'></i>
+                    <span>Point-Cloud</span>
+                </div>
+                <div class="type" data-type="point-grid">
+                    <i class='bx bx-scatter-chart'></i>
+                    <span>Point-Grid</span>
+                </div>
             </div>
             <div class="header">Options:</div>
             <div class="visualizer-options">
@@ -77,6 +85,37 @@
                         <option value="256">256</option>
                         <option value="512">512</option>
                     </select>
+                </div>
+                <div class="option" data-type="point-cloud">
+                    <span>Point Count:</span>
+                    <select id="point-cloud-count-select">
+                        <option value="128">128</option>
+                        <option value="32">32</option>
+                        <option value="64">64</option>
+                        <option value="256">256</option>
+                        <option value="512">512</option>
+                        <option value="1024">1024</option>
+                    </select>
+                </div>
+                <div class="option" data-type="point-cloud">
+                    <span>Point Size:</span>
+                    <input type="number" min="1" max="50" value="2" id="point-cloud-size">
+                </div>
+                <div class="option" data-type="point-grid">
+                    <span>Point Size:</span>
+                    <input type="number" min="1" max="50" value="10" id="point-grid-size">
+                </div>
+                <div class="option" data-type="point-grid">
+                    <span>Point Trails:</span>
+                    <input type="checkbox" checked id="point-grid-trails">
+                </div>
+                <div class="option" data-type="point-grid">
+                    <span>Rainbow:</span>
+                    <input type="checkbox" checked id="point-grid-rainbow">
+                </div>
+                <div class="option" data-type="point-cloud">
+                    <span>Point Trails:</span>
+                    <input type="checkbox" checked id="point-cloud-trails">
                 </div>
                 <div class="option" data-type="circle-bar|circle-wave">
                     <span>Circle Radius:</span>

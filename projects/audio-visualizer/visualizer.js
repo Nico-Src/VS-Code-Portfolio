@@ -339,3 +339,224 @@ class CircleWaveVisualizer{
         this.ctx.restore();
     }
 }
+
+class PointCloudVisualizer{
+    constructor(audio, canvas){
+        this.audio = audio;
+        this.canvas = canvas;
+        this.ctx = this.canvas.getContext('2d');
+
+        this.options = {
+            points: {
+                count: 256,
+                spacing: 10,
+                size: 2,
+                trails: false
+            },
+            blocks: {
+                size: Math.floor(1024 / 256)
+            },
+            audio: {
+                maxRange: 1024,
+                normalize: true
+            },
+        }
+
+        this.blocks = [];
+    }
+
+    /** update */
+    update(){ // ANCHOR update
+        this.audio.updateData();
+    }
+
+    /** window resize handler */
+    updateDimensions(){ // ANCHOR updateDimensions
+        
+    }
+
+    /** draw visualizer */
+    draw(){ // ANCHOR draw
+        this.update();
+
+        if(this.options.points.trails == false) this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        else {
+            this.ctx.globalCompositeOperation = 'destination-out';
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            this.ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // reset composite operation
+        this.ctx.globalCompositeOperation = 'source-over';
+
+        this.blocks = [];
+
+        // calculate average of each block
+        let byteArr = [];
+
+        for(let i = 0; i < this.options.audio.maxRange; i++){
+            byteArr.push(this.audio.data[i]); // push bytes
+            if((i + 1) % this.options.blocks.size === 0){ //  check if block is full
+                let avg = 0, sum = 0; 
+
+                byteArr.forEach(byte => {
+                    sum += byte;
+                });
+
+                avg = sum / byteArr.length;
+                this.blocks.push(avg); // push average to blocks
+                byteArr = []; // reset byte array
+            }
+        }
+
+        // normalize blocks
+        let max = 10;
+        let sum = 0;
+        this.blocks.forEach(block => {
+            sum += block;
+            if(block > max){
+                max = block;
+            }
+        });
+
+        this.audio.bgHueRotate += (sum / this.blocks.length) / 100;
+        this.audio.bgBrightness = (sum / this.blocks.length);
+        this.audio.updateBG();
+
+        // set spiral properties
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = Math.min(centerX, centerY) - 20;
+        const spiralCount = this.options.points.count;
+        const spiralSpacing = radius / spiralCount;
+        const rotationIncrement = Math.PI * 2 / 100;
+        let rotation = 0;
+
+        // draw spirals
+        for (let i = 0; i < spiralCount; i++) {
+            const audioValue = this.blocks[Math.floor(i * (this.blocks.length / spiralCount))];
+            const spiralRadius = (audioValue / 255) * radius;
+            const spiralRotation = rotation + (i * (Math.PI / 4)) % (Math.PI * 2);
+            const spiralX = centerX + spiralRadius * Math.cos(spiralRotation);
+            const spiralY = centerY + spiralRadius * Math.sin(spiralRotation);
+
+            this.ctx.beginPath();
+            this.ctx.arc(spiralX, spiralY, this.options.points.size, 0, Math.PI * 2);
+            this.ctx.fillStyle = `rgba(255,255,255,${audioValue / 100})`;
+            this.ctx.fill();
+
+            rotation += rotationIncrement;
+        }
+    }
+}
+
+class PointGridVisualizer{
+    constructor(audio, canvas){
+        this.audio = audio;
+        this.canvas = canvas;
+        this.ctx = this.canvas.getContext('2d');
+
+        this.options = {
+            points: {
+                count: 256,
+                spacing: 10,
+                size: 10,
+                trails: false,
+                rainbow: false
+            },
+            blocks: {
+                size: Math.floor(1024 / 256)
+            },
+            audio: {
+                maxRange: 1024,
+                normalize: true
+            },
+        }
+
+        this.blocks = [];
+    }
+
+    /** update */
+    update(){ // ANCHOR update
+        this.audio.updateData();
+    }
+
+    /** window resize handler */
+    updateDimensions(){ // ANCHOR updateDimensions
+        
+    }
+
+    /** draw visualizer */
+    draw(){ // ANCHOR draw
+        this.update();
+
+        if(this.options.points.trails == false) this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        else {
+            this.ctx.globalCompositeOperation = 'destination-out';
+            this.ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            this.ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // reset composite operation
+        this.ctx.globalCompositeOperation = 'source-over';
+
+        this.blocks = [];
+
+        // calculate average of each block
+        let byteArr = [];
+
+        for(let i = 0; i < this.options.audio.maxRange; i++){
+            byteArr.push(this.audio.data[i]); // push bytes
+            if((i + 1) % this.options.blocks.size === 0){ //  check if block is full
+                let avg = 0, sum = 0; 
+
+                byteArr.forEach(byte => {
+                    sum += byte;
+                });
+
+                avg = sum / byteArr.length;
+                this.blocks.push(avg); // push average to blocks
+                byteArr = []; // reset byte array
+            }
+        }
+
+        // normalize blocks
+        let max = 10;
+        let sum = 0;
+        this.blocks.forEach(block => {
+            sum += block;
+            if(block > max){
+                max = block;
+            }
+        });
+
+        this.audio.bgHueRotate += (sum / this.blocks.length) / 100;
+        this.audio.bgBrightness = (sum / this.blocks.length);
+        this.audio.updateBG();
+
+        const pointSize = this.options.points.size;
+        const pointSpacing = 10;
+        const rowCount = Math.floor(canvas.height / (pointSize + pointSpacing));
+        const colCount = Math.floor(canvas.width / (pointSize + pointSpacing));
+        const startX = (canvas.width - (colCount * (pointSize + pointSpacing) - pointSpacing)) / 2;
+        const startY = (canvas.height - (rowCount * (pointSize + pointSpacing) - pointSpacing)) / 2;
+
+        // draw grid
+        for (let row = 0; row < rowCount; row++) {
+            for (let col = 0; col < colCount; col++) {
+                const pointX = startX + col * (pointSize + pointSpacing);
+                const pointY = startY + row * (pointSize + pointSpacing);
+                const pointValue = this.blocks[Math.floor((row * colCount + col) * (this.blocks.length / (rowCount * colCount)))] / 255;
+                const pointScale = pointValue + 0.5;
+                // use x and y for color and value for alpha
+                const angle = Math.atan2(pointY - canvas.height / 2, pointX - canvas.width / 2);
+                const hue = ((angle * 180 / Math.PI) + 360) % 360;
+                const pointColor = this.options.points.rainbow ? `hsla(${hue}, 100%, 50%, ${pointValue * 2})`
+                                                               : `rgba(255, 255, 255, ${pointValue * 2})`;
+
+                this.ctx.fillStyle = pointColor;
+                this.ctx.fillRect(pointX, pointY, pointSize * pointScale, pointSize * pointScale);
+            }
+        }
+    }
+}

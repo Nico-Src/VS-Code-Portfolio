@@ -11,6 +11,7 @@ class Audio{
         this.track = this.context.createMediaElementSource(this.dom);
         // create analyser
         this.analyser = this.context.createAnalyser();
+        this.analyser.smoothingTimeConstant = 0.8;
         // create gain node
         this.gainNode = this.context.createGain();
 

@@ -52,10 +52,21 @@ for(const item of items){
             case 'circle-wave':
                 visualizer = new CircleWaveVisualizer(audio, canvas);
                 break;
+            case 'point-cloud':
+                visualizer = new PointCloudVisualizer(audio, canvas);
+                break;
+            case 'point-grid':
+                visualizer = new PointGridVisualizer(audio, canvas);
+                break;
         }
         barSelect.value = 128;
         normalizeCheckbox.checked = true;
         circleRadiusInput.value = 200;
+        pointCloudTrailsCombo.checked = false;
+        pointGridTrailCombo.checked = false;
+        pointGridRainbowCombo.checked = false;
+        pointCloudSizeInput.value = 2;
+        pointGridSizeInput.value = 10;
         drawInterval = setInterval(() => {
             visualizer.draw();
         }, 1000 / 60);
@@ -74,6 +85,37 @@ wavePointSelect.onchange = (e) => {
     visualizer.options.wave.count = e.target.value;
     visualizer.options.wave.width = canvas.width / e.target.value;
     visualizer.options.blocks.size = Math.floor(visualizer.options.audio.maxRange / e.target.value);
+};
+
+var pointCloudCountSelect = document.querySelector('#point-cloud-count-select');
+pointCloudCountSelect.onchange = (e) => {
+    visualizer.options.points.count = e.target.value;
+    visualizer.options.blocks.size = Math.floor(visualizer.options.audio.maxRange / e.target.value);
+};
+
+var pointCloudSizeInput = document.querySelector('#point-cloud-size');
+pointCloudSizeInput.oninput = (e) => {
+    visualizer.options.points.size = parseInt(e.target.value);
+};
+
+var pointGridSizeInput = document.querySelector('#point-grid-size');
+pointGridSizeInput.oninput = (e) => {
+    visualizer.options.points.size = parseInt(e.target.value);
+};
+
+var pointCloudTrailsCombo = document.querySelector('#point-cloud-trails');
+pointCloudTrailsCombo.onchange = (e) => {
+    visualizer.options.points.trails = e.target.checked;
+};
+
+var pointGridTrailCombo = document.querySelector('#point-grid-trails');
+pointGridTrailCombo.onchange = (e) => {
+    visualizer.options.points.trails = e.target.checked;
+};
+
+var pointGridRainbowCombo = document.querySelector('#point-grid-rainbow');
+pointGridRainbowCombo.onchange = (e) => {
+    visualizer.options.points.rainbow = e.target.checked;
 };
 
 var circleRadiusInput = document.querySelector('#circle-radius');

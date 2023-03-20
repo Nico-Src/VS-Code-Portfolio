@@ -60,6 +60,7 @@ html,body{
 #app #viewport canvas{
     width: 100% !important;
     height: 100% !important;
+    background-color: transparent;
 }
 
 .drop-area{
