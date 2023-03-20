@@ -1,203 +1,126 @@
-class Visualizer{
-    constructor(audioElement,playButton,volumeControl,barNumberSelect,volumeInfluenceCheckBox,reverseLowBarsCheckBox,normalizeCheckBox,gradientStartInput,gradientEndInput){
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        this.audioCtx = new AudioContext();
-        this.track = this.audioCtx.createMediaElementSource(audioElement);
-        this.analyser = this.audioCtx.createAnalyser();
-        this.dataArray = new Uint8Array(this.analyser.frequencyBinCount);
-        this.gainNode = this.audioCtx.createGain();
+const canvas = document.querySelector('canvas');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const audioDom = document.querySelector('audio');
+const fileInput = document.querySelector('input[type="file"]');
+const playBtn = document.querySelector('.play-btn');
+var audio, drawInterval, visualizer, playing = false;
+audioDom.crossOrigin = "anonymous";
+audioDom.volume = .1;
+fileInput.onchange = (e) => {
+    const file = e.target.files[0];
+    document.querySelector('#current-file .file-name span').innerHTML = file.name;
+    document.querySelector('#current-file .file-size').innerHTML = '~ ' + (file.size / 1000 / 1000).toFixed(2) + ' MB';
+    // create a blob url
+    const url = URL.createObjectURL(file);
+    // set the audio source
+    audioDom.src = url;
+    audioDom.play();
+    playBtn.innerHTML = '<i class="bx bx-pause"></i>';
+    playing = true;
+    
+    audio = new Audio(audioDom);
 
-        playButton.addEventListener('click', (e) => this.addClickHandlerPlayButton(this.audioCtx,playButton));
-        volumeControl.addEventListener('input', (e) => this.addVolumeHandler(this.gainNode,volumeControl.value));
-        volumeInfluenceCheckBox.addEventListener('click', (e) => this.volumeInfluence = volumeInfluenceCheckBox.checked);
-        reverseLowBarsCheckBox.addEventListener('click', (e) => this.reverseLowBars = reverseLowBarsCheckBox.checked);
-        normalizeCheckBox.addEventListener('click', (e) => this.normalize = normalizeCheckBox.checked);
-        barNumberSelect.addEventListener('change',(e)=>this.barNumberChanged(barNumberSelect.value));
-        gradientStartInput.addEventListener('change',(e)=>this.newColors(gradientStartInput.value,gradientEndInput.value));
-        gradientEndInput.addEventListener('change',(e)=>this.newColors(gradientStartInput.value,gradientEndInput.value));
+    visualizer = new BarVisualizer(audio, canvas);
+    
+    drawInterval = setInterval(() => {
+        visualizer.draw();
+    }, 1000 / 60);
 
-        // connect our graph
-        this.track.connect(this.gainNode).connect(this.audioCtx.destination);
-        this.track.connect(this.analyser);
-        this.gradientStart = '#33C0FF';
-        this.gradientEnd = '#75FF33';
+    window.onresize = () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        visualizer.updateDimensions();
+    };
+};
 
-        this.bars = 32;
-        this.step = 800 / 1024;
-        this.dataBlockSize = 1024 / this.bars;
-        this.barSpacing = 10;
-        this.minBarHeight = 10;
-        this.reverseLowBars = false;
-        this.barColors = this.generateColors(this.gradientEnd,this.gradientStart,this.bars);
-        this.volumeInfluence = false;
-        this.normalize = false;
-
-        this.volumeControl = volumeControl;
-
-        CanvasRenderingContext2D.prototype.roundRect = function (x, y, w, h, r) {
-            if (w < 2 * r) r = w / 2;
-            if (h < 2 * r) r = h / 2;
-            this.beginPath();
-            this.moveTo(x+r, y);
-            this.arcTo(x+w, y,   x+w, y+h, r);
-            this.arcTo(x+w, y+h, x,   y+h, r);
-            this.arcTo(x,   y+h, x,   y,   r);
-            this.arcTo(x,   y,   x+w, y,   r);
-            this.closePath();
-            return this;
-          }
-
-        console.log(this);
+const typeSelect = document.querySelector('.type-select');
+const items = document.querySelectorAll('.type');
+// register click event on each item
+for(const item of items){
+    item.onclick = (e) => {
+        const type = item.getAttribute('data-type');
+        setOptions(type);
+        clearInterval(drawInterval);
+        switch(type){
+            case 'bar':
+                visualizer = new BarVisualizer(audio, canvas);
+                break;
+            case 'circle-bar':
+                visualizer = new CircleBarVisualizer(audio, canvas);
+                break;
+            case 'circle-wave':
+                visualizer = new CircleWaveVisualizer(audio, canvas);
+                break;
+        }
+        barSelect.value = 128;
+        normalizeCheckbox.checked = true;
+        circleRadiusInput.value = 200;
+        drawInterval = setInterval(() => {
+            visualizer.draw();
+        }, 1000 / 60);
     }
+};
 
-    newColors(startColor,endColor){
-        this.gradientStart = startColor;
-        this.gradientEnd = endColor;
-        this.barColors = this.generateColors(this.gradientEnd,this.gradientStart,this.bars);
+var barSelect = document.querySelector('#bar-select');
+barSelect.onchange = (e) => {
+    visualizer.options.bars.count = e.target.value;
+    visualizer.options.bars.width = canvas.width / e.target.value;
+    visualizer.options.blocks.size = Math.floor(visualizer.options.audio.maxRange / e.target.value);
+};
+
+var wavePointSelect = document.querySelector('#wave-point-select');
+wavePointSelect.onchange = (e) => {
+    visualizer.options.wave.count = e.target.value;
+    visualizer.options.wave.width = canvas.width / e.target.value;
+    visualizer.options.blocks.size = Math.floor(visualizer.options.audio.maxRange / e.target.value);
+};
+
+var circleRadiusInput = document.querySelector('#circle-radius');
+circleRadiusInput.oninput = (e) => {
+    visualizer.options.circle.radius = parseInt(e.target.value);
+};
+
+var normalizeCheckbox = document.querySelector('#normalize');
+normalizeCheckbox.onchange = (e) => {
+    visualizer.options.audio.normalize = e.target.checked;
+};
+
+const volumeSlider = document.querySelector('input[type="range"]');
+volumeSlider.oninput = (e) => {
+    audioDom.volume = e.target.value / 100;
+}
+
+playBtn.onclick = () => {
+    if(playing){
+        audioDom.pause();
+        playBtn.innerHTML = '<i class="bx bx-play"></i>';
+        playing = false;
+    } else {
+        audioDom.play();
+        playBtn.innerHTML = '<i class="bx bx-pause"></i>';
+        playing = true;
     }
+};
 
-    barNumberChanged(value){
-        this.bars = value;
-        this.dataBlockSize = 1024 / this.bars;
-        this.barColors = this.generateColors(this.gradientEnd,this.gradientStart,this.bars);
-    }
+var optionWrapper = document.querySelector('.visualizer-options');
+var options = optionWrapper.querySelectorAll('.option');
+setOptions('bar');
 
-    addVolumeHandler(gainNode,value){
-        gainNode.gain.value = value;
-    }
-
-    addClickHandlerPlayButton(audioCtx,btn){
-        // check if context is in suspended state (autoplay policy)
-        if (audioCtx.state === 'suspended') {
-            audioCtx.resume();
-            btn.innerHTML = "Pause";
+function setOptions(sType){
+    for(const option of options){
+        const types = option.getAttribute('data-type').split('|');
+        let isType = false;
+        for(const type of types){
+            if(type === sType){
+                isType = true;
+                break;
+            }
+        }
+        if(isType){
+            option.style.display = 'flex';
         } else {
-            audioCtx.suspend();
-            btn.innerHTML = "Play";
-        }         
-    }
-
-    update(){
-        var c = document.querySelector("canvas");
-        var ctx = c.getContext("2d");
-
-        // fill canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        var width = c.width;
-        var height = c.height;
-
-        this.barWidth = width / this.bars;
-        
-        // get audio data
-        this.analyser.getByteFrequencyData(this.dataArray);
-        let blockBytes = [];
-        let arr = [];
-        for(let j = 0; j < 1024;j++){
-            arr.push(this.dataArray[j]);
-            if((j + 1) % this.dataBlockSize === 0){
-                let avg = 0;
-                let sum = 0;
-
-                arr.forEach(byte => {
-                    sum += byte;
-                });
-
-                avg = sum / arr.length;
-                blockBytes.push(avg);
-                arr = [];
-            }
+            option.style.display = 'none';
         }
-        if(this.normalize)blockBytes = this.normalizeBytes(blockBytes,height - 50);
-
-        let volumeMultiplier = this.normalize === true ? 1.0 : 1.5;
-
-        let barCount = 0;
-        let currentBlock = [];
-
-        for(let i = 0;i<1024;i++){
-            if((i + 1) % this.dataBlockSize === 0){
-                let x = barCount * this.barWidth;
-                let y = blockBytes[barCount];
-
-                if(this.volumeInfluence){
-                    y *= (volumeMultiplier * this.volumeControl.value);
-                }
-
-                ctx.fillStyle = "#" + this.barColors[barCount];
-                ctx.fillRect(x + (this.barSpacing / 2),height - y - this.minBarHeight,this.barWidth - (this.barSpacing / 2),y - (this.reverseLowBars ? this.minBarHeight : -this.minBarHeight));
-                barCount++;
-                currentBlock = [];
-            }
-        }
-
-        requestAnimationFrame(this.update.bind(this));
-    }
-
-    normalizeBytes(arr,normalizeValue){
-        let max = 0;
-        arr.forEach(byte => {if(byte > max) max = byte;});
-
-        let ratio = normalizeValue / max;
-        for(let i = 0; i < arr.length;i++){
-            arr[i] = arr[i] * ratio;
-        }
-
-        return arr;
-    }
-
-    hex (c) {
-        var s = "0123456789abcdef";
-        var i = parseInt (c);
-        if (i == 0 || isNaN (c))
-          return "00";
-        i = Math.round (Math.min (Math.max (0, i), 255));
-        return s.charAt ((i - i % 16) / 16) + s.charAt (i % 16);
-    }
-      
-    /* Convert an RGB triplet to a hex string */
-    convertToHex (rgb) {
-        return this.hex(rgb[0]) + this.hex(rgb[1]) + this.hex(rgb[2]);
-    }
-      
-    /* Remove '#' in color hex string */
-    trim (s) { return (s.charAt(0) == '#') ? s.substring(1, 7) : s }
-      
-    /* Convert a hex string to an RGB triplet */
-    convertToRGB (hex) {
-        var color = [];
-        color[0] = parseInt ((this.trim(hex)).substring (0, 2), 16);
-        color[1] = parseInt ((this.trim(hex)).substring (2, 4), 16);
-        color[2] = parseInt ((this.trim(hex)).substring (4, 6), 16);
-        return color;
-    }
-      
-    generateColors(colorStart,colorEnd,colorCount){
-      
-        // The beginning of your gradient
-        var start = this.convertToRGB (colorStart);    
-      
-        // The end of your gradient
-        var end   = this.convertToRGB (colorEnd);    
-      
-        // The number of colors to compute
-        var len = colorCount;
-      
-        //Alpha blending amount
-        var alpha = 0.0;
-      
-        var saida = [];
-          
-        for (var i = 0; i < len; i++) {
-            var c = [];
-            alpha += (1.0/len);
-              
-            c[0] = start[0] * alpha + (1 - alpha) * end[0];
-            c[1] = start[1] * alpha + (1 - alpha) * end[1];
-            c[2] = start[2] * alpha + (1 - alpha) * end[2];
-      
-            saida.push(this.convertToHex(c));
-        }
-        return saida;  
     }
 }

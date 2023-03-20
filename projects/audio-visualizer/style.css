@@ -1,0 +1,250 @@
+html,body{
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: #202020;
+}
+
+*{
+    box-sizing: border-box;
+    font-family: 'Poppins',sans-serif;
+}
+
+.bg{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    transition: all .4s ease;
+}
+
+.bg img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(50px);
+}
+
+#app{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2;
+    position: absolute;
+    inset: 0;
+}
+
+#app #menu{
+    width: 300px;
+    height: 100%;
+    background-color: rgba(0,0,0,.35);
+    overflow: hidden;
+    padding: 10px;
+}
+
+#app #viewport{
+    flex: 1;
+    min-width: 0;
+    height: 100%;
+    overflow: hidden;
+    padding: 50px;
+}
+
+#app #viewport canvas{
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.drop-area{
+    width: 100%;
+    height: 125px;
+    display:flex;
+    color:white;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,.5);
+    border-radius: 5px;
+    position: relative;
+}
+
+.drop-area .border{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    border: 2px dashed white;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.drop-area .border i{
+    font-size: 30px;
+}
+
+.drop-area .border span{
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.drop-area input{
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+#current-file{
+    margin-top: 5px;
+    font-size: 14px;
+    font-weight: 500;
+    color:white;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#current-file .file-name{
+    flex: 1;
+    min-width: auto;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+#current-file .file-name span{
+    display: inline-block;
+    padding-left: 100%;
+    animation: marquee 10s linear infinite;
+}
+
+#current-file .file-size{
+    width: fit-content;
+    padding-left: 15px;
+    text-align: right;
+}
+
+.audio-controls{
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.audio-controls .play-btn{
+    padding-left: 2px;
+    width: 30px;
+    aspect-ratio: 1/1;
+    font-size: 25px;
+    background-color: #505050;
+    border-radius: 50%;
+    color:white;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all .2s ease;
+}
+
+.audio-controls .play-btn:hover{
+    background-color: #707070;
+}
+
+.audio-controls input[type="range"]{
+    flex: 1;
+    margin-left: 10px;
+}
+
+.header{
+    width: 100%;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    color:white;
+    font-weight: 300;
+}
+
+.visualizer-options{
+    width: 100%;
+    height: fit-content;
+}
+
+.visualizer-options .option{
+    width: 100%;
+    display:none;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.visualizer-options .option span{
+    font-size: 14px;
+    font-weight: 500;
+    color:white;
+}
+
+.visualizer-options .option input,
+.visualizer-options .option select{
+    width: 100px;
+    height: 30px;
+    background-color: #505050;
+    border: none;
+    color:white;
+    border-radius: 4px;
+    padding: 0 10px;
+    font-size: 14px;
+    font-weight: 500;
+    outline: none;
+    cursor: pointer;
+}
+
+.type-select{
+    width: 100%;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    height: fit-content;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    user-select: none;
+    cursor: pointer;
+}
+
+.type-select .type:hover{
+    background-color: #707070;
+}
+
+.type-select .type{
+    width: calc(50% - 5px);
+    background-color: #505050;
+    border-radius: 4px;
+    display:flex;
+    justify-content: center;
+    height: 75px;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 10px;
+    color:white;
+    transition: all .2s ease;
+}
+
+.type-select .type i{
+    font-size: 50px;
+}
+
+/* Animations */
+
+@keyframes marquee {
+    0%   { transform: translate(0, 0); }
+    100% { transform: translate(-100%, 0); }
+}
