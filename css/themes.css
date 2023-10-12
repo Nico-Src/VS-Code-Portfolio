@@ -1,0 +1,35 @@
+body{
+    --title-bar-height: 35px;
+    --title-bar-bg: rgb(28, 33, 40);
+    --title-bar-color: rgb(118, 131, 144);
+    --title-bar-border-color: rgb(68, 76, 86);
+
+    --status-bar-height: 22px;
+    --status-bar-bg: rgb(34, 39, 46);
+    --status-bar-color: rgb(118, 131, 144);
+    --status-bar-border-color: #444c56;
+
+    --activity-bar-width: 48px;
+    --activity-bar-bg: rgb(34, 39, 46);
+    --activity-bar-border-color: rgb(68, 76, 86);
+
+    --side-bar-width: 279px;
+    --side-bar-bg: rgb(28, 33, 40);
+    --side-bar-color: rgb(173, 186, 199);
+    --side-bar-border-color: rgb(68, 76, 86);
+    --side-bar-pane-item-height: 22px;
+    --side-bar-pane-item-selected-bg: rgba(99, 110, 123, 0.4);
+    --side-bar-pane-item-hover-bg: rgba(99, 110, 123, 0.1);
+
+    --side-bar-pane-header-height: 22px;
+    --side-bar-directory-line-layer-1: rgb(68, 76, 86);
+    --side-bar-directory-line-layer-2: rgba(68, 76, 86, .6);
+    --side-bar-directory-line-layer-3: rgba(68, 76, 86, .4);
+
+    --editor-bg: rgb(34, 39, 46);
+
+    --icon-foreground: #768390;
+    --icon-foreground-hover-bg: rgba(90, 93, 94, 0.31);
+
+    --header-foreground-color: rgb(173, 186, 199);
+}
