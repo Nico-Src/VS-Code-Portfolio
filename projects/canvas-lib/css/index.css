@@ -1,0 +1,151 @@
+:root{
+    --accent-color: rgb(74, 187, 74);
+    --light-accent: rgb(122, 229, 122);
+}
+
+body,html{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #202020;
+    overflow: hidden;
+}
+
+*{
+    box-sizing: border-box;
+    font-family: 'Poppins',sans-serif;
+}
+
+.toolbar{
+    height: 40px;
+    width: 100%;
+    background-color: #2b2b2b;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+}
+
+.tools{
+    height: 100%;
+    width: 50px;
+    background-color: #151515;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    padding: 0 20px;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    z-index: 1;
+}
+
+.tools .item{
+    height: 40px;
+    width: 40px;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px;
+    cursor: pointer;
+    transition: 0.2s;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+    color:white;
+}
+
+.tools .item .name{
+    position: absolute;
+    height: 20px;
+    left: calc(100% + 10px);
+    background-color: #505050;
+    color:white;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2px 5px;
+    font-size: 14px;
+    border-radius: 4px;
+    opacity: 0;
+    pointer-events: none;
+    transition: 0.2s;
+    transition-delay: 0ms;
+}
+
+.tools .item:hover,
+.tools .item.active{
+    background-color: #404040;
+}
+
+.tools .item:hover .name{
+    opacity: 1;
+    transition-delay: 500ms;
+}
+
+.inspector{
+    height: 100%;
+    width: 300px;
+    background-color: #2b2b2b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    right: 0;
+    top: 40px;
+    z-index: 1;
+}
+
+canvas{
+    margin-top: 40px;
+    width: calc(100% - 340px);
+    margin-left: 50px;
+    height: calc(100% - 40px);
+    cursor: grab;
+    border: 2px solid #202020;
+}
+
+/* ANCHOR Ripple */
+
+.ripple-btn{
+    position: relative !important;
+    overflow: hidden !important;
+    z-index: 0 !important;
+    user-select: none !important;
+    cursor: pointer !important;
+}
+
+span.ripple {
+    position: absolute;
+    border-radius: 50%;
+    transform: scale(0);
+    animation-name: ripple;
+    animation-duration: 600ms;
+    animation-timing-function: linear;
+    background-color: rgba(255, 255, 255, 0.7);
+    z-index: 200;
+    opacity: 1;
+}
+
+@keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+@-webkit-keyframes ripple {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}

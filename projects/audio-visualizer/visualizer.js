@@ -419,8 +419,10 @@ class PointCloudVisualizer{
             }
         });
 
-        this.audio.bgHueRotate += (sum / this.blocks.length) / 100;
-        this.audio.bgBrightness = (sum / this.blocks.length);
+        const totalAvg = sum / this.blocks.length;
+
+        this.audio.bgHueRotate += totalAvg / 100;
+        this.audio.bgBrightness = totalAvg;
         this.audio.updateBG();
 
         // set spiral properties
@@ -432,13 +434,18 @@ class PointCloudVisualizer{
         const rotationIncrement = Math.PI * 2 / 100;
         let rotation = 0;
 
+        this.ctx.save();
+        this.ctx.translate(centerX, centerY);
+        this.ctx.rotate(totalAvg / 100);
+        this.ctx.translate(-centerX, -centerY);
+
         // draw spirals
         for (let i = 0; i < spiralCount; i++) {
             const audioValue = this.blocks[Math.floor(i * (this.blocks.length / spiralCount))];
             const spiralRadius = (audioValue / 255) * radius;
             const spiralRotation = rotation + (i * (Math.PI / 4)) % (Math.PI * 2);
-            const spiralX = centerX + spiralRadius * Math.cos(spiralRotation);
-            const spiralY = centerY + spiralRadius * Math.sin(spiralRotation);
+            let spiralX = centerX + spiralRadius * Math.cos(spiralRotation);
+            let spiralY = centerY + spiralRadius * Math.sin(spiralRotation);
 
             this.ctx.beginPath();
             this.ctx.arc(spiralX, spiralY, this.options.points.size, 0, Math.PI * 2);
@@ -447,6 +454,8 @@ class PointCloudVisualizer{
 
             rotation += rotationIncrement;
         }
+
+        this.ctx.restore();
     }
 }
 

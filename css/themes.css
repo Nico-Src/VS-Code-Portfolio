@@ -27,6 +27,16 @@ body{
     --side-bar-directory-line-layer-3: rgba(68, 76, 86, .4);
 
     --editor-bg: rgb(34, 39, 46);
+    --editor-scrollbar-thumb-bg: rgba(118, 131, 144, 0.2);
+    --editor-scrollbar-thumb-hover-bg: rgba(118, 131, 144, 0.24);
+    --editor-scrollbar-thumb-active-bg: rgba(118, 131, 144, 0.28);
+    --editor-top-bar-bg: rgb(28, 33, 40);
+    --editor-top-bar-border-color: #444c56;
+    --editor-top-bar-height: 35px;
+    --editor-top-bar-item-border-color: rgb(68, 76, 86);
+    --editor-top-bar-item-bg: rgb(28, 33, 40);
+    --editor-top-bar-item-color: rgb(118, 131, 144);
+    --editor-top-bar-item-active-border-color: #ec775c;
 
     --icon-foreground: #768390;
     --icon-foreground-hover-bg: rgba(90, 93, 94, 0.31);

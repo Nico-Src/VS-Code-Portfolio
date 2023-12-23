@@ -1,0 +1,177 @@
+<div class="sub-content">
+    <div class="row-content">
+        <div class="text slide-right">
+            <div class="line-one">Hello, my name is</div>
+            <div class="line-two">Nico Thuniot</div>
+            <div class="line-three">
+                I'm a recent graduate from HTL Donaustadt with a degree in Computer Science. I successfully completed my final exam last year and have since been immersed in the exciting world of Web Development. My passion lies in creating innovative and user-friendly web experiences. Explore my portfolio to discover the projects that showcase my skills and dedication to the world of coding and design. 
+            </div>
+        </div>
+        <div class="profile slide-left">
+            <img src="img/profile.jpg">
+        </div>
+    </div>
+    <div class="contact-list scale-up">
+        <a href="mailto:nico.thuniot@gmx.at" target="_blank"><i class='bx bxs-envelope email'></i></a>
+        <a href="https://www.linkedin.com/in/nico-thuniot-415047258/" target="_blank"><i class='bx bxl-linkedin-square linked-in'></i></a>
+        <a href="https://github.com/Nico-Src" target="_blank"><i class='bx bxl-github github'></i></a>
+    </div>
+</div>
+<script>
+    window.subContent = document.querySelector('.sub-content');
+
+    setTimeout(()=>{
+        subContent.classList.add('transition');
+    },400);
+</script>
+<style>
+    .editor .sub-content{
+        width: 100%;
+        height: 100%;
+        background-color: var(--editor-bg);
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .editor .sub-content .slide-right,
+    .editor .sub-content .slide-left{
+        transition: translate .75s cubic-bezier(0.68, -0.55, 0.265, 1.55) .05s, opacity .75s ease;
+        will-change: transform;
+    }
+
+    .editor .sub-content .scale-up{
+        transition: scale .75s cubic-bezier(0.68, -0.55, 0.265, 1.55) .05s, opacity .75s ease;
+        will-change: transform;
+    }
+
+    .editor .sub-content .slide-right{
+        translate: -100px 0px;
+        opacity: 0;
+    }
+
+    .editor .sub-content.transition .slide-right{
+        translate: 0px 0px;
+        opacity: 1;
+    }
+
+    .editor .sub-content .slide-left{
+        translate: 100px 0px;
+        opacity: 0;
+    }
+
+    .editor .sub-content.transition .slide-left{
+        translate: 0px 0px;
+        opacity: 1;
+    }
+
+    .editor .sub-content .scale-up{
+        opacity: 0;
+    }
+
+    .editor .sub-content.transition .scale-up{
+        opacity: 1;
+    }
+
+    .editor .sub-content .row-content{
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .editor .sub-content .text{
+        padding: 0 25px;
+        max-width: 50%;
+        transform: rotateX(-12deg) rotateY(6deg);
+        perspective: 1000px;
+        transform-style: preserve-3d;
+    }
+
+    .editor .sub-content .text .line-one{
+        font-family: 'Poppins';
+        color: #64ffda;
+        font-size: 1.25vw;
+    }
+
+    .editor .sub-content .text .line-two{
+        font-family: 'Poppins';
+        color: white;
+        font-weight: bold;
+        font-size: 3.5vw;
+    }
+
+    .editor .sub-content .text .line-three{
+        font-family: 'Poppins';
+        color: #BCBCBC;
+        font-size: 1.25vw;
+    }
+
+    .editor .sub-content .profile{
+        width: 20vw;
+        aspect-ratio: 1;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        margin-left: 45px;
+        transform: rotateX(12deg) rotateY(-6deg);
+        perspective: 1000px;
+        transform-style: preserve-3d;
+    }
+
+    .editor .sub-content .profile img{
+        border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+
+    .editor .sub-content .contact-list{
+        width: 100%;
+        height: 35px;
+        padding: 0 10vw;
+        margin-top: 4vw;
+        display:flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .editor .sub-content .contact-list span{
+        font-family: 'Poppins';
+        color: #64ffda;
+        font-size: 1vw;
+    }
+
+    .editor .sub-content .contact-list a{
+        text-decoration: none;
+    }
+
+    .editor .sub-content .contact-list i{
+        font-size: 45px;
+        margin-right: 30px;
+        width: 28px;
+        height: 28px;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        opacity: .5;
+        transition: opacity .2s ease;
+    }
+
+    .editor .sub-content .contact-list i.linked-in{
+        background-color: white;
+        color: #0077b7;
+    }
+
+    .editor .sub-content .contact-list i.github,
+    .editor .sub-content .contact-list i.email{
+        background-color: black;
+        color: white;
+    }
+
+    .editor .sub-content .contact-list i:hover{
+        opacity: 1;
+    }
+</style>

@@ -2,6 +2,7 @@ class App{
     constructor(img){
         this.canvas = document.getElementById('canvas');
         this.ctx = this.canvas.getContext('2d',{willReadFrequently:true, alpha:true});
+        this.ctx.imageSmoothingEnabled = false;
         this.image = img;
         this.imageData = [];
         this.revealed = [];
@@ -12,8 +13,8 @@ class App{
 
         this.firstDraw = true;
 
-        this.rows = 50;
-        this.cols = 50;
+        this.rows = img.naturalHeight;
+        this.cols = img.naturalWidth;
 
         this.mouse = {
             x: 0,
@@ -41,8 +42,8 @@ class App{
         this.canvas.addEventListener('mouseup', this.mouseUp.bind(this));
         this.canvas.addEventListener('contextmenu', e => e.preventDefault());
         this.canvas.addEventListener('wheel', e => {
-            this.scale += e.deltaY * -0.001;
-            this.scale = Math.min(Math.max(.125, this.scale), 4);
+            this.scale += e.deltaY * -0.01;
+            this.scale = Math.min(Math.max(.0125, this.scale), 50);
         });
         window.addEventListener('resize', this.resize.bind(this));
 
@@ -79,39 +80,66 @@ class App{
             let totalCells = this.cols * this.rows;
             let cellCount = 0;
 
-            // draw the average color of each cell
-            for(let i = 0; i < this.rows; i++){
-                for(let j = 0; j < this.cols; j++){
-                    if(!this.revealed[i]) continue;
-                    if(this.revealed[i][j]) continue;
-                    let x = Math.floor(j * this.cellWidth);
-                    let y = Math.floor(i * this.cellHeight);
-                    // check if the cell is on the screen before drawing it (including translation and scale)
-                    if(x + this.cellWidth < -this.translate.x / this.scale) continue;
-                    if(y + this.cellHeight < -this.translate.y / this.scale) continue;
-                    if(x > (-this.translate.x / this.scale) + this.canvas.width / this.scale) continue;
-                    if(y > (-this.translate.y / this.scale) + this.canvas.height / this.scale) continue;
-                    this.ctx.fillStyle = 'white';
-                    if(this.selectedColor && this.selectedColor === this.colorMap[i][j]){
-                        this.ctx.fillStyle = 'gray';
+            const that = this;
+
+            // Precompute font size
+            let fontSize = Math.min(this.cellWidth, this.cellHeight) * 0.5;
+            this.ctx.font = fontSize + 'px Poppins';
+            this.ctx.textAlign = 'center';
+            this.ctx.textBaseline = 'middle';
+
+            let colorIndexMap = {};
+            for (let i = 0; i < this.colorPalette.length; i++) {
+                colorIndexMap[this.colorPalette[i]] = i + 1; // Assuming colorPalette is an array of color strings
+            }
+
+            function processBatch(startRow, endRow) {
+                for (let i = startRow; i < endRow; i++) {
+                    if (!that.revealed[i]) continue;
+                    for (let j = 0; j < that.cols; j++) {
+                        if (that.revealed[i][j]) continue;
+
+                        let x = Math.floor(j * that.cellWidth);
+                        let y = Math.floor(i * that.cellHeight);
+
+                        if (x + that.cellWidth < -that.translate.x / that.scale ||
+                            y + that.cellHeight < -that.translate.y / that.scale ||
+                            x > (-that.translate.x / that.scale) + that.canvas.width / that.scale ||
+                            y > (-that.translate.y / that.scale) + that.canvas.height / that.scale) continue;
+
+                        let color = that.colorMap[i][j];
+                        let colorIndex = colorIndexMap[color];
+
+                        that.ctx.fillStyle = (that.selectedColor && that.selectedColor === color) ? 'gray' : 'white';
+
+                        that.ctx.beginPath();
+                        that.ctx.rect(x, y, that.cellWidth, that.cellHeight);
+                        that.ctx.closePath();
+                        that.ctx.fill();
+
+                        that.ctx.fillStyle = 'black';
+                        that.ctx.fillText(`${colorIndex}`, x + that.cellWidth / 2, y + that.cellHeight / 2);
+
+                        cellCount++;
                     }
-                    this.ctx.beginPath();
-                    this.ctx.rect(x, y, this.cellWidth, this.cellHeight);
-                    this.ctx.closePath();
-                    this.ctx.stroke();
-                    this.ctx.fill();
-                    // draw index of the color as text
-                    this.ctx.fillStyle = 'black';
-                    // calculate the font size based on the cell size
-                    let fontSize = Math.min(this.cellWidth, this.cellHeight) * 0.5;
-                    this.ctx.font = fontSize + 'px Poppins';
-                    this.ctx.textAlign = 'center';
-                    this.ctx.textBaseline = 'middle';
-                    const colorIndex = this.colorPalette.indexOf(this.colorMap[i][j]);
-                    this.ctx.fillText(`${colorIndex+1}`, x + this.cellWidth / 2, y + this.cellHeight / 2);
-                    cellCount++;
                 }
             }
+
+            let batchSize = 150; // Adjust batch size based on performance testing
+            let numRows = this.rows;
+            let i = 0;
+
+            function processNextBatch() {
+                let endRow = Math.min(i + batchSize, numRows);
+                processBatch(i, endRow);
+                i = endRow;
+
+                if (i < numRows) {
+                    requestAnimationFrame(processNextBatch);
+                }
+            }
+
+            processNextBatch();
 
             document.querySelector('.total-cells .value').innerHTML = totalCells;
             document.querySelector('.rendered-cells .value').innerHTML = cellCount;
@@ -121,6 +149,8 @@ class App{
     resize(){
         this.canvas.width = window.innerWidth;
         this.canvas.height = window.innerHeight;
+
+        this.ctx.imageSmoothingEnabled = false;
 
         // draw image
         this.ctx.drawImage(this.image, 0,0);

@@ -1,0 +1,295 @@
+<div class="sub-content">
+    <div class="projects">
+        <div class="project mangadb">
+            <div class="image">
+                <img src="img/logo/mangadb.png">
+            </div>
+            <div class="details">
+                <div class="name">MangaDB</div>
+                <div class="description">A robust platform for manga enthusiasts, providing efficient collection and list management, along with detailed insights into series, publishers, contributors, and editions.</div>
+                <div class="tags">
+                    <div class="tag nuxt">NuxtJS</div>
+                    <div class="tag node">NodeJS</div>
+                    <div class="tag express">Express</div>
+                    <div class="tag puppeteer">Puppeteer</div>
+                    <div class="tag mysql">Mysql</div>
+                </div>
+            </div>
+        </div>
+        <div class="project lego">
+            <div class="image">
+                <img src="img/logo/lego.png">
+            </div>
+            <div class="details">
+                <div class="name">Lego Builder</div>
+                <div class="description">A web app to construct lego buildings. An performant web lego builder.</div>
+                <div class="tags">
+                    <div class="tag html">Html</div>
+                    <div class="tag css">Css</div>
+                    <div class="tag babylon">BabylonJS</div>
+                    <div class="tag javascript">Javascript</div>
+                </div>
+                <div class="buttons">
+                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/nico-src.github.io/tree/master/projects/lego-3d" class="text">Source Code</a></div>
+                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/projects/lego-3d/" class="text">Live Demo</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="project audio-viz">
+            <div class="image">
+                <img src="img/logo/audio-visualizer.png">
+            </div>
+            <div class="details">
+                <div class="name">Audio Visualizer</div>
+                <div class="description">A web app to visualize music. Includes six different audio visualizers and a file picker to choose which music to visualize.</div>
+                <div class="tags">
+                    <div class="tag html">Html</div>
+                    <div class="tag css">Css</div>
+                    <div class="tag javascript">Javascript</div>
+                    <div class="tag web-audio">Web Audio API</div>
+                </div>
+                <div class="buttons">
+                    <div class="source button"><div class="bg"></div><span class="text">Source Code</span></div>
+                    <div class="demo button"><div class="bg"></div><span class="text">Live Demo</span></div>
+                </div>
+            </div>
+        </div>
+        <div class="project puzzle">
+            <div class="image">
+                <img src="img/logo/puzzle.png">
+            </div>
+            <div class="details">
+                <div class="name">Puzzle Lib</div>
+                <div class="description">A small library to create a playable puzzle from an image.</div>
+                <div class="tags">
+                    <div class="tag html">Html</div>
+                    <div class="tag css">Css</div>
+                    <div class="tag javascript">Javascript</div>
+                </div>
+                <div class="buttons">
+                    <div class="source button"><div class="bg"></div><span class="text">Source Code</span></div>
+                    <div class="demo button"><div class="bg"></div><span class="text">Live Demo</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.subContent = document.querySelector('.sub-content');
+
+    setTimeout(()=>{
+        subContent.classList.add('transition');
+    },400);
+</script>
+<style>
+    .editor .sub-content{
+        width: 100%;
+        height: 100%;
+        background-color: var(--editor-bg);
+        display:flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+        overflow: auto;
+    }
+
+    .editor .sub-content .projects{
+        width: 100%;
+        height: fit-content;
+        padding: 10px 15px;
+        display:grid;
+        row-gap: 1rem;
+        column-gap: 1rem;
+        grid-template-columns: repeat(auto-fill,minmax(min(15.375rem,100%),1fr));
+        align-items:self-start;
+    }
+
+    .editor .sub-content .projects .project{
+        background-color: var(--side-bar-bg);
+        border-bottom: 4px solid var(--side-bar-border-color);
+        height: 100%;
+        border-radius: 4px;
+        overflow: hidden;
+        box-shadow: 0 0 3px 2px rgba(0,0,0,.1);
+        display:flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+        opacity: 0;
+        transform: scale(0.7);
+        cursor: pointer;
+        transition: transform .25s ease, opacity .2s ease;
+    }
+
+    .editor .sub-content .projects .project:nth-child(2){ transition-delay: .1s;}
+    .editor .sub-content .projects .project:nth-child(3){ transition-delay: .2s;}
+    .editor .sub-content .projects .project:nth-child(4){ transition-delay: .3s;}
+    .editor .sub-content .projects .project:nth-child(5){ transition-delay: .4s;}
+    .editor .sub-content .projects .project:nth-child(6){ transition-delay: .5s;}
+
+    .editor .sub-content.transition .projects .project{
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    .editor .sub-content .projects .project .image{
+        width: 100%;
+        height: 150px;
+        overflow: hidden;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+        border-radius: 4px;
+    }
+
+    .editor .sub-content .projects .project .image img{
+        transition: transform .2s ease;
+        will-change: transform;
+    }
+
+    .editor .sub-content .projects .project:hover .image img{
+        transform: scale(1.1);
+    }
+
+    .editor .sub-content .projects .project.mangadb .image{ background-color: #DDD; }
+    .editor .sub-content .projects .project.lego .image{ background-color: rgb(211, 46, 46); }
+    .editor .sub-content .projects .project.audio-viz .image{ background-color: #6e91f1; }
+    .editor .sub-content .projects .project.puzzle .image{ background-color: #dd9a17; }
+
+    .editor .sub-content .projects .project .image img{
+        width: 80%;
+        height: 80%;
+        object-fit: contain;
+    }
+
+    .editor .sub-content .projects .project .details{
+        flex: 1;
+        width: 100%;
+        display:flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 4px 10px 10px 10px;
+    }
+    
+    .editor .sub-content .projects .project .details .name{
+        color: #FFF;
+        font-family: 'Poppins';
+        font-weight: bold;
+        width: 100%;
+        text-align: start;
+    }
+
+    .editor .sub-content .projects .project .details .description{
+        margin-top: 2px;
+        color: #EEE;
+        font-family: 'Poppins';
+        font-size: 12px;
+        width: 100%;
+        text-align: start;
+    }
+
+    .editor .sub-content .projects .project .details .tags{
+        width: 100%;
+        height: fit-content;
+        display:flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        margin-top: 7px;
+    }
+
+    .editor .sub-content .projects .project .details .tags .tag{
+        background-color: rgb(20, 23, 28);
+        font-family: 'Poppins';
+        border-radius: 12px;
+        color: #CCC;
+        font-size: 10px;
+        padding: 1px 8px;
+        margin-right: 4px;
+        margin-bottom: 4px;
+        transform: translateX(-5px);
+        border: 2px solid white;
+        font-weight: 500;
+        transition: background .2s ease;
+    }
+
+    .editor .sub-content .projects .project .details .tags .tag.nuxt{border-color: #00dc82; color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.nuxt:hover{background-color: rgb(0, 220, 130, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.node{border-color: rgb(130, 205, 40); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.node:hover{background-color: rgb(130, 205, 40, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.express{border-color: rgb(243, 223, 30); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.express:hover{background-color: rgb(243, 223, 30, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.puppeteer{border-color: rgb(117, 117, 116); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.puppeteer:hover{background-color: rgb(117, 117, 116, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.mysql{border-color: rgb(68, 121, 161); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.mysql:hover{background-color: rgb(68, 121, 161, .5); color:white;} 
+    .editor .sub-content .projects .project .details .tags .tag.html{border-color: rgb(232, 88, 35); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.html:hover{background-color: rgb(232, 88, 35, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.css{border-color: rgb(34, 152, 248); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.css:hover{background-color: rgb(34, 152, 248, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.babylon{border-color: rgb(187, 70, 76); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.babylon:hover{background-color: rgb(187, 70, 76, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.javascript{border-color: rgb(243, 223, 30); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.javascript:hover{background-color: rgb(243, 223, 30, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.web-audio{border-color: rgb(128, 78, 189); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.web-audio:hover{background-color: rgb(128, 78, 189, .5); color:white;}
+
+    .editor .sub-content .projects .project .details .buttons{
+        width: 100%;
+        display:flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 5px;
+    }
+
+    .editor .sub-content .projects .project .details .buttons .button{
+        flex: 1;
+        height: 30px;
+        display:flex;
+        justify-content: flex-start;
+        align-items: flex-end;
+        position: relative;
+        margin-right: 10px;
+        cursor: pointer;
+        opacity: .5;
+        transition: opacity .2s ease;
+    }
+
+    .editor .sub-content .projects .project .details .buttons .button:hover{
+        opacity: 1;
+    }
+
+    .editor .sub-content .projects .project .details .buttons .button .bg{
+        width: 100%;
+        height: 100%;
+        transform-origin: 0 100%;
+        background-color: var(--side-bar-border-color);
+        transform: scaleY(0.1);
+        transition: transform .2s ease;
+        will-change: transform;
+    }
+
+    .editor .sub-content .projects .project .details .buttons .button:hover .bg{
+        transform: scaleX(1);
+    }
+
+    .editor .sub-content .projects .project .details .buttons .button .text{
+        width: fit-content;
+        height: fit-content;
+        position: absolute;
+        inset: 0;
+        margin: auto;
+        color:#CCC;
+        font-weight: bold;
+        font-size: 13px;
+        font-family: 'Poppins';
+        transition: color .2s ease;
+        text-decoration: none;
+    }
+
+    .editor .sub-content .projects .project .details .buttons .button:hover .text{
+        color: #FFF;
+    }
+</style>

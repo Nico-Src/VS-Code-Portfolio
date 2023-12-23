@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio</title>
     <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css'>
+    <link rel="stylesheet" href="css/themes/github-dark-dimmed.css">
     <link rel='stylesheet' href='css/fonts.css'>
     <link rel='stylesheet' href='css/themes.css'>
     <link rel='stylesheet' href='css/index.css'>
@@ -18,113 +19,170 @@
                 <span class="title">EXPLORER</span>
                 <i class='bx bx-dots-horizontal-rounded icon'></i>
             </div>
-            <div class="pane">
+            <div class="pane" data-expanded="true" data-pane-id="open-editors">
                 <div class="pane-header">
                     <i class='bx bx-chevron-down icon'></i>
                     <span class="title">OPEN EDITORS</span>
                 </div>
-                <div class="pane-content expanded" data-category="open-editors" data-items="2">
-                    <div class="pane-item active">
-                        <div class="close-action"><i class='bx bx-x'></i></div>
-                        <img class="icon" src="img/icons/html.svg">
-                        <span class="name">index.html</span>
-                    </div>
-                    <div class="pane-item">
-                        <div class="close-action"><i class='bx bx-x'></i></div>
-                        <img class="icon" src="img/icons/css.svg">
-                        <span class="name">index.css</span>
-                    </div>
+                <div class="pane-content expanded" data-category="open-editors" data-items="2" id="root-pane-content">
+
                 </div>
             </div>
-            <div class="pane">
+            <div class="pane" data-expanded="true" data-pane-id="explorer">
                 <div class="pane-header">
                     <i class='bx bx-chevron-down icon'></i>
                     <span class="title">NICO-SRC.GITHUB.IO</span>
                 </div>
                 <div class="pane-content pane-item-children expanded" data-category="explorer" data-items="2" id="root-pane-content">
-                    <div class="pane-item directory" id="css-directory">
+                    <div class="pane-item" data-close="false" data-path="index.html">
+                        <div class="close-action"><i class='bx bx-x'></i></div>
+                        <img class="icon" src="img/icons/html.svg">
+                        <span class="name">index.html</span>
+                    </div>
+                    <div class="pane-item directory" id="pages-directory" data-path="pages/">
+                        <div class="arrow"><i class='bx bx-chevron-down icon'></i></div>
+                        <img class="icon" src="img/icons/folder-views.svg">
+                        <span class="name">pages</span>
+                    </div>
+                    <div class="pane-item-children pane-content layer-1" data-category="pages-directory" data-items="1" data-parent="pages-directory">
+                        <div class="pane-item" data-close="false" data-path="pages/index.html">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/html.svg">
+                            <span class="name">index.html</span>
+                        </div>
+                        <div class="pane-item" data-close="false" data-path="pages/projects.html">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/html.svg">
+                            <span class="name">projects.html</span>
+                        </div>
+                        <div class="pane-item" data-close="false" data-path="pages/skills.html">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/html.svg">
+                            <span class="name">skills.html</span>
+                        </div>
+                    </div>
+                    <div class="pane-item directory" id="css-directory" data-path="css/">
                         <div class="arrow"><i class='bx bx-chevron-down icon'></i></div>
                         <img class="icon" src="img/icons/folder-css.svg">
                         <span class="name">css</span>
                     </div>
                     <div class="pane-item-children pane-content layer-1" data-category="css-directory" data-items="1" data-parent="css-directory">
-                        <div class="pane-item">
+                        <div class="pane-item" data-close="false" data-path="css/index.css">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/css.svg">
+                            <span class="name">index.css</span>
+                        </div>
+                        <div class="pane-item" data-path="css/fonts.css">
                             <div class="close-action"><i class='bx bx-x'></i></div>
                             <img class="icon" src="img/icons/css.svg">
                             <span class="name">fonts.css</span>
                         </div>
                     </div>
-                    <div class="pane-item directory" id="javascript-directory">
+                    <div class="pane-item directory" id="javascript-directory" data-path="js/">
                         <div class="arrow"><i class='bx bx-chevron-down icon'></i></div>
                         <img class="icon" src="img/icons/folder-js.svg">
                         <span class="name">js</span>
                     </div>
                     <div class="pane-item-children pane-content layer-1" data-category="javascript-directory" data-items="3" data-parent="javascript-directory">
-                        <div class="pane-item directory" id="javascript-portfolio-directory">
+                        <div class="pane-item directory" id="javascript-portfolio-directory" data-path="js/portfolio/">
                             <div class="arrow"><i class='bx bx-chevron-down icon'></i></div>
                             <img class="icon" src="img/icons/folder.svg">
                             <span class="name">portfolio</span>
                         </div>
                         <div class="pane-item-children pane-content layer-2" data-category="javascript-portfolio-directory" data-items="3" data-parent="javascript-portfolio-directory">
-                            <div class="pane-item">
+                            <div class="pane-item" data-path="js/portfolio/app.js">
                                 <div class="close-action"><i class='bx bx-x'></i></div>
                                 <img class="icon" src="img/icons/js.svg">
-                                <span class="name">side-bar.js</span>
+                                <span class="name">app.js</span>
                             </div>
                         </div>
                     </div>
-                    <div class="pane-item directory" id="image-directory">
+                    <div class="pane-item directory" id="image-directory" data-path="img/">
                         <div class="arrow"><i class='bx bx-chevron-down icon'></i></div>
                         <img class="icon" src="img/icons/folder-images.svg">
                         <span class="name">img</span>
                     </div>
                     <div class="pane-item-children pane-content layer-1" data-category="image-directory" data-items="3" data-parent="image-directory">
-                        <div class="pane-item directory" id="image-icons-directory">
+                        <div class="pane-item directory" id="image-icons-directory" data-path="img/icons">
                             <div class="arrow"><i class='bx bx-chevron-down icon'></i></div>
                             <img class="icon" src="img/icons/folder.svg">
                             <span class="name">icons</span>
                         </div>
                         <div class="pane-item-children pane-content layer-2" data-category="image-icons-directory" data-items="3" data-parent="image-icons-directory">
-                            <div class="pane-item">
+                            <div class="pane-item" data-path="img/icons/css.svg">
                                 <div class="close-action"><i class='bx bx-x'></i></div>
-                                <img class="icon" src="img/icons/image.svg">
+                                <img class="icon" src="img/icons/svg.svg">
                                 <span class="name">css.svg</span>
                             </div>
-                            <div class="pane-item">
+                            <div class="pane-item" data-path="img/icons/file.svg">
                                 <div class="close-action"><i class='bx bx-x'></i></div>
-                                <img class="icon" src="img/icons/image.svg">
+                                <img class="icon" src="img/icons/svg.svg">
                                 <span class="name">file.svg</span>
                             </div>
-                            <div class="pane-item">
+                            <div class="pane-item" data-path="img/icons/folder-css-open.svg">
                                 <div class="close-action"><i class='bx bx-x'></i></div>
-                                <img class="icon" src="img/icons/image.svg">
+                                <img class="icon" src="img/icons/svg.svg">
                                 <span class="name">folder-css-open.svg</span>
                             </div>
-                            <div class="pane-item directory" id="image-icons-test-directory">
-                                <div class="arrow"><i class='bx bx-chevron-down icon'></i></div>
-                                <img class="icon" src="img/icons/folder.svg">
-                                <span class="name">test</span>
-                            </div>
-                            <div class="pane-item-children pane-content layer-3" data-category="image-icons-test-directory" data-items="3" data-parent="image-icons-test-directory">
-                                <div class="pane-item">
-                                    <div class="close-action"><i class='bx bx-x'></i></div>
-                                    <img class="icon" src="img/icons/image.svg">
-                                    <span class="name">file.svg</span>
-                                </div>
-                                <div class="pane-item">
-                                    <div class="close-action"><i class='bx bx-x'></i></div>
-                                    <img class="icon" src="img/icons/image.svg">
-                                    <span class="name">folder-css-open.svg</span>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="pane-item" data-path="img/lego-3d.png">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/image.svg">
+                            <span class="name">lego-3d.png</span>
+                        </div>
+                        <div class="pane-item" data-path="img/scroll.gif">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/image.svg">
+                            <span class="name">scroll.gif</span>
+                        </div>
+                        <div class="pane-item" data-path="img/modeling-tool.png">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/image.svg">
+                            <span class="name">modeling-tool.png</span>
+                        </div>
+                        <div class="pane-item" data-path="img/mandelbrot.png">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/image.svg">
+                            <span class="name">mandelbrot.png</span>
+                        </div>
+                    </div>
+                    <div class="pane-item directory" id="fonts-directory" data-path="fonts/">
+                        <div class="arrow"><i class='bx bx-chevron-down icon'></i></div>
+                        <img class="icon" src="img/icons/folder-font.svg">
+                        <span class="name">fonts</span>
+                    </div>
+                    <div class="pane-item-children pane-content layer-1" data-category="fonts-directory" data-items="1" data-parent="fonts-directory">
+                        <div class="pane-item" data-path="fonts/segoe_wpc.ttf">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/font.svg">
+                            <span class="name">segoe_wpc.ttf</span>
+                        </div>
+                        <div class="pane-item" data-path="fonts/nunito-semi-bold-italic.ttf">
+                            <div class="close-action"><i class='bx bx-x'></i></div>
+                            <img class="icon" src="img/icons/font.svg">
+                            <span class="name">nunito-semi-bold-italic.ttf</span>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="editor"></div>
+        <div class="editor">
+            <div class="scroll-buttons">
+                <i class='bx bx-chevron-left icon left'></i>
+                <i class='bx bx-chevron-right icon right'></i>
+            </div>
+            <div class="top-bar">
+                
+            </div>
+            <div class="content">
+
+            </div>
+        </div>
     </div>
     <div class="status-bar"></div>
 </body>
-<script src="js/portfolio/side-bar.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<script src="js/slideToggle.min.js"></script>
+<script src="js/portfolio/app.js" defer></script>
 </html>
