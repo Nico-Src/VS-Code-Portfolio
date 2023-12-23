@@ -31,34 +31,20 @@
                 puzzle.randomizePieces();
                 requestAnimationFrame(puzzle.draw.bind(puzzle));
             }
-
-            function selectViewMode(e){
-                document.querySelector('.piece-select .selected').classList.remove('selected');
-                e.target.classList.add('selected');
-                const type = e.target.getAttribute('view-mode');
-                puzzle.viewMode = type;
-            }
         </script>
         <div class="controls">
-            <div class="piece-select">
-                <div class="selected" view-mode="All" onclick="selectViewMode(event)">
-                    <img src="img/puzzle_icon.png">
-                    <span>All</span>
-                </div>
-                <div view-mode="BorderPieces" onclick="selectViewMode(event)">
-                    <img src="img/puzzle_icon.png">
-                    <span>Border</span>
-                </div>
-                <div view-mode="NonBorderPieces" onclick="selectViewMode(event)">
-                    <img src="img/puzzle_icon.png">
-                    <span>Non-Border</span>
-                </div>
-            </div>
+            <div class="solve-btn" onclick="puzzle.solve();">Solve</div>
+            <div class="mix-btn" onclick="puzzle.randomizePieces();">Mix</div>
+            <select onchange="puzzle.viewMode = this.value;">
+                <option value="All">All Pieces</option>
+                <option value="BorderPieces">Only Border Pieces</option>
+                <option value="NonBorderPieces">Only Non-Border Pieces</option>
+            </select>
             <div class="divider"></div>
             <span>Show Hints: </span>
             <input type="checkbox" onchange="puzzle.toggleHints(this.checked);">
         </div>
-        <image src="img/e715d1a9381104b4d256675e83ec02ccd4b53c6e31abb268ddd2845cf523f81a.jpg" id="original-image" onload="createPuzzle();"></image>
+        <image src="img/img.jpg" id="original-image" onload="createPuzzle();"></image>
         <canvas id="canvas"></canvas>
         <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
         <!--<script src="js/app.js" defer></script>-->
