@@ -48,7 +48,8 @@
         window.sliderScrollbar.querySelector('.scrollbar-value').style.transform = `translateX(${(window.sliderIndex * window.slideSize)}px)`;
     };
 
-    window.onresize = () => {
+    window.addEventListener('resize', () => {
+        if(!document.querySelector('.media-slider')) return;
         let sliderSize = document.querySelector('.media-slider').clientWidth;
         let mediaList = document.querySelector('.media-slider .media-list');
         window.slideSize = window.sliderScrollbar.clientWidth / window.sliderItems;
@@ -56,7 +57,7 @@
 
         mediaList.style.transform = `translateX(-${(sliderIndex * sliderSize)}px)`;
         window.sliderScrollbar.querySelector('.scrollbar-value').style.transform = `translateX(${(window.sliderIndex * window.slideSize)}px)`;
-    };
+    });
 
     setTimeout(()=>{
         subContent.classList.add('transition');

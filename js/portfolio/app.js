@@ -468,6 +468,6 @@ function setInnerHTML(elm, html) {
     });
 }
 
-window.onresize = () => {
+window.addEventListener('resize', () => {
     checkTabOverflow();
-};
+});
