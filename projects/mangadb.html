@@ -1,0 +1,174 @@
+<div class="sub-content">
+    <div class="media-slider">
+        <div class="slider-wrapper">
+            <i class='bx bx-chevron-left btn' id="prev-slide"></i>
+            <div class="media-list">
+                <img class="media-item" src="img/project-assets/mangadb/image-1.jpg" alt="MangaDB"/>
+                <iframe class="media-item" width="460" height="315" style="object-fit: contain;" src="https://www.youtube.com/embed/45Tm-hqtGOU?si=bATRsDNKpwE7yC3l" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <i class='bx bx-chevron-right btn' id="next-slide"></i>
+        </div>
+        <div class="slider-scrollbar">
+            <div class="scrollbar-value">
+                
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    window.subContent = document.querySelector('.sub-content');
+    window.sliderIndex = 0;
+    window.sliderScrollbar = document.querySelector('.sub-content .slider-scrollbar');
+    window.sliderItems = Array.from(document.querySelectorAll('.media-slider .media-list .media-item')).length;
+    window.slideSize = window.sliderScrollbar.clientWidth / window.sliderItems;
+    window.sliderScrollbar.querySelector('.scrollbar-value').style.width = `${window.slideSize}px`;
+
+    window.prevSlideBtn = document.querySelector('.media-slider #prev-slide');
+    window.nextSlideBtn = document.querySelector('.media-slider #next-slide');
+
+    window.prevSlideBtn.onclick = () => {
+        window.sliderIndex--;
+        if(window.sliderIndex < 0) window.sliderIndex = Array.from(document.querySelectorAll('.media-slider .media-list .media-item')).length - 1;
+
+        let sliderSize = document.querySelector('.media-slider').clientWidth;
+        let mediaList = document.querySelector('.media-slider .media-list');
+
+        mediaList.style.transform = `translateX(-${(sliderIndex * sliderSize)}px)`;
+        window.sliderScrollbar.querySelector('.scrollbar-value').style.transform = `translateX(${(window.sliderIndex * window.slideSize)}px)`;
+    };
+
+    window.nextSlideBtn.onclick = () => {
+        window.sliderIndex++;
+        if(window.sliderIndex > Array.from(document.querySelectorAll('.media-slider .media-list .media-item')).length - 1) window.sliderIndex = 0;
+
+        let sliderSize = document.querySelector('.media-slider').clientWidth;
+        let mediaList = document.querySelector('.media-slider .media-list');
+
+        mediaList.style.transform = `translateX(-${(sliderIndex * sliderSize)}px)`;
+        window.sliderScrollbar.querySelector('.scrollbar-value').style.transform = `translateX(${(window.sliderIndex * window.slideSize)}px)`;
+    };
+
+    window.onresize = () => {
+        let sliderSize = document.querySelector('.media-slider').clientWidth;
+        let mediaList = document.querySelector('.media-slider .media-list');
+        window.slideSize = window.sliderScrollbar.clientWidth / window.sliderItems;
+        window.sliderScrollbar.querySelector('.scrollbar-value').style.width = `${window.slideSize}px`;
+
+        mediaList.style.transform = `translateX(-${(sliderIndex * sliderSize)}px)`;
+        window.sliderScrollbar.querySelector('.scrollbar-value').style.transform = `translateX(${(window.sliderIndex * window.slideSize)}px)`;
+    };
+
+    setTimeout(()=>{
+        subContent.classList.add('transition');
+    },400);
+</script>
+<style>
+    .editor .sub-content{
+        width: 100%;
+        height: 100%;
+        background-color: var(--editor-bg);
+        display:flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+        overflow: auto;
+    }
+
+    .editor .sub-content .media-slider{
+        width: calc(100% - 50px);
+        margin-left: 25px;
+        margin-top: 20px;
+        height: 420px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .editor .sub-content .media-slider .slider-scrollbar{
+        width: 50%;
+        margin-left: 25%;
+        height: 5px;
+        position: absolute;
+        top: calc(100% - 10px);
+        border-radius: 12px;
+        left: 0;
+        right: 0;
+        background-color: var(--side-bar-border-color);
+        overflow: hidden;
+        display:flex;
+        justify-content: flex-start;
+        align-items: center;
+    }
+
+    .editor .sub-content .media-slider .slider-scrollbar .scrollbar-value{
+        width: 100%;
+        height: 100%;
+        background-color: white;
+        border-radius: 12px;
+        transition: transform .2s ease;
+        will-change: transform;
+    }
+
+    .editor .sub-content .media-slider .slider-wrapper{
+        position: relative;
+        width: 100%;
+        height: calc(100% - 20px);
+    }
+
+    .editor .sub-content .media-slider .slider-wrapper .btn{
+        position: absolute;
+        top: 0; bottom: 0;
+        margin: auto;
+        color: rgba(255,255,255,.5);
+        font-size: 30px;
+        height: 100px;
+        cursor: pointer;
+        transition: color .2s ease;
+        z-index: 5;
+        width: 30px;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .editor .sub-content .media-slider .slider-wrapper .btn:hover{
+        color: rgba(255,255,255,1);
+    }
+
+    .editor .sub-content .media-slider .slider-wrapper .btn#prev-slide{
+        left: 0px;
+        background: var(--side-bar-bg);
+        border-radius: 0px 8px 8px 0px;
+    }
+
+    .editor .sub-content .media-slider .slider-wrapper .btn#next-slide{
+        right: 0px;
+        background: var(--side-bar-bg);
+        border-radius: 8px 0px 0px 8px;
+    }
+
+    .editor .sub-content .media-slider .slider-wrapper .media-list{
+        display:flex;
+        justify-content: flex-start;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        transition: transform .2s ease;
+        will-change: transform;
+    }
+
+    .editor .sub-content .media-slider .slider-wrapper .media-list::-webkit-scrollbar{
+        display: none;
+    }
+
+    .editor .sub-content .media-slider .slider-wrapper .media-list .media-item{
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        flex-shrink: 0;
+        background-color: var(--side-bar-bg);
+        object-fit: contain;
+        display:flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>

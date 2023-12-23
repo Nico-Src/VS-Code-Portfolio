@@ -384,7 +384,7 @@ async function openFile(file, jumpTo){
             document.querySelector('.editor .content').className = `content hidden ${type}`;
             // if type is lang show code file with syntax highlighting
             if(type == 'lang'){
-                if(lang === 'html' && file.startsWith('pages/')){
+                if(lang === 'html' && (file.startsWith('pages/') || file.startsWith('projects/'))){
                     setInnerHTML(document.querySelector('.editor .content'), rawContent);
                 } else {
                     document.querySelector('.editor .content').innerHTML = `<pre><code class="language-${extension}">${content}</code></pre>`;

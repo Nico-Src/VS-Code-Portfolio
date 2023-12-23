@@ -10,11 +10,11 @@
         <div class="profile slide-left">
             <img src="img/profile.jpg">
         </div>
-    </div>
-    <div class="contact-list scale-up">
-        <a href="mailto:nico.thuniot@gmx.at" target="_blank"><i class='bx bxs-envelope email'></i></a>
-        <a href="https://www.linkedin.com/in/nico-thuniot-415047258/" target="_blank"><i class='bx bxl-linkedin-square linked-in'></i></a>
-        <a href="https://github.com/Nico-Src" target="_blank"><i class='bx bxl-github github'></i></a>
+        <div class="contact-list scale-up">
+            <a href="mailto:nico.thuniot@gmx.at" target="_blank"><i class='bx bxs-envelope email'></i></a>
+            <a href="https://www.linkedin.com/in/nico-thuniot-415047258/" target="_blank"><i class='bx bxl-linkedin-square linked-in'></i></a>
+            <a href="https://github.com/Nico-Src" target="_blank"><i class='bx bxl-github github'></i></a>
+        </div>
     </div>
 </div>
 <script>
@@ -33,7 +33,8 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     .editor .sub-content .slide-right,
@@ -48,7 +49,7 @@
     }
 
     .editor .sub-content .slide-right{
-        translate: -100px 0px;
+        translate: -50px 0px;
         opacity: 0;
     }
 
@@ -58,7 +59,7 @@
     }
 
     .editor .sub-content .slide-left{
-        translate: 100px 0px;
+        translate: 50px 0px;
         opacity: 0;
     }
 
@@ -79,14 +80,15 @@
         display:flex;
         justify-content: center;
         align-items: center;
+        flex-wrap: wrap;
+        position: relative;
+        transform: translateY(-30px);
     }
 
     .editor .sub-content .text{
         padding: 0 25px;
         max-width: 50%;
-        transform: rotateX(-12deg) rotateY(6deg);
-        perspective: 1000px;
-        transform-style: preserve-3d;
+        flex-shrink: 0;
     }
 
     .editor .sub-content .text .line-one{
@@ -115,9 +117,7 @@
         justify-content: center;
         align-items: center;
         margin-left: 45px;
-        transform: rotateX(12deg) rotateY(-6deg);
-        perspective: 1000px;
-        transform-style: preserve-3d;
+        flex-shrink: 0;
     }
 
     .editor .sub-content .profile img{
@@ -128,13 +128,14 @@
     }
 
     .editor .sub-content .contact-list{
-        width: 100%;
+        width: fit-content;
         height: 35px;
-        padding: 0 10vw;
         margin-top: 4vw;
         display:flex;
         justify-content: flex-start;
         align-items: center;
+        position: absolute;
+        top: calc(100% + 10px);
     }
 
     .editor .sub-content .contact-list span{
