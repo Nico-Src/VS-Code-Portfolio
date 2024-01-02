@@ -30,8 +30,8 @@
                     <div class="tag javascript">Javascript</div>
                 </div>
                 <div class="buttons">
-                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/nico-src.github.io/tree/master/projects/lego-3d" class="text">Source Code</a></div>
-                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/projects/lego-3d/" class="text">Live Demo</a></div>
+                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/nico-src.github.io/VS-Code-Portfoliotree/master/projects/lego-3d" class="text">Source Code</a></div>
+                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/VS-Code-Portfolio/projects/lego-3d/" class="text">Live Demo</a></div>
                 </div>
             </div>
         </div>
@@ -49,8 +49,8 @@
                     <div class="tag web-audio">Web Audio API</div>
                 </div>
                 <div class="buttons">
-                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/nico-src.github.io/tree/master/projects/audio-visualizer" class="text">Source Code</a></div>
-                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/projects/audio-visualizer" class="text">Live Demo</a></div>
+                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/nico-src.github.io/VS-Code-Portfoliotree/master/projects/audio-visualizer" class="text">Source Code</a></div>
+                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/VS-Code-Portfolio/projects/audio-visualizer" class="text">Live Demo</a></div>
                 </div>
             </div>
         </div>
@@ -67,8 +67,8 @@
                     <div class="tag javascript">Javascript</div>
                 </div>
                 <div class="buttons">
-                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/nico-src.github.io/tree/master/projects/jigsaw-puzzle" class="text">Source Code</a></div>
-                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/projects/jigsaw-puzzle" class="text">Live Demo</a></div>
+                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/nico-src.github.io/VS-Code-Portfolio/tree/master/projects/jigsaw-puzzle" class="text">Source Code</a></div>
+                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/VS-Code-Portfolio/projects/jigsaw-puzzle" class="text">Live Demo</a></div>
                 </div>
             </div>
         </div>
@@ -95,9 +95,11 @@
     Array.from(document.querySelectorAll('.sub-content .project')).forEach((el)=>{
         if(el.getAttribute('data-path')){
             el.onclick = (e) => {
-                if(e.target.classList.contains('button')) return;
+                let target = e.target;
+                if(target.classList.contains('button')) return;
+                if(target.classList.contains('details') || target.classList.contains('tags')) target = target.parentElement;
 
-                fileItemClickExplorer({target: document.querySelector(`.side-bar [data-category="explorer"] .pane-item[data-path="${e.target.getAttribute('data-path')}"]`)});
+                fileItemClickExplorer({target: document.querySelector(`.side-bar [data-category="explorer"] .pane-item[data-path="${target.getAttribute('data-path')}"]`)});
             };
         }
     });
@@ -220,6 +222,7 @@
         width: 100%;
         text-align: start;
         pointer-events: none;
+        user-select: none;
     }
 
     .editor .sub-content .projects .project .details .description{
@@ -230,6 +233,7 @@
         width: 100%;
         text-align: start;
         pointer-events: none;
+        user-select: none;
     }
 
     .editor .sub-content .projects .project .details .tags{
