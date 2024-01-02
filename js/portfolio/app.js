@@ -353,6 +353,7 @@ function saveEditorTopBarState(){
 // open / select file in editor
 // file - path to the file to open
 async function openFile(file, jumpTo){
+    console.log(file);
     // only open if file is not already shown in editor
     if(file !== currentFile){
         // hide svg preview by default

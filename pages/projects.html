@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-        <div class="project lego">
+        <div class="project lego" data-path="projects/lego-builder.html" data-icon="img/icons/html.svg" data-name="lego-builder.html">
             <div class="image">
                 <img src="img/logo/lego.png">
             </div>
@@ -97,7 +97,7 @@
             el.onclick = (e) => {
                 if(e.target.classList.contains('button')) return;
 
-                fileItemClickExplorer({target: document.querySelector('.side-bar [data-category="explorer"] .pane-item[data-path="projects/mangadb.html"]')});
+                fileItemClickExplorer({target: document.querySelector(`.side-bar [data-category="explorer"] .pane-item[data-path="${e.target.getAttribute('data-path')}"]`)});
             };
         }
     });
