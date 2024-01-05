@@ -70,8 +70,10 @@ class Level{
             .then((text) => {
                 // read line by line
                 let lines = text.split('\n');
+                console.log(lines);
                 // first line is the size of the level (x y z)
                 const size = lines[0].split(' ').map((val)=>parseInt(val));
+                console.log(size);
                 const level = new Level(size);
                 
                 // go through each line and set the block states
@@ -86,6 +88,8 @@ class Level{
                     // theres no space between lines so after each "n"-lines increase layer
                     if((index-1) % level.size.y === 0) layer++;
                 }
+
+                console.log(level)
 
                 // calculate hints for the given blocks
                 for(let x = 0; x < level.size.x; x++){
