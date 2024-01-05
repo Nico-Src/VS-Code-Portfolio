@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Picross 3D</title>
+    <link rel='stylesheet' href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css'>
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body>
+    <div id="menu" class="show">
+        <div class="btn play" onclick="game.switchMode(MODES.LEVEL_SELECT)">Play</div>
+        <div class="btn editor" onclick="">Editor</div>
+    </div>
+    <div id="pause-menu">
+        <div class="btn resume" onclick="game.closePauseMenu();">Resume</div>
+        <div class="btn menu" onclick="game.switchMode(MODES.MENU)">Back To Menu</div>
+    </div>
+    <div id="level-select">
+        <div class="title">Level Select</div>
+        <div class="level-wrapper">
+            <div class="level" onclick="game.switchMode(MODES.PLAYING, 'level1.lvl');">
+                <img loading="lazy" src="img/levels/level1.png">
+                <div class="size">4 x 4 x 4</div>
+            </div>
+            <div class="level" onclick="game.switchMode(MODES.PLAYING, 'level2.lvl');">
+                <img loading="lazy" src="img/levels/level2.png">
+                <div class="size">3 x 3 x 3</div>
+            </div>
+        </div>
+    </div>
+    <div id="pause-btn" onclick="game.openPauseMenu();">
+        <i class='bx bx-pause'></i>
+    </div>
+    <div id="pause-banner">PAUSED</div>
+    <script src="js/three.js"></script>
+    <script src="js/orbit-controls.js"></script>
+    <script src="js/drag-controls.js"></script>
+    <script src="js/enums.js"></script>
+    <script src="js/texture-manager.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/util.js"></script>
+    <script src="js/level.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
