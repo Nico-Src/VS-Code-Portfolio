@@ -69,18 +69,16 @@ class Level{
             fetch(path).then((res) => res.text())
             .then((text) => {
                 // read line by line
-                let lines = text.split('\n');
-                console.log(lines);
+                let lines = text.split('\n').map((l)=>l.replaceAll('\r',''));
                 // first line is the size of the level (x y z)
                 const size = lines[0].split(' ').map((val)=>parseInt(val));
-                console.log(size);
                 const level = new Level(size);
                 
                 // go through each line and set the block states
                 let index = 1;
                 let layer = 0;
                 while(index < lines.length){
-                    for(let c = 0; c < lines[index].length - 1; c++){
+                    for(let c = 0; c < lines[index].length; c++){
                         // layer, z, x
                         level.blockMap[layer][(index-1) % level.size.z][c] = parseInt(lines[index][c]);
                     }
@@ -88,8 +86,6 @@ class Level{
                     // theres no space between lines so after each "n"-lines increase layer
                     if((index-1) % level.size.y === 0) layer++;
                 }
-
-                console.log(level)
 
                 // calculate hints for the given blocks
                 for(let x = 0; x < level.size.x; x++){
