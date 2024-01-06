@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 * {
     box-sizing: border-box;
@@ -29,6 +30,37 @@ html,body{
     transition: opacity .2s ease;
 }
 
+#timer{
+    position: fixed;
+    z-index: 20;
+    top: 20px;
+    right: 20px;
+    margin: auto;
+    width: 150px;
+    height: 60px;
+    background-color: white;
+    border-radius: 12px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease;
+    overflow: hidden;
+}
+
+#timer .time{
+    font-family: 'Orbitron';
+    font-weight: bold;
+    font-size: 16px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+}
+
 #level-select{
     position: fixed;
     z-index: 20;
@@ -39,7 +71,7 @@ html,body{
     background-color: #d6c39b;
     border-radius: 12px;
     display:flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: flex-start;
     flex-direction: column;
     opacity: 0;
@@ -47,6 +79,13 @@ html,body{
     transition: opacity .2s ease;
     overflow: hidden;
 }
+
+#level-select .level-wrapper::-webkit-scrollbar{width: 14px;height: 14px;}
+#level-select .level-wrapper::-webkit-scrollbar-track{background-color: transparent;}
+#level-select .level-wrapper::-webkit-scrollbar-thumb{background-color: #a59678;}
+#level-select .level-wrapper::-webkit-scrollbar-thumb:hover{background-color: #95876c;}
+#level-select .level-wrapper::-webkit-scrollbar-thumb:active{background-color: #80745d;}
+#level-select .level-wrapper::-webkit-scrollbar-corner{background-color: transparent;}
 
 #level-select .title{
     width: 100%;
@@ -61,11 +100,30 @@ html,body{
     font-weight: bolder;
     font-size: 30px;
     font-family: 'Poppins';
+    position: relative;
+}
+
+#level-select .title .menu{
+    position: absolute;
+    top: 0; bottom: 0;
+    left: 10px;
+    margin: auto;
+    height: fit-content;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    opacity: .5;
+    transition: opacity .2s ease;
+}
+
+#level-select .title .menu:hover{
+    opacity: 1;
 }
 
 #level-select .level-wrapper{
-    flex: 1;
     max-height: calc(100% - 50px);
+    height: fit-content;
     overflow: auto;
     width: 100%;
     display:grid;
@@ -73,7 +131,8 @@ html,body{
     column-gap: 1rem;
     padding: 1rem;
     grid-template-columns: repeat(auto-fill,minmax(min(10.375rem,100%),1fr));
-    align-items:flex-start;
+    align-items: self-start;
+    align-self: flex-start;
 }
 
 #level-select .level-wrapper .level{
@@ -100,20 +159,100 @@ html,body{
     transition: background .2s ease;
 }
 
+#level-select .level-wrapper .level .name{
+    position: absolute;
+    font-size: 14px;
+    font-weight: bolder;
+    bottom: 30px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 0px 0px 4px 0px;
+    background-color: #bfae8b;
+    color: black;
+    font-family: 'Poppins';
+    padding: 2px 10px;
+    text-align: center;
+    transition: background .2s ease;
+}
+
+#level-select .level-wrapper .level .name.bottom{
+    transform: translateY(30px);
+}
+
+#level-select .level-wrapper .level .stats{
+    position: absolute;
+    font-size: 14px;
+    font-weight: bolder;
+    height:30px;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    width: 100%;
+    border-radius: 0px 0px 4px 0px;
+    background-color: #bfae8b;
+    color: black;
+    font-family: 'Poppins';
+    padding: 2px 10px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 1;
+    transition: background .2s ease, opacity .2s ease;
+}
+
+#level-select .level-wrapper .level .stats.hidden{opacity: 0;}
+
+#level-select .level-wrapper .level .stats i{
+    font-size: 20px;
+}
+
+#level-select .level-wrapper .level .stats i.star{
+    color: rgb(253, 219, 0);
+}
+
+#level-select .level-wrapper .level .stats i.star-empty{
+    color: #505050;
+}
+
+#level-select .level-wrapper .level .stats .time{
+    margin-right: 20px;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #level-select .level-wrapper .level:hover,
-#level-select .level-wrapper .level:hover .size{
+#level-select .level-wrapper .level:hover .size,
+#level-select .level-wrapper .level:hover .name,
+#level-select .level-wrapper .level:hover .stats{
     background-color: #a59678;
 }
 
 #level-select .level-wrapper .level img{
     border-radius: 4px;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 30px);
     object-fit: cover;
+    background-color: #d6c39b;
+}
+
+#level-select .level-wrapper .level-category{
+    grid-column: 1/-1;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: fit-content;
+    padding: 2px 5px;
+    font-family: 'Poppins';
+    font-weight: bolder;
+    font-size: 18px;
+    border-bottom: 2px solid #505050;
 }
 
 #menu .btn,
-#pause-menu .btn{
+#pause-menu .btn,
+#win-menu .btn{
     background-color: transparent;
     width: 200px;
     height: 40px;
@@ -170,7 +309,8 @@ html,body{
     color: white;
 }
 
-#pause-menu{
+#pause-menu,
+#win-menu{
     position: fixed;
     z-index: 20;
     inset: 0;
@@ -189,6 +329,36 @@ html,body{
     pointer-events: none;
     transition: opacity .2s ease;
     background-color: #d6c39b;
+}
+
+#win-menu{
+    transform: translateY(0px) !important;
+    border-radius: 12px 12px 0px 0px !important;
+    bottom: 0;
+    top: unset;
+}
+
+#win-menu .btn.level-select,
+#win-menu .btn.menu{
+    box-shadow: 0 0.6em rgb(94, 183, 86), 0 0.9em rgb(94, 164, 78);
+    border: 3px solid rgb(92, 164, 78);
+    color:rgb(92, 164, 78);
+}
+
+#win-menu .btn.level-select:hover,
+#win-menu .btn.menu:hover{
+    background-color: rgb(109, 213, 100);
+    transform: translateY(0.2em);
+    box-shadow: 0 0.4em rgb(94, 183, 86), 0 0.7em rgb(92, 164, 78);
+    color: white;
+}
+
+#win-menu .btn.level-select:active,
+#win-menu .btn.menu:active{
+    background-color: rgb(92, 164, 78);
+    transform: translateY(0.4em);
+    box-shadow: 0 0.2em rgb(94, 183, 86), 0 0.5em rgb(92, 164, 78);
+    color: white;
 }
 
 #pause-banner{
@@ -319,7 +489,9 @@ html,body{
 #pause-menu.show,
 #pause-btn.show,
 #pause-banner.show,
-#level-select.show{
+#level-select.show,
+#win-menu.show,
+#timer.show{
     opacity: 1;
     pointer-events: all;
 }

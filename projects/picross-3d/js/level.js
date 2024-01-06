@@ -53,12 +53,14 @@ class LayerHandle{
 }
 
 class Level{
-    constructor(size){
+    constructor(path, size){
+        this.path = path;
         this.size = {x: size[0], y: size[1], z: size[2]};
         // init block and hint map
         this.blockMap = Util.init3DArray(this.size.x, this.size.y, this.size.z);
         this.blocks = Util.init3DArray(this.size.x, this.size.y, this.size.z);
         this.hintMap = Util.init3DArray(this.size.x, this.size.y, this.size.z);
+        this.colorMap = Util.init3DArray(this.size.x, this.size.y, this.size.z);
 
         this.layerHandles = [];
     }
@@ -72,19 +74,38 @@ class Level{
                 let lines = text.split('\n').map((l)=>l.replaceAll('\r',''));
                 // first line is the size of the level (x y z)
                 const size = lines[0].split(' ').map((val)=>parseInt(val));
-                const level = new Level(size);
+                const level = new Level(path, size);
                 
                 // go through each line and set the block states
                 let index = 1;
                 let layer = 0;
                 while(index < lines.length){
-                    for(let c = 0; c < lines[index].length; c++){
-                        // layer, z, x
-                        level.blockMap[layer][(index-1) % level.size.z][c] = parseInt(lines[index][c]);
+                    // check if line has 1s in it (which means there are colors afterwards)
+                    if(lines[index].includes('1')){
+                        const blocks = lines[index].split(' ')[0];
+                        const colorLine = lines[index].split(' ')[1]; 
+                        const colors = colorLine.includes(';') ? colorLine.split(';') : [colorLine];
+                        let colorIndex = 0;
+
+                        for(let c = 0; c < blocks.length; c++){
+                            const blockVal = parseInt(blocks[c]);
+                            // x, layer (y), z
+                            level.blockMap[c][layer][(index-1) % level.size.z] = blockVal;
+
+                            if(blockVal === 1){
+                                level.colorMap[c][layer][(index-1) % level.size.z] = colors[colorIndex];
+                                colorIndex++;
+                            }
+                        }
+                    } else {
+                        for(let c = 0; c < lines[index].length; c++){
+                            // x, layer (y), z
+                            level.blockMap[c][layer][(index-1) % level.size.z] = parseInt(lines[index][c]);
+                        }
                     }
                     index++;
                     // theres no space between lines so after each "n"-lines increase layer
-                    if((index-1) % level.size.y === 0) layer++;
+                    if((index-1) % level.size.z === 0) layer++;
                 }
 
                 // calculate hints for the given blocks
@@ -96,7 +117,7 @@ class Level{
                             let inGroup = false;  // flag to track if we are currently in a group of 1s
 
                             for (let y1 = 0; y1 < level.size.y; y1++) {
-                                if (level.blockMap[y1][z][x] === BLOCK_STATE.NON_DESTROYABLE) {
+                                if (level.blockMap[x][y1][z] === BLOCK_STATE.NON_DESTROYABLE) {
                                     vertical++;
                                     // found a block with value 1
                                     if (!inGroup) {
@@ -114,7 +135,7 @@ class Level{
                             let horizontalRightLeft = 0;
                             let horizontalRightLeftGroups = 0;
                             for(let x1 = 0; x1 < level.size.x; x1++){
-                                if(level.blockMap[y][z][x1] === BLOCK_STATE.NON_DESTROYABLE){
+                                if(level.blockMap[x1][y][z] === BLOCK_STATE.NON_DESTROYABLE){
                                     horizontalRightLeft++;
                                     // found a block with value 1
                                     if (!inGroup) {
@@ -132,7 +153,7 @@ class Level{
                             let horizontalBackFront = 0;
                             let horizontalBackFrontGroups = 0;
                             for(let z1 = 0; z1 < level.size.z; z1++){
-                                if(level.blockMap[y][z1][x] === BLOCK_STATE.NON_DESTROYABLE){
+                                if(level.blockMap[x][y][z1] === BLOCK_STATE.NON_DESTROYABLE){
                                     horizontalBackFront++;
                                     // found a block with value 1
                                     if (!inGroup) {
@@ -147,7 +168,7 @@ class Level{
                             }
 
                             // set hints
-                            level.hintMap[y][z][x] = {
+                            level.hintMap[x][y][z] = {
                                 vertical, 
                                 verticalType: verticalGroups <= 1 ? 'single' : verticalGroups === 2 ? 'two' : 'three',
                                 horizontalBackFront, 

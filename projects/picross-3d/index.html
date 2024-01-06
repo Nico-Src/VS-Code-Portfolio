@@ -17,23 +17,30 @@
         <div class="btn resume" onclick="game.closePauseMenu();">Resume</div>
         <div class="btn menu" onclick="game.switchMode(MODES.MENU)">Back To Menu</div>
     </div>
+    <div id="win-menu">
+        <div class="btn level-select" onclick="game.switchMode(MODES.LEVEL_SELECT);">Back To Level Select</div>
+        <div class="btn menu" onclick="game.switchMode(MODES.MENU)">Back To Menu</div>
+    </div>
+    <div id="timer">
+        <div class="clock">
+
+        </div>
+        <div class="time"></div>
+    </div>
     <div id="level-select">
-        <div class="title">Level Select</div>
+        <div class="title">
+            <div class="menu" onclick="game.switchMode(MODES.MENU)"><i class='bx bx-arrow-back' ></i></div>
+            Level Select
+        </div>
         <div class="level-wrapper">
-            <div class="level" onclick="game.switchMode(MODES.PLAYING, 'level1.lvl');">
-                <img loading="lazy" src="img/levels/level1.png">
-                <div class="size">4 x 4 x 4</div>
-            </div>
-            <div class="level" onclick="game.switchMode(MODES.PLAYING, 'level2.lvl');">
-                <img loading="lazy" src="img/levels/level2.png">
-                <div class="size">3 x 3 x 3</div>
-            </div>
+
         </div>
     </div>
     <div id="pause-btn" onclick="game.openPauseMenu();">
         <i class='bx bx-pause'></i>
     </div>
     <div id="pause-banner">PAUSED</div>
+    <script src="js/level-data.js"></script>
     <script src="js/three.js"></script>
     <script src="js/orbit-controls.js"></script>
     <script src="js/drag-controls.js"></script>

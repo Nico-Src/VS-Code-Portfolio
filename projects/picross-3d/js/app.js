@@ -5,19 +5,58 @@ class Game{
         this.pauseBanner = document.querySelector('#pause-banner');
         this.menu = document.querySelector('#menu');
         this.pauseMenu = document.querySelector('#pause-menu');
+        this.winMenu = document.querySelector('#win-menu');
+        this.timerWindow = document.querySelector('#timer');
+        this.timerEl = this.timerWindow.querySelector('.time');
+        this.timerEl.innerHTML = `<i class='bx bxs-time'></i>&nbsp;${Util.formatSeconds(0)}`;
 
         this.currentMode = mode;
         this.transitions = [];
         this.textureManager = new TextureManager(new THREE.TextureLoader());
 
         this.level = undefined;
+        this.levelTimer = 0;
+        this.levelTimerInterval = undefined;
 
         this.init();
     }
 
     init(){
+        this.addLevels();
         this.initScene();
         this.initListeners();
+    }
+
+    addLevels(){
+        const levelWrapper = this.levelSelectMenu.querySelector('.level-wrapper');
+        let currentCategory;
+        for(const level of LEVELS){
+            const path = `levels/${level}.lvl`;
+            // create category if category changed
+            if(currentCategory !== LEVEL_DATA[path].category){
+                currentCategory = LEVEL_DATA[path].category;
+                const category = document.createElement('div');
+                category.className = 'level-category';
+                category.innerHTML = currentCategory;
+                levelWrapper.appendChild(category);
+            }
+
+            const levelItem = document.createElement('div');
+            levelItem.className = 'level';
+            levelItem.setAttribute('data-path',path);
+            levelItem.setAttribute('data-name',LEVEL_DATA[path].name);
+            levelItem.innerHTML = `
+                <img loading="lazy" src="img/question.png">
+                <div class="size">${LEVEL_DATA[path].size}</div>
+                <div class="name bottom">???</div>
+                <div class="stats hidden">
+                    <div class="time"></div>
+                    <div class="stars"></div>
+                </div>
+            `;
+
+            levelWrapper.appendChild(levelItem);
+        }
     }
 
     initScene(){
@@ -34,9 +73,13 @@ class Game{
         const ambientLight = new THREE.AmbientLight('white', 0.75);
         this.scene.add(ambientLight);
 
-        const light = new THREE.DirectionalLight('white', 0.5);
+        const light = new THREE.DirectionalLight('white', 0.3);
         light.position.set( 1, 1, 1 );
         this.scene.add(light);
+
+        const light2 = new THREE.DirectionalLight('#ccc', 0.3);
+        light2.position.set( 0, 15, 0 );
+        this.scene.add(light2);
 
         // init orbit controls
         this.controls = new THREE.OrbitControls(this.camera, this.renderer.domElement);
@@ -120,7 +163,7 @@ class Game{
                 const x = Math.floor(obj.position.x);
                 const y = Math.floor(obj.position.y);
                 const z = Math.floor(obj.position.z);
-                const blockState = this.level.blockMap[y][z][x];
+                const blockState = this.level.blockMap[x][y][z];
                 // if block is marked it cant be destroyed
                 if(obj.marked === true){
                     this.transitions.push(new Transition(obj, 'scale', 1.1, 1.0, 'in'));
@@ -268,7 +311,7 @@ class Game{
     // place a block at a specific position
     placeBlock(x,y,z,index,transition){
         // get hints for that position
-        const hints = this.level.hintMap[y][z][x];
+        const hints = this.level.hintMap[x][y][z];
         
         // right, left, top, bottom, front, back
         const urls = [
@@ -292,7 +335,7 @@ class Game{
         const block = new THREE.Mesh(geometry, materials);
 
         block.name = 'block';
-        block.state = this.level.blockMap[y][z][x];
+        block.state = this.level.blockMap[x][y][z];
         block.marked = false;
         block.position.x = x + this.gridOffset;
         block.position.y = y + this.gridOffset;
@@ -383,15 +426,81 @@ class Game{
                 block.fixed = true;
             }
         }
+
+        // check if game is over
+        const winState = this.checkForWin();
+        if(winState){
+            // show all layers
+            this.updateLayers('x', 0);
+            this.updateLayers('y', 0);
+            this.updateLayers('z', 0);
+
+            // remove handles (transition them out)
+            for(const handle of this.level.layerHandles){
+                handle.setPosition(handle.originPos.x, handle.originPos.y, handle.originPos.z);
+                this.transitions.push(new Transition(handle.handle, 'opacity', 0.0, 1.0, 'out', 0.02));
+            }
+
+            // set colors after a little delay and switch to won mode after
+            setTimeout(()=>{
+                this.setColors();
+                setTimeout(()=>{
+                    this.switchMode(MODES.WON);
+                },400);
+            },200);
+        }
+    }
+
+    setColors(){
+        let index = 0;
+        // place blocks after level loaded
+        for(let x = 0; x < this.level.size.x; x++){
+            for(let y = 0; y < this.level.size.y; y++){
+                for(let z = 0; z < this.level.size.z; z++){
+                    if(this.level.colorMap[x][y][z] === 0) continue;
+                    // replace old material with color (after some delay)
+                    setTimeout(()=>{
+                        this.level.blocks[x][y][z].material = new THREE.MeshPhongMaterial( { color: new THREE.Color(this.level.colorMap[x][y][z]) } );
+                    },150 + (20 * index));
+                }
+                index++;
+            }
+        }
+    }
+
+    checkForWin(){
+        // place blocks after level loaded
+        for(let x = 0; x < this.level.size.x; x++){
+            for(let y = 0; y < this.level.size.y; y++){
+                for(let z = 0; z < this.level.size.z; z++){
+                    // for blocks its normal x,y,z
+                    if(!this.level.blocks[x][y][z]) continue;
+                    // x, layer (y), z
+                    const state = this.level.blockMap[x][y][z];
+                    const fixed = this.level.blocks[x][y][z].fixed;
+                    // if there is one block left thats destroyable or one that is not fixed game is not won yet
+                    if(state === BLOCK_STATE.DESTROYABLE || fixed !== true) return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     // switch mode (MENU, PLAY, EDIT)
     async switchMode(mode, lvl){
+        const prevMode = this.currentMode;
         if(this.currentMode == mode) return;
         this.currentMode = mode;
 
         switch(this.currentMode){
             case MODES.MENU:
+                if(this.levelTimerInterval){
+                    this.levelTimer = 0;
+                    this.timerEl.innerHTML = `<i class='bx bxs-time'></i>&nbsp;${Util.formatSeconds(0)}`;
+                    clearInterval(this.levelTimerInterval);
+                }
+
                 this.controls.enabled = false;
                 // update dom elements
                 setTimeout(()=>{
@@ -400,7 +509,9 @@ class Game{
                     this.pauseMenu.classList.remove('show');
                     this.pauseBanner.classList.remove('show');
                     this.levelSelectMenu.classList.remove('show');
-                }, 300);
+                    this.winMenu.classList.remove('show');
+                    this.timerWindow.classList.remove('show');
+                }, prevMode === MODES.LEVEL_SELECT ? 0 : 300);
 
                 // transition grid out
                 this.transitions.push(new Transition(this.gridHelper, 'scale', 0.0, 1.0, 'out', 0.03));
@@ -440,14 +551,21 @@ class Game{
                 }
                 break;
             case MODES.PLAYING:
+                if(this.levelTimerInterval){
+                    this.levelTimer = 0;
+                    this.timerEl.innerHTML = `<i class='bx bxs-time'></i>&nbsp;${Util.formatSeconds(0)}`;
+                    clearInterval(this.levelTimerInterval);
+                }
+
                 this.controls.enabled = true;
                 // update dom elements
                 this.menu.classList.remove('show');
                 this.pauseBtn.classList.add('show');
                 this.levelSelectMenu.classList.remove('show');
+                this.timerWindow.classList.add('show');
                 
                 // load level
-                this.level = await Level.loadFromFile('levels/' + lvl);
+                this.level = await Level.loadFromFile(lvl);
                 this.transitions.push(new Transition(this.gridHelper, 'scale', 1.0, 0.0, 'out', 0.03));
 
                 // create box and set position
@@ -553,13 +671,136 @@ class Game{
                 this.gridHelper.position.x = Math.floor(this.level.size.x / 2);
                 this.gridHelper.position.z = Math.floor(this.level.size.z / 2);
                 this.controls.target = this.gridHelper.position;
+
+                setTimeout(()=>{
+                    this.levelTimerInterval = setInterval(()=>{
+                        this.levelTimer += 1;
+                        this.timerEl.innerHTML = `<i class='bx bxs-time'></i>&nbsp;${Util.formatSeconds(this.levelTimer)}`;
+                    },1000);
+                },500);
                 break;
             case MODES.LEVEL_SELECT:
+                if(this.levelTimerInterval){
+                    this.levelTimer = 0;
+                    this.timerEl.innerHTML = `<i class='bx bxs-time'></i>&nbsp;${Util.formatSeconds(0)}`;
+                    clearInterval(this.levelTimerInterval);
+                }
+
+                this.controls.enabled = false;
                 this.levelSelectMenu.classList.add('show');
                 this.menu.classList.remove('show');
                 this.pauseBtn.classList.remove('show');
                 this.pauseMenu.classList.remove('show');
                 this.pauseBanner.classList.remove('show');
+                this.winMenu.classList.remove('show');
+                this.timerWindow.classList.remove('show');
+
+                // if previous mode was won than level has to be cleaned up
+                if(prevMode === MODES.WON){
+                    // transition grid out
+                    this.transitions.push(new Transition(this.gridHelper, 'scale', 0.0, 1.0, 'out', 0.03));
+
+                    // reset level and layer handles
+                    for(const handle of this.level.layerHandles){
+                        handle.handle.geometry.dispose();
+                        handle.handle.material.dispose();
+                        this.transitions.push(new Transition(handle.handle, 'opacity', 0.0, 1.0, 'out', 0.02));
+                        setTimeout(()=>{
+                            this.scene.remove(handle.handle);
+                        },400);
+                    }
+
+                    // disable and dispose drag controls 
+                    this.dragControls.deactivate();
+                    this.dragControls.dispose();
+                    this.dragControls = undefined;
+
+                    this.level.layerHandles = [];
+                    this.level = undefined;
+
+                    // remove all blocks
+                    for(const obj of this.scene.children.filter(c => c.name === 'block')){
+                        // transition block out
+                        this.transitions.push(new Transition(obj, 'scale', 0.0, 1.0, 'out', 0.02));
+                        // disable raycast so block doesnt block other blocks behind it while it transitions
+                        obj.disableRaycast = true;
+                        setTimeout(()=>{
+                            // destroy block and dispose materials and geometry to not leak any memory
+                            obj.geometry.dispose();
+                            obj.material.dispose();
+                            this.scene.remove(obj);
+                        },400 + (10 * this.scene.children.indexOf(obj))); // small delay after each block
+                    }
+                }
+
+                const level_progress = JSON.parse(localStorage.getItem('level_progress')) || [];
+                const levels = Array.from(document.querySelectorAll('#level-select .level'));
+                for(const level of levels){
+                    const path = level.getAttribute('data-path');
+                    level.onclick = () => {
+                        game.switchMode(MODES.PLAYING, path);
+                    };
+                    const stats = level_progress.find(l => l.path === path);
+                    if(stats){
+                        level.querySelector('img').src = `img/${path.replace('.lvl','.png')}`;
+                        level.querySelector('.name').innerHTML = level.getAttribute('data-name');
+                        level.querySelector('.name').classList.remove('bottom');
+                        level.querySelector('.stats').classList.remove('hidden');
+                        let stars = ``;
+                        for(let s = 0; s < stats.stars; s++) stars += `<i class='bx bxs-star star'></i>`;
+                        for(let s = 0; s < 3 - stats.stars; s++) stars += `<i class='bx bxs-star star-empty'></i>`;
+                        level.querySelector('.stars').innerHTML = stars;
+                        level.querySelector('.time').innerHTML = `<i class='bx bx-timer'></i>&nbsp;${Util.formatSeconds(stats.time)}`;
+                    }
+                }
+                break;
+            case MODES.WON:
+                if(this.levelTimerInterval){
+                    clearInterval(this.levelTimerInterval);
+                }
+
+                // get the level progress from local storage
+                const wonLevels = localStorage.getItem('level_progress');
+                const time = this.levelTimer;
+                this.levelTimer = 0;
+                if(wonLevels){
+                    let level_progress = JSON.parse(wonLevels);
+                    const stats = level_progress.find(l => l.path === this.level.path);
+                    // check how many stars the user has scored based on the time
+                    let stars = 1;
+                    for(const key in LEVEL_DATA[this.level.path].times){
+                        if(time <= parseInt(key)){
+                            stars = LEVEL_DATA[this.level.path].times[key];
+                            break;
+                        }
+                    }
+                    // if there are no stats for the level yet or user scored a better time replace / add score to list
+                    if(!stats || stats.time > time){
+                        level_progress = level_progress.filter(l => l.path !== this.level.path);
+                        level_progress.push({path: this.level.path, stars: stars, time: time});
+                        localStorage.setItem('level_progress',JSON.stringify(level_progress));
+                    }
+                // if this is the first level create object
+                } else {
+                    let stars = 1;
+                    // check how many stars the user has scored based on the time
+                    for(const key in LEVEL_DATA[this.level.path].times){
+                        if(time <= parseInt(key)){
+                            stars = LEVEL_DATA[this.level.path].times[key];
+                            break;
+                        }
+                    }
+                    localStorage.setItem('level_progress',JSON.stringify([{path: this.level.path, stars: stars, time: time}]));
+                }
+                // update dom elements
+                setTimeout(()=>{
+                    this.menu.classList.remove('show');
+                    this.pauseBtn.classList.remove('show');
+                    this.pauseMenu.classList.remove('show');
+                    this.pauseBanner.classList.remove('show');
+                    this.levelSelectMenu.classList.remove('show');
+                    this.winMenu.classList.add('show');
+                }, 300);
                 break;
         }
     }
@@ -615,12 +856,21 @@ class Game{
         this.controls.enabled = false;
         this.pauseMenu.classList.add('show');
         this.pauseBanner.classList.add('show');
+
+        if(this.levelTimerInterval){
+            clearInterval(this.levelTimerInterval);
+        }
     }
 
     closePauseMenu(){
         this.controls.enabled = true;
         this.pauseMenu.classList.remove('show');
         this.pauseBanner.classList.remove('show');
+
+        this.levelTimerInterval = setInterval(()=>{
+            this.levelTimer += 1;
+            this.timerEl.innerHTML = `<i class='bx bxs-time'></i>&nbsp;${Util.formatSeconds(this.levelTimer)}`;
+        },1000);
     }
 }
 

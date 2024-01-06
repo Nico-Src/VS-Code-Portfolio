@@ -17,7 +17,21 @@ class Util{
         return new THREE.Vector3((x / window.innerWidth) * 2 - 1, -(y / window.innerHeight) * 2 + 1, 0.5);
     }
 
+    // convert deegrees to radians
     static toRadians(degr){
         return degr * (Math.PI / 180);
+    }
+
+    static formatSeconds(seconds) {
+        let hours = Math.floor(seconds / 3600);
+        let minutes = Math.floor((seconds % 3600) / 60);
+        let remainingSeconds = Math.floor(seconds % 60);
+    
+        // Add leading zeros if needed
+        hours = hours < 10 ? "0" + hours : hours;
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        remainingSeconds = remainingSeconds < 10 ? "0" + remainingSeconds : remainingSeconds;
+    
+        return hours + ":" + minutes + ":" + remainingSeconds;
     }
 }
