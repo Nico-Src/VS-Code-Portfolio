@@ -106,6 +106,63 @@
                 </div>
             </div>
         </div>
+        <div class="project mandelbrot">
+            <div class="image">
+                <img src="img/logo/mandelbrot.png">
+            </div>
+            <div class="details">
+                <div class="name">Mandelbrot Viewer</div>
+                <div class="description">A web application to explore the mandelbrot sets..</div>
+                <div class="tags">
+                    <div class="tag html">Html</div>
+                    <div class="tag css">Css</div>
+                    <div class="tag javascript">Javascript</div>
+                    <div class="tag webgl">WebGL</div>
+                    <div class="tag glsl">GLSL</div>
+                </div>
+                <div class="buttons">
+                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/VS-Code-Portfolio/tree/master/projects/mandelbrot" class="text">Source Code</a></div>
+                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/VS-Code-Portfolio/projects/mandelbrot" class="text">Live Demo</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="project tree-generator">
+            <div class="image">
+                <img src="img/logo/tree-generator.png">
+            </div>
+            <div class="details">
+                <div class="name">Tree Generator</div>
+                <div class="description">A web application to generate trees in 3d (stylized)..</div>
+                <div class="tags">
+                    <div class="tag html">Html</div>
+                    <div class="tag css">Css</div>
+                    <div class="tag javascript">Javascript</div>
+                </div>
+                <div class="buttons">
+                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/VS-Code-Portfolio/tree/master/projects/tree-generator" class="text">Source Code</a></div>
+                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/VS-Code-Portfolio/projects/tree-generator" class="text">Live Demo</a></div>
+                </div>
+            </div>
+        </div>
+        <div class="project picross-3d">
+            <div class="image">
+                <img src="img/logo/picross-3d.png">
+            </div>
+            <div class="details">
+                <div class="name">Picross 3D Clone</div>
+                <div class="description">A clone of the popular ds game called Picross 3D.</div>
+                <div class="tags">
+                    <div class="tag html">Html</div>
+                    <div class="tag css">Css</div>
+                    <div class="tag javascript">Javascript</div>
+                    <div class="tag threejs">ThreeJS</div>
+                </div>
+                <div class="buttons">
+                    <div class="source button"><div class="bg"></div><a target="_blank" href="https://github.com/Nico-Src/VS-Code-Portfolio/tree/master/projects/picross-3d" class="text">Source Code</a></div>
+                    <div class="demo button"><div class="bg"></div><a target="_blank" href="https://nico-src.github.io/VS-Code-Portfolio/projects/picross-3d" class="text">Live Demo</a></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <script>
@@ -178,6 +235,9 @@
     .editor .sub-content .projects .project:nth-child(4){ transition: transform .25s ease .3s, opacity .2s ease .3s, border .2s ease; }
     .editor .sub-content .projects .project:nth-child(5){ transition: transform .25s ease .4s, opacity .2s ease .4s, border .2s ease; }
     .editor .sub-content .projects .project:nth-child(6){ transition: transform .25s ease .5s, opacity .2s ease .5s, border .2s ease; }
+    .editor .sub-content .projects .project:nth-child(7){ transition: transform .25s ease .6s, opacity .2s ease .6s, border .2s ease; }
+    .editor .sub-content .projects .project:nth-child(8){ transition: transform .25s ease .7s, opacity .2s ease .7s, border .2s ease; }
+    .editor .sub-content .projects .project:nth-child(9){ transition: transform .25s ease .8s, opacity .2s ease .8s, border .2s ease; }
 
     .editor .sub-content.transition .projects .project{
         transform: scale(1);
@@ -211,6 +271,9 @@
     .editor .sub-content .projects .project.puzzle .image{ background-color: #dd9a17; }
     .editor .sub-content .projects .project.voxel-game .image{ background-color: #4f3624; }
     .editor .sub-content .projects .project.vertex-game .image{ background-color: #548693; }
+    .editor .sub-content .projects .project.mandelbrot .image{ background-color: #3f8a55; }
+    .editor .sub-content .projects .project.tree-generator .image{ background-color: #edaeed; }
+    .editor .sub-content .projects .project.picross-3d .image{ background-color: hsl(89, 64%, 74%); }
 
     .editor .sub-content .projects .project.mangadb:hover{ border-color: #DDD; }
     .editor .sub-content .projects .project.lego:hover{ border-color: rgb(211, 46, 46); }
@@ -218,6 +281,9 @@
     .editor .sub-content .projects .project.puzzle:hover{ border-color: #dd9a17; }
     .editor .sub-content .projects .project.voxel-game:hover{ border-color: #4f3624; }
     .editor .sub-content .projects .project.vertex-game:hover{ border-color: #548693; }
+    .editor .sub-content .projects .project.mandelbrot:hover{ border-color: #3f8a55; }
+    .editor .sub-content .projects .project.tree-generator:hover{ border-color: #edaeed; }
+    .editor .sub-content .projects .project.picross-3d:hover{ border-color: hsl(89, 64%, 74%); }
 
     .editor .sub-content .projects .project .image img{
         width: 80%;
@@ -305,7 +371,13 @@
     .editor .sub-content .projects .project .details .tags .tag.unity:hover{background-color: rgba(166, 166, 166, 0.5); color:white;}
     .editor .sub-content .projects .project .details .tags .tag.csharp{border-color: rgb(155, 71, 147);}
     .editor .sub-content .projects .project .details .tags .tag.csharp:hover{background-color: rgb(155, 71, 147, .5); color:white;}
-
+    .editor .sub-content .projects .project .details .tags .tag.webgl{border-color: rgb(0, 220, 130);}
+    .editor .sub-content .projects .project .details .tags .tag.webgl:hover{background-color: rgb(0, 220, 130, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.glsl{border-color: rgb(232, 59, 125);}
+    .editor .sub-content .projects .project .details .tags .tag.glsl:hover{background-color: rgb(232, 59, 125, .5); color:white;}
+    .editor .sub-content .projects .project .details .tags .tag.threejs{border-color: rgb(125, 17, 17);}
+    .editor .sub-content .projects .project .details .tags .tag.threejs:hover{background-color: rgb(125, 17, 17, .5); color:white;}
+    
     .editor .sub-content .projects .project .details .buttons{
         width: 100%;
         display:flex;
