@@ -173,7 +173,6 @@ class Editor{
 
         if(this.selectedTool === 'move' && this.mouse.right){
             const near = this.getNearPoint(e,undefined);
-            console.log(near);
             if(near){
                 near.selected = !near.selected;
                 if(near.selected){

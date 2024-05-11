@@ -145,6 +145,8 @@ class Canvas{
         this.vertexConnections = [
             
         ];
+
+        this.fadeOutConnections = [];
         
         this.blockTranslation = false;
         this.baseVertex = null;
@@ -244,7 +246,10 @@ class Canvas{
         
         // draw vertex faces (polygon with lines from vertices in the face)
         for(let i = 0; i < this.vertexFaces.length; i++){
-            if(!this.vertexFaces[i].show) continue;
+            if(!this.vertexFaces[i].show){
+                if(this.vertexFaces[i].opacity > 0) this.vertexFaces[i].opacity = clamp(this.vertexFaces[i].opacity - deltaTime * 4, 0, 1);
+                continue;
+            }
             this.ctx.globalAlpha = this.vertexFaces[i].opacity;
             if(this.vertexFaces[i].opacity < 1) this.vertexFaces[i].opacity = clamp(this.vertexFaces[i].opacity + deltaTime * 4, 0, 1);
             this.ctx.fillStyle = this.vertexFaces[i].color;
@@ -269,13 +274,32 @@ class Canvas{
         
         // draw dashed line from baseVertex to current cursor position if baseVertex is set
         if(this.baseVertex){
-            this.ctx.strokeStyle = 'black';
+            this.ctx.strokeStyle = this.vertices.filter(v => v.id !== this.baseVertex.id && v.hovered === true).length > 0 ? '#e8ae35' : 'black';
             this.ctx.beginPath();
             this.ctx.setLineDash([2, 2]);
             this.ctx.moveTo(this.baseVertex.x, this.baseVertex.y);
             this.ctx.lineTo(this.cursor.x, this.cursor.y);
             this.ctx.stroke();
             this.ctx.setLineDash([]);
+        }
+
+        // draw fadeoutconnections
+        for(let i = 0; i < this.fadeOutConnections.length; i++){
+            this.ctx.strokeStyle = this.fadeOutConnections[i].color || 'black';
+            this.ctx.beginPath();
+            this.ctx.setLineDash([2, 2]);
+            this.ctx.moveTo(this.fadeOutConnections[i].start.x, this.fadeOutConnections[i].start.y);
+            this.ctx.lineTo(this.fadeOutConnections[i].end.x, this.fadeOutConnections[i].end.y);
+            this.ctx.stroke();
+            this.ctx.setLineDash([]);
+
+            // lerp end point to start point and if the end point is close to the start point remove the connection
+            if(Math.abs(this.fadeOutConnections[i].end.x - this.fadeOutConnections[i].start.x) < 5 && Math.abs(this.fadeOutConnections[i].end.y - this.fadeOutConnections[i].start.y) < 5){
+                this.fadeOutConnections.splice(i, 1);
+            } else {
+                this.fadeOutConnections[i].end.x = lerp(this.fadeOutConnections[i].end.x, this.fadeOutConnections[i].start.x, deltaTime * 10);
+                this.fadeOutConnections[i].end.y = lerp(this.fadeOutConnections[i].end.y, this.fadeOutConnections[i].start.y, deltaTime * 10);
+            }
         }
         
         // draw points (vertices) with the number of remaining connections in it
@@ -298,8 +322,8 @@ class Canvas{
             this.ctx.fill();
             this.ctx.setLineDash([]);
             
-            this.ctx.fillStyle = this.vertices[i].hovered ? 'black' : 'white';
-            this.ctx.strokeStyle = this.vertices[i].hovered ? 'white' : 'black';
+            this.ctx.fillStyle = this.vertices[i].hovered ? this.baseVertex ? '#e8ae35' : 'black' : 'white';
+            this.ctx.strokeStyle = this.vertices[i].hovered ? this.baseVertex ? 'black' : 'white' : 'black';
             
             this.ctx.beginPath();
             this.ctx.arc(this.vertices[i].x, this.vertices[i].y, this.vertexSize, 0, 2 * Math.PI);
@@ -307,7 +331,7 @@ class Canvas{
             this.ctx.stroke();
             
             // draw number of connections remaining in the center of the point
-            this.ctx.fillStyle = this.vertices[i].hovered ? 'white' : 'black';
+            this.ctx.fillStyle = this.vertices[i].hovered ? this.baseVertex ? 'black' : 'white' : 'black';
             this.ctx.textAlign = 'center';
             this.ctx.font = `${this.vertexSize}px Arial`;
             this.ctx.textBaseline = 'middle';
@@ -328,7 +352,8 @@ class Canvas{
             this.ctx.fill();
             this.ctx.setLineDash([]);
 
-            this.ctx.fillStyle = 'black';
+            this.ctx.fillStyle = this.vertices.filter(v => v.id !== this.baseVertex.id && v.hovered === true).length > 0 ? '#e8ae35' : 'black';
+            this.ctx.strokeStyle = this.vertices.filter(v => v.id !== this.baseVertex.id && v.hovered === true).length > 0 ? '#e8ae35' : 'black';
 
             this.ctx.beginPath();
             this.ctx.arc(this.cursor.x, this.cursor.y, this.vertexSize / 2, 0, 2 * Math.PI);
@@ -380,9 +405,16 @@ class Canvas{
                 } else if(this.cursor.right) {
                     // remove all vertex connections that connect to this vertex
                     for(let j = 0; j < this.vertexConnections.length; j++){
-                        if(this.vertexConnections[j].a === this.vertices[i] || this.vertexConnections[j].b === this.vertices[i]){
+                        if(this.vertexConnections[j].a === this.vertices[i]){
                             this.vertexConnections[j].a.remainingConnections++;
                             this.vertexConnections[j].b.remainingConnections++;
+                            this.fadeOutConnections.push({start: {x: this.vertexConnections[j].a.x, y: this.vertexConnections[j].a.y}, end: {x: this.vertexConnections[j].b.x, y: this.vertexConnections[j].b.y}});
+                            this.vertexConnections.splice(j, 1);
+                            j--;
+                        } else if(this.vertexConnections[j].b === this.vertices[i]) {
+                            this.vertexConnections[j].a.remainingConnections++;
+                            this.vertexConnections[j].b.remainingConnections++;
+                            this.fadeOutConnections.push({start: {x: this.vertexConnections[j].b.x, y: this.vertexConnections[j].b.y}, end: {x: this.vertexConnections[j].a.x, y: this.vertexConnections[j].a.y}});
                             this.vertexConnections.splice(j, 1);
                             j--;
                         }
@@ -444,12 +476,16 @@ class Canvas{
             }
             
             if(this.connectTo && this.connectTo !== this.baseVertex){
-                if(this.connectTo.remainingConnections > 0){
+                if(this.connectTo.remainingConnections > 0 && this.baseVertex.remainingConnections > 0){
                     this.vertexConnections.push({a: this.baseVertex, b: this.connectTo});
                     // decrease remaining connections
                     this.baseVertex.remainingConnections--;
                     this.connectTo.remainingConnections--;
+                } else {
+                    this.fadeOutConnections.push({start: {x: this.baseVertex.x, y: this.baseVertex.y}, end: {x: this.cursor.x, y: this.cursor.y}, color: 'red'});
                 }
+            } else {
+                this.fadeOutConnections.push({start: {x: this.baseVertex.x, y: this.baseVertex.y}, end: {x: this.cursor.x, y: this.cursor.y}, color: 'red'});
             }
         }
         
@@ -613,4 +649,8 @@ function clamp(num, min, max) {
       : num >= max 
         ? max 
         : num
+}
+
+function lerp(a, b, n) {
+    return (1-n)*a + n*b;
 }
