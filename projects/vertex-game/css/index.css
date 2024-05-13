@@ -23,3 +23,41 @@ body,html{
     inset: 0;
     z-index: 1;
 }
+
+.debug-info{
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background-color: white;
+    border-radius: 4px;
+    border: 2px solid #999;
+    z-index: 2;
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0;
+    transition: opacity .2s ease;
+    pointer-events: none;
+}
+
+.debug-info.show{
+    opacity: 1;
+}
+
+.debug-info > *{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.stat{
+    min-width: 100%;
+}
+
+.stat .label{
+    margin-right: 30px;
+    flex: 1;
+}

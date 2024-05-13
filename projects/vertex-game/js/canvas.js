@@ -37,116 +37,26 @@ class Canvas{
         };
         
         this.keys = {};
-        
-        this.vertices = [
-            {x: 0, y: 0},
-            {x: 25, y: 50},
-            {x: 50, y: 0},
-            {x: 0, y: 35},
-            {x: 75, y: 50},
-            {x: 50, y: 70},
-            {x: 17.5, y: 65},
-            {x: 25, y: -50},
-            {x: 100, y: 0},
-            {x: 125, y: 50},
-            {x: 150, y: 0},
-            {x: 175, y: 50},
-            {x: 200, y: 0},
-            {x: 225, y: 50},
-            {x: 250, y: 0},
-            {x: 100, y: 70},
-            {x: 150, y: 70},
-            {x: 200, y: 70},
-            {x: 232.5, y: 65},
-            {x: 250, y: 35},
-            {x: 75, y: -50},
-            {x: 125, y: -50},
-            {x: 175, y: -50},
-            {x: 225, y: -50},
-            {x: 50, y: -100},
-            {x: 100, y: -100},
-            {x: 150, y: -100},
-            {x: 200, y: -100},
-            {x: 75, y: -150},
-            {x: 125, y: -150},
-            {x: 175, y: -150},
-            {x: 100, y: -200},
-            {x: 150, y: -200},
-            {x: 125, y: -250}
-        ];
-        
-        this.vertexFaces = [
-            {vertices: [0,1,2], color: '#77ab58'},
-            {vertices: [0,1,3], color: '#416443'},
-            {vertices: [1,2,4], color: '#b2d19d'},
-            {vertices: [1,4,5], color: '#416443'},
-            {vertices: [1,3,6], color: '#174311'},
-            {vertices: [1,5,6], color: '#174311'},
-            {vertices: [0,2,7], color: '#d32f2e'},
-            {vertices: [2,4,8], color: '#77ab58'},
-            {vertices: [4,8,9], color: '#b2d19d'},
-            {vertices: [8,9,10], color: '#77ab58'},
-            {vertices: [9,10,11], color: '#b2d19d'},
-            {vertices: [10,11,12], color: '#77ab58'},
-            {vertices: [11,12,13], color: '#b2d19d'},
-            {vertices: [12,13,14], color: '#77ab58'},
-            {vertices: [4,5,15], color: '#174311'},
-            {vertices: [4,9,15], color: '#416443'},
-            {vertices: [9,15,16], color: '#174311'},
-            {vertices: [9,11,16], color: '#416443'},
-            {vertices: [11,16,17], color: '#174311'},
-            {vertices: [11,13,17], color: '#416443'},
-            {vertices: [13,17,18], color: '#174311'},
-            {vertices: [13,18,19], color: '#174311'},
-            {vertices: [13,14,19], color: '#416443'},
-            {vertices: [2,7,20], color: '#df5655'},
-            {vertices: [2,8,20], color: '#d32f2e'},
-            {vertices: [8,20,21], color: '#df5655'},
-            {vertices: [8,10,21], color: '#d32f2e'},
-            {vertices: [10,21,22], color: '#df5655'},
-            {vertices: [10,12,22], color: '#d32f2e'},
-            {vertices: [12,22,23], color: '#df5655'},
-            {vertices: [12,14,23], color: '#d32f2e'},
-            {vertices: [7,20,24], color: '#d32f2e'},
-            {vertices: [20,24,25], color: '#df5655'},
-            {vertices: [20,21,25], color: '#d32f2e'},
-            {vertices: [21,25,26], color: '#df5655'},
-            {vertices: [21,22,26], color: '#d32f2e'},
-            {vertices: [22,26,27], color: '#df5655'},
-            {vertices: [22,23,27], color: '#d32f2e'},
-            {vertices: [24,25,28], color: '#d32f2e'},
-            {vertices: [25,28,29], color: '#df5655'},
-            {vertices: [25,26,29], color: '#d32f2e'},
-            {vertices: [26,29,30], color: '#df5655'},
-            {vertices: [26,27,30], color: '#d32f2e'},
-            {vertices: [28,29,31], color: '#d32f2e'},
-            {vertices: [29,31,32], color: '#df5655'},
-            {vertices: [29,30,32], color: '#d32f2e'},
-            {vertices: [31,32,33], color: '#d32f2e'},
-        ];
-        
-        // calc remaining connections
-        for(let i = 0; i < this.vertices.length; i++){
-            // remaining connections = how many times the id is in one of the vertex faces
-            this.vertices[i].remainingConnections = this.vertexFaces.filter(f => f.vertices.includes(i)).length + 1;
-            this.vertices[i].id = i;
-            this.vertices[i].hovered = false;
-            this.vertices[i].circlePadding = 2;
-            this.vertices[i].opacity = 0;
+
+        this.stats = {};
+        for(const el of Array.from(document.querySelectorAll('.debug-info .stat'))){
+            this.stats[el.getAttribute("id")] = {label: el.querySelector(".label"), value: el.querySelector(".value")};
         }
 
-        // calc remaining connections
-        for(let i = 0; i < this.vertexFaces.length; i++){
-            // remaining connections = how many times the id is in one of the vertex faces
-            this.vertexFaces[i].show = false;
-            this.vertexFaces[i].opacity = 0;
-        }
+        this.baseVertexSize = 3;
+        this.vertexShrinkFactor = 4;
         
-        this.vertexConnections = [
-            
-        ];
+        this.colorPalette = [];
+        this.vertices = [];
+        this.vertexFaces = [];
 
-        this.fadeOutConnections = [];
+        this.loadLevel("level1");
+
+        // connection dictionary to keep track which connections have been used yet
+        this.connectionDictionary = [];
+        
+        this.vertexConnections = [];
+        this.animatedLines = [];
         
         this.blockTranslation = false;
         this.baseVertex = null;
@@ -154,12 +64,116 @@ class Canvas{
         
         this.showDebug = false;
         
-        this.vertexSize = 5;
-        
         this.currentFrame = 0;
         this.finished = false;
         
         this.init();
+    }
+
+    loadLevel(name){
+        this.vertices = [];
+        this.vertexFaces = [];
+        this.vertexConnections = [];
+        this.animatedLines = [];
+        this.connectionDictionary = [];
+        this.finished = false;
+        this.baseVertex = null;
+        this.connectTo = null;
+        this.blockTranslation = false;
+
+        // load level (in level folder)
+        const file = `./levels/${name}.lvl`;
+        // send request
+        fetch(file).then(response => response.json()).then(data => {
+            this.vertices = data.vertices;
+            this.vertexFaces = data.faces;
+            this.colorPalette = data.palette;
+
+            for(const face of this.vertexFaces){
+                face.color = this.colorPalette[face.color];
+            }
+
+            console.log(this.vertices, this.vertexFaces, this.colorPalette);
+
+            this.initLevel();
+        });
+    }
+
+    initLevel(){
+        // init vertices
+        for(let i = 0; i < this.vertices.length; i++){
+            this.vertices[i].id = i;
+            this.vertices[i].remainingConnections = 0;
+            this.vertices[i].hovered = false;
+            this.vertices[i].circlePadding = 2;
+            this.vertices[i].opacity = 0;
+        }
+
+        // init faces
+        for(let i = 0; i < this.vertexFaces.length; i++){
+            this.vertexFaces[i].show = false;
+            this.vertexFaces[i].opacity = 0;
+
+            // calculate remaining connections for each vertex (point)
+            for(let j = 0; j < this.vertexFaces[i].vertices.length; j++){
+                // connection from last to first point to close the shape
+                if(j == this.vertexFaces[i].vertices.length - 1){
+                    const start = this.vertices.find(v => v.id === this.vertexFaces[i].vertices[j]);
+                    const end = this.vertices.find(v => v.id === this.vertexFaces[i].vertices[0]);
+
+                    // don't count the same connection twice (just skip if the connection is already used)
+                    if(this.connectionDictionary.find(c => c.start === start.id && c.end === end.id) || this.connectionDictionary.find(c => c.end === start.id && c.start === end.id)) continue;
+                    this.connectionDictionary.push({start: start.id, end: end.id});
+
+                    // invalid connection
+                    if(!start || !end){
+                        console.error('Corrupted Level Data.');
+                        return;
+                    }
+
+                    start.remainingConnections++;
+                    end.remainingConnections++;
+                }
+                // else normal connection
+                else {
+                    const start = this.vertices.find(v => v.id == this.vertexFaces[i].vertices[j]);
+                    const end = this.vertices.find(v => v.id == this.vertexFaces[i].vertices[j+1]);
+
+                    // don't count the same connection twice (just skip if the connection is already used)
+                    if(this.connectionDictionary.find(c => c.start === start.id && c.end === end.id) || this.connectionDictionary.find(c => c.end === start.id && c.start === end.id)) continue;
+                    this.connectionDictionary.push({start: start.id, end: end.id});
+
+                    // invalid connection
+                    if(!start || !end){
+                        console.error('Corrupted Level Data.');
+                        return;
+                    }
+
+                    start.remainingConnections++;
+                    end.remainingConnections++;
+                }
+            }
+        }
+        
+        // calc size of vertex based on the remaining connections and shrink factor
+        for(let i = 0; i < this.vertices.length; i++){
+            this.vertices[i].vertexSize = this.baseVertexSize + this.vertices[i].remainingConnections / this.vertexShrinkFactor;
+        }
+
+        this.stats["total-vertices"].value.innerHTML = `${this.vertices.length}`;
+        this.stats["total-faces"].value.innerHTML = `${this.vertexFaces.length}`;
+
+        // Calculate translation to move midpoint of vertices to the center of the canvas
+        const minX = Math.min(...this.vertices.map(v => v.x));
+        const minY = Math.min(...this.vertices.map(v => v.y));
+        const maxX = Math.max(...this.vertices.map(v => v.x));
+        const maxY = Math.max(...this.vertices.map(v => v.y));
+
+        const midX = (minX + maxX) / 2;
+        const midY = (minY + maxY) / 2;
+
+        this.translation.x = this.canvas.width / 2 - midX;
+        this.translation.y = this.canvas.height / 2 - midY;
     }
     
     init(){ // ANCHOR init
@@ -201,32 +215,35 @@ class Canvas{
     animate(){ // ANCHOR animate
         requestAnimationFrame(this.animate.bind(this));
 
+        if(!this.vertexFaces) return;
+
+        // calculate delta time for transitions
         let deltaTime = (Date.now() - this.lastFrameTime || 0) / 1000;
         this.lastFrameTime = Date.now();
 
+        // transitions for the outer circle for vertices (when they are clicked)
+        // -- transition in
         if(this.baseVertex){
-            if(this.baseVertex.circlePadding < 3) this.baseVertex.circlePadding += deltaTime * 10;
-            else this.baseVertex.circlePadding = 3;
+            if(this.baseVertex.circlePadding < 3) this.baseVertex.circlePadding = clamp(this.baseVertex.circlePadding + deltaTime * 10, 2, 3);
 
-            // decrease all other vertices circlePadding
+            // decrease others
             for(let i = 0; i < this.vertices.length; i++){
                 if(this.vertices[i] !== this.baseVertex){
-                    if(this.vertices[i].circlePadding > 2) this.vertices[i].circlePadding -= deltaTime * 10;
-                    else this.vertices[i].circlePadding = 2;
+                    if(this.vertices[i].circlePadding > 2) this.vertices[i].circlePadding = clamp(this.vertices[i].circlePadding - deltaTime * 10, 2, 3);
                 }
             }
+        // -- transition out
         } else {
             for(let i = 0; i < this.vertices.length; i++){
-                if(this.vertices[i].circlePadding > 2) this.vertices[i].circlePadding -= deltaTime * 10;
-                else this.vertices[i].circlePadding = 2;
+                if(this.vertices[i].circlePadding > 2) this.vertices[i].circlePadding = clamp(this.vertices[i].circlePadding - deltaTime * 10, 2, 3);
             }
         }
         
         // clear
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
         
-        // draw grid that moves with the canvas
-        // this.drawGrid(this.ctx);
+        // draw grid that moves with the canvas (only when debug mode is active)
+        if(this.showDebug) this.drawGrid(this.ctx);
         
         // scale and translate
         this.ctx.save();
@@ -235,25 +252,31 @@ class Canvas{
         
         this.ctx.lineWidth = 0.5;
         
-        // draw vertex connections (line from point a to b)
-        for(let i = 0; i < this.vertexConnections.length; i++){
-            this.ctx.strokeStyle = 'black';
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.vertexConnections[i].a.x, this.vertexConnections[i].a.y);
-            this.ctx.lineTo(this.vertexConnections[i].b.x, this.vertexConnections[i].b.y);
-            this.ctx.stroke();
+        if(!this.finished){
+            // draw vertex connections (straight lines)
+            for(let i = 0; i < this.vertexConnections.length; i++){
+                this.ctx.strokeStyle = 'black';
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.vertexConnections[i].a.x, this.vertexConnections[i].a.y);
+                this.ctx.lineTo(this.vertexConnections[i].b.x, this.vertexConnections[i].b.y);
+                this.ctx.stroke();
+            }
         }
         
         // draw vertex faces (polygon with lines from vertices in the face)
         for(let i = 0; i < this.vertexFaces.length; i++){
+            // fade out face if it isnt currently shown and opacity is above 0
             if(!this.vertexFaces[i].show){
                 if(this.vertexFaces[i].opacity > 0) this.vertexFaces[i].opacity = clamp(this.vertexFaces[i].opacity - deltaTime * 4, 0, 1);
                 continue;
             }
+
             this.ctx.globalAlpha = this.vertexFaces[i].opacity;
+            // fade face in if opacity is below 1
             if(this.vertexFaces[i].opacity < 1) this.vertexFaces[i].opacity = clamp(this.vertexFaces[i].opacity + deltaTime * 4, 0, 1);
             this.ctx.fillStyle = this.vertexFaces[i].color;
             this.ctx.strokeStyle = this.vertexFaces[i].color;
+            // draw face
             this.ctx.beginPath();
             this.ctx.moveTo(this.vertices[this.vertexFaces[i].vertices[0]].x, this.vertices[this.vertexFaces[i].vertices[0]].y);
             for(let j = 1; j < this.vertexFaces[i].vertices.length; j++){
@@ -263,42 +286,39 @@ class Canvas{
             this.ctx.fill();
         }
 
+        // reset opacity
         this.ctx.globalAlpha = 1;
-        
         this.ctx.fillStyle = '#202020';
         
-        /* this.ctx.beginPath();
-        this.ctx.rect(0,0,30,30);
-        this.ctx.stroke();
-        this.ctx.fill(); */
-        
-        // draw dashed line from baseVertex to current cursor position if baseVertex is set
+        // draw connection indicator if user currently tries to connect two points (if baseVertex is set)
         if(this.baseVertex){
+            // if there user hovers over other point while connecting color changes to dark yellow
             this.ctx.strokeStyle = this.vertices.filter(v => v.id !== this.baseVertex.id && v.hovered === true).length > 0 ? '#e8ae35' : 'black';
             this.ctx.beginPath();
             this.ctx.setLineDash([2, 2]);
             this.ctx.moveTo(this.baseVertex.x, this.baseVertex.y);
             this.ctx.lineTo(this.cursor.x, this.cursor.y);
             this.ctx.stroke();
+            // reset line dash to keep other lines normal
             this.ctx.setLineDash([]);
         }
 
-        // draw fadeoutconnections
-        for(let i = 0; i < this.fadeOutConnections.length; i++){
-            this.ctx.strokeStyle = this.fadeOutConnections[i].color || 'black';
+        // draw animate lines
+        for(let i = 0; i < this.animatedLines.length; i++){
+            this.ctx.strokeStyle = this.animatedLines[i].color || 'black';
             this.ctx.beginPath();
             this.ctx.setLineDash([2, 2]);
-            this.ctx.moveTo(this.fadeOutConnections[i].start.x, this.fadeOutConnections[i].start.y);
-            this.ctx.lineTo(this.fadeOutConnections[i].end.x, this.fadeOutConnections[i].end.y);
+            this.ctx.moveTo(this.animatedLines[i].start.x, this.animatedLines[i].start.y);
+            this.ctx.lineTo(this.animatedLines[i].end.x, this.animatedLines[i].end.y);
             this.ctx.stroke();
             this.ctx.setLineDash([]);
 
             // lerp end point to start point and if the end point is close to the start point remove the connection
-            if(Math.abs(this.fadeOutConnections[i].end.x - this.fadeOutConnections[i].start.x) < 5 && Math.abs(this.fadeOutConnections[i].end.y - this.fadeOutConnections[i].start.y) < 5){
-                this.fadeOutConnections.splice(i, 1);
+            if(Math.abs(this.animatedLines[i].end.x - this.animatedLines[i].start.x) < 5 && Math.abs(this.animatedLines[i].end.y - this.animatedLines[i].start.y) < 5){
+                this.animatedLines.splice(i, 1);
             } else {
-                this.fadeOutConnections[i].end.x = lerp(this.fadeOutConnections[i].end.x, this.fadeOutConnections[i].start.x, deltaTime * 10);
-                this.fadeOutConnections[i].end.y = lerp(this.fadeOutConnections[i].end.y, this.fadeOutConnections[i].start.y, deltaTime * 10);
+                this.animatedLines[i].end.x = lerp(this.animatedLines[i].end.x, this.animatedLines[i].start.x, deltaTime * 10);
+                this.animatedLines[i].end.y = lerp(this.animatedLines[i].end.y, this.animatedLines[i].start.y, deltaTime * 10);
             }
         }
         
@@ -306,18 +326,20 @@ class Canvas{
         for(let i = 0; i < this.vertices.length; i++){
             this.ctx.strokeStyle = 'black';
             this.ctx.globalAlpha = this.vertices[i].opacity;
+            // fade in or fade out vertex based on its opacity (and if the game is finished)
             if(!this.finished){
                 if(this.vertices[i].opacity < 1) this.vertices[i].opacity = clamp(this.vertices[i].opacity + deltaTime * 4, 0, 1);
             } else {
                 if(this.vertices[i].opacity > 0) this.vertices[i].opacity = clamp(this.vertices[i].opacity - deltaTime * 4, 0, 1);
             }
 
+            // point outline is only filled in with a color when the user tries to connect from this point
             this.ctx.fillStyle = (this.vertices[i].hovered || this.vertices[i] === this.baseVertex ? 'rgba(200,200,200,.5)' : 'rgba(0,0,0,0)');
             
             // draw dotted outline with a radius of 5 bigger than the point
             this.ctx.beginPath();
             this.ctx.setLineDash([1, 1]);
-            this.ctx.arc(this.vertices[i].x, this.vertices[i].y, this.vertexSize + this.vertices[i].circlePadding, 0, 2 * Math.PI);
+            this.ctx.arc(this.vertices[i].x, this.vertices[i].y, this.vertices[i].vertexSize + this.vertices[i].circlePadding, 0, 2 * Math.PI);
             this.ctx.stroke();
             this.ctx.fill();
             this.ctx.setLineDash([]);
@@ -326,16 +348,22 @@ class Canvas{
             this.ctx.strokeStyle = this.vertices[i].hovered ? this.baseVertex ? 'black' : 'white' : 'black';
             
             this.ctx.beginPath();
-            this.ctx.arc(this.vertices[i].x, this.vertices[i].y, this.vertexSize, 0, 2 * Math.PI);
+            this.ctx.arc(this.vertices[i].x, this.vertices[i].y, this.vertices[i].vertexSize, 0, 2 * Math.PI);
             this.ctx.fill();
             this.ctx.stroke();
             
             // draw number of connections remaining in the center of the point
             this.ctx.fillStyle = this.vertices[i].hovered ? this.baseVertex ? 'black' : 'white' : 'black';
             this.ctx.textAlign = 'center';
-            this.ctx.font = `${this.vertexSize}px Arial`;
+            this.ctx.font = `${this.vertices[i].vertexSize}px Arial`;
             this.ctx.textBaseline = 'middle';
             this.ctx.fillText(this.showDebug ? this.vertices[i].id : this.vertices[i].remainingConnections, this.vertices[i].x, this.vertices[i].y);
+
+            // draw coordinates if debug mode is active (top left)
+            if(this.showDebug){
+                this.ctx.fillStyle = 'black';
+                this.ctx.fillText(`(${Math.round(this.vertices[i].x)}, ${Math.round(this.vertices[i].y)})`, this.vertices[i].x, this.vertices[i].y - this.vertices[i].vertexSize * 2);
+            }
         }
         
         // draw cursor on top of everything else
@@ -347,7 +375,7 @@ class Canvas{
             // draw dotted outline with a radius of 5 bigger than the point
             this.ctx.beginPath();
             this.ctx.setLineDash([1, 1]);
-            this.ctx.arc(this.cursor.x, this.cursor.y, this.vertexSize / 2 + 2, 0, 2 * Math.PI);
+            this.ctx.arc(this.cursor.x, this.cursor.y, this.baseVertexSize / 2 + 2, 0, 2 * Math.PI);
             this.ctx.stroke();
             this.ctx.fill();
             this.ctx.setLineDash([]);
@@ -356,16 +384,29 @@ class Canvas{
             this.ctx.strokeStyle = this.vertices.filter(v => v.id !== this.baseVertex.id && v.hovered === true).length > 0 ? '#e8ae35' : 'black';
 
             this.ctx.beginPath();
-            this.ctx.arc(this.cursor.x, this.cursor.y, this.vertexSize / 2, 0, 2 * Math.PI);
+            this.ctx.arc(this.cursor.x, this.cursor.y, this.baseVertexSize / 2, 0, 2 * Math.PI);
             this.ctx.fill();
             this.ctx.stroke();
         }
         
+        // shows mouse position on the canvas
         if(this.showDebug){
+            this.ctx.fillStyle = 'rgba(0,0,0,0)';
             this.ctx.beginPath();
             this.ctx.arc(this.cursor.x, this.cursor.y, 10 / this.scale.x, 0, 2 * Math.PI);
             this.ctx.fill();
             this.ctx.stroke();
+
+            // draw mouse position above the cursor
+            this.ctx.fillStyle = 'black';
+            this.ctx.textAlign = 'center';
+            this.ctx.font = `5px Arial`;
+            this.ctx.textBaseline = 'middle';
+            this.ctx.fillText(`(${Math.round(this.cursor.x)}, ${Math.round(this.cursor.y)})`, this.cursor.x, this.cursor.y - 20 / this.scale.x);
+
+            // stats
+            this.stats["frametime"].value.innerHTML = `${deltaTime * 1000}ms`;
+            this.stats["fps"].value.innerHTML = `${Math.round(1000 / (deltaTime * 1000))}`;
         }
         
         this.globalAlpha = 1;
@@ -397,24 +438,29 @@ class Canvas{
             const dx = this.vertices[i].x - this.cursor.x;
             const dy = this.vertices[i].y - this.cursor.y;
             const distance = Math.sqrt(dx*dx + dy*dy);
-            if(distance < this.vertexSize){
+            // check if mouse is inside vertex
+            if(distance < this.vertices[i].vertexSize){
+                // set as base vertex if user is pressing the left mouse button (and block translation for connecting)
                 if(this.cursor.left){
                     this.baseVertex = this.vertices[i];
                     this.blockTranslation = true;
                     break;
+                // remove all connections from vertex on right click
                 } else if(this.cursor.right) {
-                    // remove all vertex connections that connect to this vertex
                     for(let j = 0; j < this.vertexConnections.length; j++){
+                        // check which of the two is the vertex clicked on (based on that the line will animate to the clicked vertex)
                         if(this.vertexConnections[j].a === this.vertices[i]){
                             this.vertexConnections[j].a.remainingConnections++;
                             this.vertexConnections[j].b.remainingConnections++;
-                            this.fadeOutConnections.push({start: {x: this.vertexConnections[j].a.x, y: this.vertexConnections[j].a.y}, end: {x: this.vertexConnections[j].b.x, y: this.vertexConnections[j].b.y}});
+                            // add animated line
+                            this.animatedLines.push({start: {x: this.vertexConnections[j].a.x, y: this.vertexConnections[j].a.y}, end: {x: this.vertexConnections[j].b.x, y: this.vertexConnections[j].b.y}});
                             this.vertexConnections.splice(j, 1);
                             j--;
                         } else if(this.vertexConnections[j].b === this.vertices[i]) {
                             this.vertexConnections[j].a.remainingConnections++;
                             this.vertexConnections[j].b.remainingConnections++;
-                            this.fadeOutConnections.push({start: {x: this.vertexConnections[j].b.x, y: this.vertexConnections[j].b.y}, end: {x: this.vertexConnections[j].a.x, y: this.vertexConnections[j].a.y}});
+                            // add animated line
+                            this.animatedLines.push({start: {x: this.vertexConnections[j].b.x, y: this.vertexConnections[j].b.y}, end: {x: this.vertexConnections[j].a.x, y: this.vertexConnections[j].a.y}});
                             this.vertexConnections.splice(j, 1);
                             j--;
                         }
@@ -435,7 +481,7 @@ class Canvas{
                                     allConnected = false;
                                     break;
                                 }
-                                // from last to first
+                            // from last to first
                             } else {
                                 if(!this.vertexConnections.some(c => c.a.id === this.vertexFaces[i].vertices[j] && c.b.id === this.vertexFaces[i].vertices[j+1])
                                 && !this.vertexConnections.some(c => c.a.id === this.vertexFaces[i].vertices[j+1] && c.b.id === this.vertexFaces[i].vertices[j])){
@@ -452,6 +498,7 @@ class Canvas{
             }
         }
         
+        // if base vertex is not set (no vertex has been clicked) disable translation block
         if(!this.baseVertex){
             this.blockTranslation = false;
         }
@@ -468,24 +515,32 @@ class Canvas{
                     const dx = this.vertices[i].x - this.cursor.x;
                     const dy = this.vertices[i].y - this.cursor.y;
                     const distance = Math.sqrt(dx*dx + dy*dy);
-                    if(distance < this.vertexSize){
+                    // check if mouse is in vertex (if so set connectTo vertex)
+                    if(distance < this.vertices[i].vertexSize){
                         this.connectTo = this.vertices[i];
                         break;
                     }
                 }
             }
             
+            // if connectTo is set and is not the same as the baseVertex proceed
             if(this.connectTo && this.connectTo !== this.baseVertex){
+                // check if both have remaining connections left (if so connect them)
                 if(this.connectTo.remainingConnections > 0 && this.baseVertex.remainingConnections > 0){
                     this.vertexConnections.push({a: this.baseVertex, b: this.connectTo});
                     // decrease remaining connections
                     this.baseVertex.remainingConnections--;
                     this.connectTo.remainingConnections--;
+                    // recalculate vertex sizes
+                    this.baseVertex.vertexSize = this.baseVertexSize + this.baseVertex.remainingConnections / this.vertexShrinkFactor;
+                    this.connectTo.vertexSize = this.baseVertexSize + this.connectTo.remainingConnections / this.vertexShrinkFactor;
+                // else show an animated line retracting
                 } else {
-                    this.fadeOutConnections.push({start: {x: this.baseVertex.x, y: this.baseVertex.y}, end: {x: this.cursor.x, y: this.cursor.y}, color: 'red'});
+                    this.animatedLines.push({start: {x: this.baseVertex.x, y: this.baseVertex.y}, end: {x: this.cursor.x, y: this.cursor.y}, color: 'red'});
                 }
+            // else show an animated line retracing
             } else {
-                this.fadeOutConnections.push({start: {x: this.baseVertex.x, y: this.baseVertex.y}, end: {x: this.cursor.x, y: this.cursor.y}, color: 'red'});
+                this.animatedLines.push({start: {x: this.baseVertex.x, y: this.baseVertex.y}, end: {x: this.cursor.x, y: this.cursor.y}, color: 'red'});
             }
         }
         
@@ -506,7 +561,7 @@ class Canvas{
                         allConnected = false;
                         break;
                     }
-                    // from last to first
+                // from last to first
                 } else {
                     if(!this.vertexConnections.some(c => c.a.id === this.vertexFaces[i].vertices[j] && c.b.id === this.vertexFaces[i].vertices[j+1])
                     && !this.vertexConnections.some(c => c.a.id === this.vertexFaces[i].vertices[j+1] && c.b.id === this.vertexFaces[i].vertices[j])){
@@ -520,9 +575,10 @@ class Canvas{
             this.vertexFaces[i].show = allConnected;
         }
 
-        // check if all faces are shown
+        // check if all faces are shown (game finished)
         this.finished = this.vertexFaces.every(f => f.show) && this.vertexFaces.length > 0;
         
+        // reset vertex references and unblock translation
         this.baseVertex = null;
         this.connectTo = null;
         this.blockTranslation = false;
@@ -547,8 +603,8 @@ class Canvas{
         this.cursor.y /= this.scale.y;
         
         if(this.cursor.left && !this.blockTranslation){
-            this.translation.x += e.movementX;
-            this.translation.y += e.movementY;
+            this.translation.x += e.movementX * this.pixelScale;
+            this.translation.y += e.movementY * this.pixelScale;
         }
         
         // check if the cursor is over a vertex
@@ -556,7 +612,7 @@ class Canvas{
             const dx = this.vertices[i].x - this.cursor.x;
             const dy = this.vertices[i].y - this.cursor.y;
             const distance = Math.sqrt(dx*dx + dy*dy);
-            if(distance < this.vertexSize){
+            if(distance < this.vertices[i].vertexSize){
                 this.vertices[i].hovered = true;
                 break;
             } else {
@@ -570,9 +626,20 @@ class Canvas{
         this.keys.ctrl = e.ctrlKey;
         this.keys.alt = e.altKey;
         
-        // d-key 
+        // Press d-key to toggle debug mode
         if(e.key === "d"){
             this.showDebug = !this.showDebug;
+            document.querySelector(".debug-info").classList.toggle('show');
+        }
+
+        // Press c-key to prompt level name
+        if(e.key === "c"){
+            const name = prompt("Enter level name:");
+            this.finished = true;
+            for(const face of this.vertexFaces) face.show = false;
+            setTimeout(() => {
+                if(name != null) this.loadLevel(name);
+            },400);
         }
     }
     
@@ -587,17 +654,17 @@ class Canvas{
         var delta = e.deltaY ? e.deltaY * (this.zoomSensitivity) : (e.detail * (this.zoomSensitivity));
         
         this.scale.x += delta * -0.0005;
-        this.scale.x = Math.min(Math.max(.125, this.scale.x), 4);
+        this.scale.x = Math.min(Math.max(.125 / this.pixelScale, this.scale.x), 4 * this.pixelScale);
         
         this.scale.y += delta * -0.0005;
-        this.scale.y = Math.min(Math.max(.125, this.scale.y), 4);
+        this.scale.y = Math.min(Math.max(.125 / this.pixelScale, this.scale.y), 4 * this.pixelScale);
         
         // update mouse position
         const rect = e.target.getBoundingClientRect();
         
         // calculate mouse position in canvas
-        this.cursor.x = e.clientX - rect.left;
-        this.cursor.y = e.clientY - rect.top;
+        this.cursor.x = e.clientX * this.pixelScale - rect.left;
+        this.cursor.y = e.clientY * this.pixelScale - rect.top;
         
         // apply canvas scale
         this.cursor.x /= (rect.width / this.canvas.width);
@@ -621,7 +688,8 @@ class Canvas{
         const offsetY = Math.floor(this.translation.y % gridSize);
         
         // set line color
-        ctx.strokeStyle = "#333";
+        ctx.strokeStyle = "#999";
+        ctx.lineWidth = 0.25;
         
         // draw vertical lines
         for(let x = offsetX; x < this.canvas.width; x += gridSize){
@@ -643,6 +711,7 @@ class Canvas{
     }
 }
 
+// clamp number between min and max
 function clamp(num, min, max) {
     return num <= min 
       ? min 
@@ -651,6 +720,7 @@ function clamp(num, min, max) {
         : num
 }
 
+// interpolate a to b by n
 function lerp(a, b, n) {
     return (1-n)*a + n*b;
 }

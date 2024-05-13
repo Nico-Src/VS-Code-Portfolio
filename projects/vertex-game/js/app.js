@@ -1,4 +1,4 @@
 const canvas = new Canvas({
     fullscreen: true,
-    zoomSensitivity: 5
+    zoomSensitivity: 5,
 });
