@@ -1,0 +1,28 @@
+[
+    {
+        "name": "windows",
+        "iconSize": 25,
+        "icon": "icons/windows.png",
+        "darkIcon": "icons/windows.png",
+        "hideToolTip": true,
+        "action": "toggleWindowsHub()"
+    },
+    {
+        "name": "search",
+        "iconSize": 25,
+        "icon": "icons/search_light.ico",
+        "darkIcon": "icons/search_dark.ico"
+    },
+    {
+        "name": "edge",
+        "iconSize": 30,
+        "icon": "icons/edge.svg",
+        "darkIcon": "icons/edge.svg"
+    },
+    {
+        "name": "file-explorer",
+        "iconSize": 25,
+        "icon": "icons/file_explorer.ico",
+        "darkIcon": "icons/file_explorer.ico"
+    }
+]
